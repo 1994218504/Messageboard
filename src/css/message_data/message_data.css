@@ -1,0 +1,182 @@
+* {
+  box-sizing: border-box;
+}
+li {
+  list-style: none;
+}
+.header {
+  display: inline-block;
+  font-size: 1rem;
+  cursor: pointer;
+  margin: 0.5rem 0 0 0.5rem;
+}
+.header:hover,
+.header i:hover {
+  color: #409eff;
+}
+.box_show {
+  width: 60%;
+  margin: 0 auto;
+  box-shadow: 0 2px 12px 0 rgba(203, 75, 75, 0.1);
+  padding: 1rem 0 5.5rem 0;
+}
+
+.main_top > div {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.main_top > div:first-child > div {
+  display: flex;
+  align-items: center;
+}
+/* 头像 */
+.main_top img,
+.comments_concern img {
+  cursor: pointer;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 0.5px #409eff solid;
+}
+/* 取消 */
+.guanzhu {
+  color: #fff;
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
+.quxiaoguanzhu {
+  color: #409eff;
+  background: #ecf5ff;
+  border-color: #b3d8ff;
+}
+/* 头像旁边的内容 */
+.main_top_left > div:first-child {
+  margin-right: 10px;
+}
+
+.main_top_left > div:last-child > li:first-child {
+  font-size: 1.5rem;
+  color: #906a8b;
+}
+/* 信息发布的时间 */
+.main_top_left > div:last-child > li:last-child {
+  color: #828488;
+}
+.box_show > .el-main > div {
+  padding: 1rem;
+}
+.userinfo > div:first-child {
+  font-size: 2rem;
+  padding-bottom: 0px;
+}
+/* 关注和取消关注 */
+.main_top_right > span {
+  display: inline-block;
+  margin-left: 1rem;
+}
+/* 留言内容 */
+.center_info {
+  display: flex;
+  align-items: center;
+}
+/* 留言左下角的点赞和举报 */
+.center_click {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+.center_click div {
+  cursor: pointer;
+  margin-left: 2rem;
+}
+.center_click div:hover,
+.praises {
+  color: #409eff;
+}
+/* 评论和关注的布局 */
+.comments_concern .el-tab-pane > div > div {
+  display: flex;
+  justify-content: space-between;
+}
+/* 右边内容 */
+.commentslists > li:first-child > div:first-child,
+.commentslistconcern > li:first-child > div:first-child {
+  margin-top: 10px;
+}
+.commentslists > li:first-child > div:last-child,
+.commentslistconcern > li:first-child > div:last-child {
+  cursor: pointer;
+  margin-left: 20px;
+}
+.commentslists > li:first-child > div:last-child > p,
+.commentslistconcern > li:first-child > div:last-child > p {
+  font-size: 1.5rem;
+  word-break: break-all;
+  position: relative;
+  margin: 5px 0;
+}
+.commentslists > li:first-child > div:last-child > div:last-child,
+.commentslists > li:first-child > div:last-child > div:first-child,
+.commentslistconcern > li:first-child > div:last-child > div:first-child {
+  color: #828488;
+}
+.commentslists > li:first-child > div:last-child > div:last-child,
+.commentslistconcern > li:first-child > div:last-child > div:last-child {
+  padding-bottom: 2rem;
+}
+.commentslists > li:first-child,
+.commentslistconcern > li:first-child {
+  display: flex;
+}
+/* 左边点击 */
+.commentslists > li:last-child {
+  display: flex;
+  position: absolute;
+  right: 0px;
+  bottom: 10px;
+}
+.commentslists > li:last-child > div {
+  cursor: pointer;
+  margin-left: 32px;
+  display: flex;
+  align-items: center;
+}
+.commentslists > li:last-child > div:hover {
+  color: #409eff;
+}
+/* 分页 */
+.pagecenter {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+/* 发布评论信息 */
+.bushcomments {
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+  width: 60%;
+  transform: translateX(-50%);
+}
+.bushcomments li .el-button {
+  border: 1px solid #dcdfe6;
+  border-radius: 4px;
+  color: #909399;
+  background-color: #f5f7fa;
+  border-radius: 0px;
+  cursor: pointer;
+}
+.bushcomments li .el-button:hover {
+  background: #409eff;
+  border-color: #409eff;
+  color: #fff;
+}
+.comments_concern hr {
+  margin: 10px 0;
+}
+.commentslistconcern {
+  align-items: center;
+}
