@@ -1,7 +1,8 @@
 // npm install的插件和js直接不需要路径就能导入
 import qs from 'qs'
 import axios from 'axios'
-import spark from 'spark-md5'
+import sparkMd5 from 'spark-md5'
+import { MessageBox } from 'element-ui'
 
 // 后端接口的服务器基础地址
 const SERVER_BASE_URL = 'https://huhuiyu.top/teach_project_service'
@@ -21,129 +22,162 @@ function loadToken() {
   return token ? token : ''
 }
 
-// 这里面的js按照es6的module规范编写即可
-let tools = {
-  info: '通用工具类',
-  test() {
-    // console.log('js导入测试', qs, axios, spark)
-  },
-  // md5加密方法
-  md5(info) {
-    if (info && info.trim() != '') {
-      return spark.hash(info)
-    }
-    return ''
-  }, // ajax请求对象
-  // ajax的要素：1：后端api的path，2：请求的参数
-  // 3：应答结果的处理回调function，4：请求的方式（可选，默认为post）
-  ajax(path, params, cb, method) {
-    // 完整的请求路径
-    let url = SERVER_BASE_URL + path
-    // 请求参数的处理（需要qs）
-    let data = qs.stringify(params, { allowDots: true })
-    // method的默认处理
-    method = method ? method : 'post'
-    if (method == 'get') {
-      url = url + '?' + data
-      data = ''
-    }
-    // console.log('请求的参数信息', url, data, method)
-    // 通过axios发起ajax请求
-    let promise = axios({
-      url: url,
-      data: data,
-      method: method,
-      // token需要通过头信息传递
-      headers: {
-        token: loadToken(),
-      },
-    })
-    // 应答结果的处理
-    promise
-      .then((resp) => {
-        // console.log('ajax请求结果：', resp)
-        // 保存token
-        saveToken(resp.data)
-        // 回调只需要应答的服务器端数据，不需要完整的resp信息
-        cb(resp.data)
-      })
-      // es6的箭头函数
-      .catch((error) => {
-        console.error('请求异常：', error)
-        // 定制错误请求信息
-        cb({ code: 500, success: false, message: '请求异常' })
-      })
-  },
+let tools = {}
+// ajax请求对象
+// ajax的要素：1：后端api的path，2：请求的参数
+// 3：应答结果的处理回调function，4：请求的方式（可选，默认为post）
 
-  // ajax文件上传
-  // 参数1：上传的文件
-  // 参数2：请求的参数
-  // 参数3：请求的回调处理function
-  upload(file, params, cb) {
-    if (!file) {
-      cb({ code: 500, success: false, message: '请选择文件' })
-      return
-    }
-    if (file.size >= 2 * 1024 * 1024) {
-      cb({ code: 500, success: false, message: '文件太大' })
-      return
-    }
-    // ajax文件上传必须使用FormData处理
-    let data = new FormData()
-    data.append('file', file)
-    // 处理请求参数
-    for (let key in params) {
-      data.append(key, params[key])
-    }
-    // 发起请求
-    let promise = axios({
-      url: SERVER_BASE_URL + '/user/file/upload',
-      data: data,
-      method: 'post',
-      headers: {
-        token: loadToken(),
-        'Content-Type': 'multipart/form-data',
-      },
-    })
-
-    // 应答结果的处理
-    promise
-      .then((resp) => {
-        // console.log('ajax请求结果：', resp)
-        // 保存token
-        saveToken(resp.data)
-        // 回调只需要应答的服务器端数据，不需要完整的resp信息
-        cb(resp.data)
-      })
-      // es6的箭头函数
-      .catch((error) => {
-        console.error('请求异常：', error)
-        // 定制错误请求信息
-        cb({ code: 500, success: false, message: '请求异常' })
-      })
-  },
-  // 获取fid对应的文件下载链接地址
-  getDownloadUrl(fid) {
-    return SERVER_BASE_URL + '/user/file/download?fid=' + fid
-  },
-  // 获取开发者密钥
-  getAccessKey() {
-    return '477ae8f3-5aa3-40f2-8f25-189aed22fb6a'
-  },
-  // 合并任意JSON数组
-  concatJson() {
-    // 不定数量参数
-    let result = {}
-    for (let i = 0; i < arguments.length; i++) {
-      // 参数循环，逐个获取json参数
-      let info = JSON.parse(JSON.stringify(arguments[i]))
-      // json循环
-      for (let key in info) {
-        result[key] = info[key]
+tools.empty = () => {}
+tools.ajax = (path, params, cb, handleMessage, method) => {
+  // 完整的请求路径
+  let url = SERVER_BASE_URL + path
+  // 请求参数的处理（需要qs）
+  let data = qs.stringify(params, { allowDots: true })
+  // method的默认处理
+  method = method ? method : 'post'
+  if (method == 'get') {
+    url = url + '?' + data
+    data = ''
+  }
+  // console.log('请求的参数信息', url, data, method)
+  // 通过axios发起ajax请求
+  let promise = axios({
+    url: url,
+    data: data,
+    method: method,
+    // token需要通过头信息传递
+    headers: {
+      token: loadToken(),
+    },
+  })
+  // 应答结果的处理
+  promise
+    .then((resp) => {
+      // console.log('ajax请求结果：', resp)
+      // 保存token
+      saveToken(resp.data)
+      // 回调只需要应答的服务器端数据，不需要完整的resp信息
+      cb(resp.data)
+      if (!resp.data.success && !handleMessage) {
+        MessageBox({ type: 'error', message: resp.data.message, title: '教学管理系统' })
+        return
       }
-    }
-    return result
-  },
+    })
+    // es6的箭头函数
+    .catch((error) => {
+      console.error('请求异常：', error)
+      // 定制错误请求信息
+      cb({ code: 500, success: false, message: '请求异常' })
+    })
+}
+tools.md5 = (info) => {
+  if (info && info.trim() != '') {
+    return sparkMd5.hash(info)
+  }
+  return ''
 }
 
+// ajax文件上传
+// 参数1：上传的文件
+// 参数2：请求的参数
+// 参数3：请求的回调处理function
+// upload(file, params, cb) {
+//   if (!file) {
+//     cb({ code: 500, success: false, message: '请选择文件' })
+//     return
+//   }
+//   if (file.size >= 2 * 1024 * 1024) {
+//     cb({ code: 500, success: false, message: '文件太大' })
+//     return
+//   }
+//   // ajax文件上传必须使用FormData处理
+//   let data = new FormData()
+//   data.append('file', file)
+//   // 处理请求参数
+//   for (let key in params) {
+//     data.append(key, params[key])
+//   }
+//   // 发起请求
+//   let promise = axios({
+//     url: SERVER_BASE_URL + '/user/file/upload',
+//     data: data,
+//     method: 'post',
+//     headers: {
+//       token: loadToken(),
+//       'Content-Type': 'multipart/form-data',
+//     },
+//   })
+
+//   // 应答结果的处理
+//   promise
+//     .then((resp) => {
+//       // console.log('ajax请求结果：', resp)
+//       // 保存token
+//       saveToken(resp.data)
+//       // 回调只需要应答的服务器端数据，不需要完整的resp信息
+//       cb(resp.data)
+//     })
+//     // es6的箭头函数
+//     .catch((error) => {
+//       console.error('请求异常：', error)
+//       // 定制错误请求信息
+//       cb({ code: 500, success: false, message: '请求异常' })
+//     })
+// },
+// 获取fid对应的文件下载链接地址
+tools.getAccessKey = () => {
+  return '477ae8f3-5aa3-40f2-8f25-189aed22fb6a'
+}
+// 获取开发者密钥
+tools.getDownloadUrl = (fid) => {
+  return SERVER_BASE_URL + '/user/file/download?fid=' + fid
+}
+// 合并json对象
+tools.concatJson = (...jsons) => {
+  console.log('json参数列表：', jsons)
+  let result = {}
+  jsons.forEach((json) => {
+    for (const key in json) {
+      if (Object.hasOwnProperty.call(json, key)) {
+        result[key] = JSON.parse(JSON.stringify(json[key]))
+      }
+    }
+  })
+  return result
+}
+// 格式化日期
+// 格式化日期
+tools.formatDate = (value, format) => {
+  try {
+    // 获取日期格式参数
+    format = format ? format : 'yyyy-MM-dd hh:mm:ss'
+    if (!isNaN(value) && !(value instanceof Date)) {
+      let time = new Date()
+      time.setTime(parseInt(value))
+      value = time
+    }
+    let year = value.getFullYear() + ''
+    let month = value.getMonth() + 1
+    let day = value.getDate()
+    let hour = value.getHours()
+    let minute = value.getMinutes()
+    let second = value.getSeconds()
+    month = month < 10 ? '0' + month : '' + month
+    day = day < 10 ? '0' + day : '' + day
+    hour = hour < 10 ? '0' + hour : '' + hour
+    minute = minute < 10 ? '0' + minute : '' + minute
+    second = second < 10 ? '0' + second : '' + second
+    format = format.replace('yyyy', year)
+    format = format.replace('MM', month)
+    format = format.replace('dd', day)
+    format = format.replace('hh', hour)
+    format = format.replace('mm', minute)
+    format = format.replace('ss', second)
+    format = format.replace('ms', value.getMilliseconds())
+    return format
+  } catch (ex) {
+    console.error(ex)
+    return ''
+  }
+}
 export default tools

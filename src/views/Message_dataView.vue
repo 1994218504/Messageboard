@@ -44,15 +44,15 @@
           </div>
           <div class="center_click">
             <div @click="praiseclick()" v-if="messageinfo.praise == false">
-              <i class="el-input_icon iconfont">&#xe86e;</i>
+              <i class="el-input_icon iconfont">&#xec7f;</i>
               <span>点赞{{ messageinfo.praiseCount }}</span>
             </div>
             <div @click="praiseclick()" v-else class="praises">
-              <i class="el-input_icon iconfont">&#xe86e;</i>
+              <i class="el-input_icon iconfont">&#xec7f;</i>
               <span>已点赞{{ messageinfo.praiseCount }}</span>
             </div>
             <div @click="reportVisible = true">
-              <i class="el-input_icon iconfont">&#xe86e;</i>
+              <i class="el-input_icon iconfont">&#xe66b;</i>
               <span>举报</span>
             </div>
           </div>
@@ -78,19 +78,19 @@
                   </li>
                   <li>
                     <div @click="DeleMessageList(d.umrid)" v-if="d.mine">
-                      <i class="input_icon iconfont">&#xe86e;</i>
+                      <i class="input_icon iconfont">&#xe68e;</i>
                       <div>删除</div>
                     </div>
                     <div @click="Commentsclick(d.umrid)" v-if="d.praise == false">
-                      <i class="input_icon iconfont">&#xe86e;</i>
+                      <i class="input_icon iconfont">&#xec7f;</i>
                       <span>点赞{{ d.praiseCount }}</span>
                     </div>
                     <div @click="Commentsclick(d.umrid)" class="praises" v-else>
-                      <i class="input_icon iconfont">&#xe86e;</i>
+                      <i class="input_icon iconfont">&#xec7f;</i>
                       <span>已点赞{{ d.praiseCount }}</span>
                     </div>
                     <div>
-                      <i class="input_icon iconfont">&#xe86e;</i>
+                      <i class="input_icon iconfont">&#xe66b;</i>
                       <div>举报</div>
                     </div>
                   </li>

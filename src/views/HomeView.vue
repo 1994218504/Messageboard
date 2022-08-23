@@ -71,19 +71,19 @@
                   </div>
                   <div>{{ d.lastupdate | formatDate }}</div>
                   <div>
-                    <div @click="message_data(d.umid)" v-if="d.replyCount != 0"><i class="el-input__icon iconfont">&#xe64b;</i> {{ d.replyCount }}条评论 </div>
-                    <div @click="message_data(d.umid)" v-else><i class="el-input__icon iconfont">&#xe64b;</i> 我去评论 </div>
+                    <div @click="message_data(d.umid)" v-if="d.replyCount != 0"><i class="el-input__icon iconfont">&#xe891;</i> {{ d.replyCount }}条评论 </div>
+                    <div @click="message_data(d.umid)" v-else><i class="el-input__icon iconfont">&#xe891;</i> 我去评论 </div>
                     <div @click="praiseclick(d.umid)">
                       <span v-if="d.praise" class="praise">
-                        <i class="el-input__icon iconfont">&#xe64b;</i>
+                        <i class="el-input__icon iconfont">&#xec7f;</i>
                         已点赞{{ d.praiseCount }}
                       </span>
                       <span v-else>
-                        <i class="el-input__icon iconfont">&#xe64b;</i>
+                        <i class="el-input__icon iconfont">&#xec7f;</i>
                         点赞{{ d.praiseCount }}
                       </span>
                     </div>
-                    <div @click="reportVisible = true"><i class="el-input__icon iconfont">&#xe64b;</i> 举报 </div>
+                    <div @click="reportVisible = true"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
                   </div>
                 </div>
               </el-card>
