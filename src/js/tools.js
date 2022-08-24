@@ -39,7 +39,7 @@ tools.ajax = (path, params, cb, handleMessage, method) => {
     url = url + '?' + data
     data = ''
   }
-  // console.log('请求的参数信息', url, data, method)
+  console.log('请求的参数信息', params)
   // 通过axios发起ajax请求
   let promise = axios({
     url: url,
@@ -53,7 +53,7 @@ tools.ajax = (path, params, cb, handleMessage, method) => {
   // 应答结果的处理
   promise
     .then((resp) => {
-      // console.log('ajax请求结果：', resp)
+      console.log('ajax请求结果：', resp)
       // 保存token
       saveToken(resp.data)
       // 回调只需要应答的服务器端数据，不需要完整的resp信息

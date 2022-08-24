@@ -23,7 +23,6 @@ export default {
     return {
       title: '我的主页',
       username: '',
-      usernames: '',
       Iusername: true,
       tbUser: {},
       tbUserInfo: {},
@@ -31,41 +30,31 @@ export default {
     }
   },
   methods: {
-    queryUser() {
+    queryLoction() {
       let Names = location.search
-      let mark = Names.lastIndexOf('&')
-      if (mark > -1) {
-        this.username = Names.substring(mark + 1)
-        tools.ajax('/user/auth/getUserInfoByName', { username: this.username }, (data) => {
-          this.tbUser = data.tbUser
-          console.log(data.success)
-          this.tbUserInfo = data.tbUserInfo
-          this.userOtherInfo = data.userOtherInfo
-          if (!data.success) {
-            this.$alert(data.message)
-          }
-        })
+      let index = Names.lastIndexOf('&')
+      if (index > -1) {
+        this.username = Names.substring(index + 1)
+        let usernames = Names.substring(1, index)
+        this.queryUser()
+        if (this.username == usernames) return (this.Iusername = false)
       } else {
-        this.usernames = location.search.replace('?', '')
-        tools.ajax('/user/auth/getUserInfoByName', { username: this.usernames }, (data) => {
-          this.tbUser = data.tbUser
-          console.log(data.success)
-          this.tbUserInfo = data.tbUserInfo
-          this.userOtherInfo = data.userOtherInfo
-          if (!data.success) {
-            this.$alert(data.message)
-          }
-        })
-      }
-
-      if (this.username == this.usernames) {
+        this.username = Names.substring(1)
         this.Iusername = false
+        this.queryUser()
       }
+    },
+    queryUser() {
+      tools.ajax('/user/auth/getUserInfoByName', { username: this.username }, (data) => {
+        this.tbUser = data.tbUser
+        this.tbUserInfo = data.tbUserInfo
+        this.userOtherInfo = data.userOtherInfo
+      })
     },
   },
   created() {
     app = this
-    app.queryUser()
+    app.queryLoction()
   },
 }
 </script>

@@ -221,10 +221,10 @@ export default {
     },
     // 进入我的主页的方法
     userMain() {
-      location.href = location.href + '/userbody?' + this.user.username
+      location = location.href + '/userbody?' + this.user.username
     },
     userBody(username) {
-      location.href = location.href + '/userbody?' + this.user.username + '&' + username
+      location = location.href + '/userbody?' + username + '&' + this.user.username
     },
     // 退出
     userup() {
