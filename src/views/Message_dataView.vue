@@ -1,11 +1,8 @@
 <template>
   <div class="center">
     <!-- {{ messageinfo }} -->
+    <el-page-header @back="jumpRouting('/index')" content="留言详细信息"> </el-page-header>
     <div>
-      <span @click="fanhui()" class="header">
-        <i class="iconfont">&#xe749;</i>
-        返回
-      </span>
       <div class="box_show">
         <!-- 发帖人信息 -->
         <el-header class="main_top">
@@ -295,8 +292,8 @@ export default {
         }
       })
     },
-    fanhui() {
-      this.$router.push('/index')
+    jumpRouting(index) {
+      this.$router.push(index)
     },
   },
   created() {

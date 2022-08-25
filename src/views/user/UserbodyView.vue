@@ -1,12 +1,26 @@
 <template>
   <div>
-    <div>
-      <div><i class="el-icon-back"> </i>返回</div>
-      <div class="index_top">
-        <div class="index_img"></div>
-        <div class="index_touxiang"></div>
-      </div>
+    <div v-loading="loading">
+      <el-page-header @back="jumpRouting('/index')" content="用户"> </el-page-header>
       {{ tbUserInfo }}
+      <div class="conter">
+        <div class="index_top">
+          <div></div>
+          <div class="index_touxiang">
+            <img :src="tbUserInfo.img" alt="" />
+            <span @click="avatarModify()" v-if="Visible.imgModifyVisible">
+              <div>
+                <i class="iconfont">&#xe8bc;</i>
+              </div>
+              <i>修改头像</i>
+            </span>
+          </div>
+          <div>{{ tbUser.nickname }}</div>
+          <div>
+            <el-button @click="ModifyInfo()" type="primary">编辑个人信息</el-button>
+          </div>
+        </div>
+      </div>
       <div v-if="!Iusername">我自己的主页 </div>
       <div v-else>别的主页</div>
     </div>
@@ -27,9 +41,14 @@ export default {
       tbUser: {},
       tbUserInfo: {},
       userOtherInfo: {},
+      Visible: {
+        imgModifyVisible: false, //修改头像的visible
+      },
+      loading: false,
     }
   },
   methods: {
+    // 获取地址栏信息
     queryLoction() {
       let Names = location.search
       let index = Names.lastIndexOf('&')
@@ -44,11 +63,41 @@ export default {
         this.queryUser()
       }
     },
+    // 查询用户信息
     queryUser() {
       tools.ajax('/user/auth/getUserInfoByName', { username: this.username }, (data) => {
         this.tbUser = data.tbUser
         this.tbUserInfo = data.tbUserInfo
         this.userOtherInfo = data.userOtherInfo
+      })
+    },
+    // 退出
+    jumpRouting(index) {
+      this.$router.push(index)
+    },
+    ModifyInfo() {
+      this.Visible.imgModifyVisible = true
+    },
+    // 修改头像
+    avatarModify() {
+      this.loading = true
+      tools.openFile((file) => {
+        let selectedFile = file
+        if (selectedFile == null) {
+          this.$alert('没有选中图片')
+          return
+        }
+        tools.upload(selectedFile, { fileinfo: '修改头像' }, (data) => {
+          if (data.success) {
+            tools.ajax('/user/file/queryAll', {}, (data) => {
+              let file = data.list
+              tools.ajax('/user/auth/updateUserInfo', { img: tools.getDownladUrl(file[0].fid) }, () => {
+                this.loading = false
+                this.queryUser()
+              })
+            })
+          }
+        })
       })
     },
   },

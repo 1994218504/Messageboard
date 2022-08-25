@@ -13,7 +13,7 @@ const routes = [
   // 表示地址栏输入服务器地址/abc看到的时AbcView.vue编译后的页面问题
 
   {
-    path: '/',
+    path: '/login',
     name: 'home',
     component: () => import('../views/Login/LoginView.vue'),
   },
@@ -23,9 +23,14 @@ const routes = [
     component: () => import('../views/TestView.vue'),
   },
   {
-    path: '/index',
+    path: '/',
     name: 'home',
     component: () => import('../views/HomeView.vue'),
+  },
+  {
+    path: '/index',
+    name: 'home',
+    component: () => import('../views/mainView.vue'),
   },
   {
     path: '/index/messagedata',

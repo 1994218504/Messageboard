@@ -180,4 +180,63 @@ tools.formatDate = (value, format) => {
     return ''
   }
 }
+// 上传文件
+tools.upload = (file, params, cb) => {
+  console.log('文件上传参数', params)
+  if (!file) {
+    cb({ code: 500, success: false, message: '请选择文件' })
+    return
+  }
+  if (file.size >= 2 * 1024 * 1024) {
+    cb({ code: 500, success: false, message: '文件太大' })
+    return
+  }
+  // ajax文件上传必须使用FormData处理
+  let data = new FormData()
+  data.append('file', file)
+  // 处理请求参数
+  for (let key in params) {
+    data.append(key, params[key])
+  }
+  // 发起请求
+  let promise = axios({
+    url: SERVER_BASE_URL + '/user/file/upload',
+    data: data,
+    method: 'post',
+    headers: {
+      token: loadToken(),
+      'Content-Type': 'multipart/form-data',
+    },
+  })
+
+  // 应答结果的处理
+  promise
+    .then((resp) => {
+      console.log('ajax请求结果：', resp)
+      // 保存token
+      saveToken(resp.data)
+      // 回调只需要应答的服务器端数据，不需要完整的resp信息
+      cb(resp.data)
+    })
+    // es6的箭头函数
+    .catch((error) => {
+      console.error('请求异常：', error)
+      // 定制错误请求信息
+      cb({ code: 500, success: false, message: '请求异常' })
+    })
+}
+tools.openFile = (cd, accept) => {
+  let file = document.createElement('input')
+  file.setAttribute('type', 'file')
+  if (accept) {
+    file.setAttribute('accept', accept)
+  }
+  file.addEventListener('change', () => {
+    cd(file.files[0])
+  })
+  file.click()
+}
+tools.getDownladUrl = (fid) => {
+  return SERVER_BASE_URL + '/user/file/download?fid=' + fid
+}
 export default tools

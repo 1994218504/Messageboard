@@ -4,6 +4,14 @@
 li {
   list-style: none;
 }
+.el-page-header {
+  line-height: 42px;
+  cursor: pointer;
+}
+.el-page-header > .el-page-header__left > .el-icon-back,
+.el-page-header > .el-page-header__left > .el-page-header__title {
+  font-size: 1.3rem;
+}
 .header {
   display: inline-block;
   font-size: 1rem;
@@ -19,6 +27,7 @@ li {
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(203, 75, 75, 0.1);
   padding: 1rem 0 5.5rem 0;
+  margin-top: 20px;
 }
 
 .main_top > div {
