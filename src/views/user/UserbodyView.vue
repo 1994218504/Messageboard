@@ -113,6 +113,8 @@ export default {
           this.$alert('您上传的不是图片')
           this.loading = false
         }
+        // 关闭遮罩层
+        this.Visible.imgModifyVisible = false
       })
     },
   },

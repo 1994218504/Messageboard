@@ -34,8 +34,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-}
-.index_top.index_touxiang span i {
   cursor: pointer;
 }
 /* nickname */

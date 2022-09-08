@@ -53,11 +53,8 @@
           <div>
             <el-row v-for="d in boardlist" :key="d.umid">
               <el-card class="liuyanflex" shadow="hover">
-                <div @click="userBody(d.user.username)" v-if="d.userInfo.img">
+                <div @click="userBody(d.user.username)">
                   <img :src="d.userInfo.img" alt="" />
-                </div>
-                <div @click="userBody(d.user.username)" v-else>
-                  <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355" alt="" />
                 </div>
                 <div class="userInfo">
                   <div @click="message_data(d.umid)">{{ d.title }}</div>
@@ -104,11 +101,8 @@
             <el-row>
               <el-card shadow="hover">
                 <div class="reightuser">
-                  <div style="cursor: pointer" @click="userMain" v-if="userInfo.img">
+                  <div style="cursor: pointer" @click="userMain">
                     <img :src="userInfo.img" alt="" />
-                  </div>
-                  <div style="cursor: pointer" @click="userMain" v-else>
-                    <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355" alt="" />
                   </div>
                   <div style="cursor: pointer" @click="userMain"> {{ user.nickname }} </div>
                   <div style="display: flex">
@@ -241,6 +235,9 @@ export default {
         console.log('用户信息', data)
         app.user = data.tbUser
         app.userInfo = data.tbUserInfo
+        if (this.userInfo.img == '') {
+          this.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+        }
         app.userOther = data.userOtherInfo
         if (data.success) {
           this.boardloging = false
@@ -255,6 +252,11 @@ export default {
       tools.ajax('/message/queryAll', tools.concatJson(this.boardquery, this.boardpage), (data) => {
         if (data.success) {
           this.boardlist = data.list
+          for (let i = 0; i < this.boardlist.length; i++) {
+            if (this.boardlist[i].userInfo.img == '') {
+              this.boardlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+            }
+          }
           this.boardpage = data.page
           console.log('留言版信息', data.list)
         } else {

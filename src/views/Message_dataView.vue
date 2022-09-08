@@ -6,13 +6,10 @@
       <div class="box_show">
         <!-- 发帖人信息 -->
         <el-header class="main_top">
-          <div v-if="messageinfo.userInfo">
+          <div>
             <div class="main_top_left">
-              <div v-if="messageinfo.userInfo.img">
+              <div>
                 <img :src="messageinfo.userInfo.img" alt="" />
-              </div>
-              <div v-else>
-                <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355" alt="" />
               </div>
               <div>
                 <li>{{ messageinfo.user.nickname }}</li>
@@ -61,11 +58,8 @@
               <div v-for="d in messagelist" :key="d.umrid">
                 <div class="commentslists">
                   <li>
-                    <div v-if="d.userInfo.img">
+                    <div>
                       <img :src="d.userInfo.img" alt="" />
-                    </div>
-                    <div v-else>
-                      <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355" alt="" />
                     </div>
                     <div>
                       <div>{{ d.user.nickname }}</div>
@@ -103,11 +97,8 @@
               <div v-for="d in concernlist" :key="d.umrid">
                 <div class="commentslistconcern">
                   <li>
-                    <div style="margin-top: 20px" v-if="d.userInfo.img">
+                    <div style="margin-top: 20px">
                       <img :src="d.userInfo.img" alt="" />
-                    </div>
-                    <div style="margin-top: 20px" v-else>
-                      <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355" alt="" />
                     </div>
                     <div>
                       <div style="color: #fff">liu</div>
@@ -203,7 +194,15 @@ export default {
       this.umid = this.messagequery.umid
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
+        if (this.messageinfo.userInfo.img == '') {
+          this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+        }
         this.messagelist = data.list
+        for (let i = 0; i < this.messagelist.length; i++) {
+          if (this.messagelist[i].userInfo.img == '') {
+            this.messagelist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+          }
+        }
         this.messagepage = data.page
         console.log(data.page)
       })
