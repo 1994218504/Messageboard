@@ -45,6 +45,8 @@ export default {
         imgModifyVisible: false, //修改头像的visible
       },
       loading: false,
+      // 传递图片的格式限制
+      avatarImg: ['jpg', 'jpeg', 'png', 'tif', 'bmp', 'gif', 'jfif'],
     }
   },
   methods: {
@@ -80,24 +82,37 @@ export default {
     },
     // 修改头像
     avatarModify() {
-      this.loading = true
+      let avatarImgVisible = true
       tools.openFile((file) => {
+        this.loading = true
         let selectedFile = file
+        console.log(file)
+        let selectedFileIndex = selectedFile.name.lastIndexOf('.')
+        let selectedFileIndexImg = selectedFile.name.substring(selectedFileIndex + 1)
         if (selectedFile == null) {
           this.$alert('没有选中图片')
           return
         }
-        tools.upload(selectedFile, { fileinfo: '修改头像' }, (data) => {
-          if (data.success) {
-            tools.ajax('/user/file/queryAll', {}, (data) => {
-              let file = data.list
-              tools.ajax('/user/auth/updateUserInfo', { img: tools.getDownladUrl(file[0].fid) }, () => {
-                this.loading = false
-                this.queryUser()
-              })
+        this.avatarImg.forEach((item) => {
+          if (selectedFileIndexImg == item) {
+            avatarImgVisible = false
+            tools.upload(selectedFile, { fileinfo: '修改头像' }, (data) => {
+              if (data.success) {
+                tools.ajax('/user/file/queryAll', {}, (data) => {
+                  let file = data.list
+                  tools.ajax('/user/auth/updateUserInfo', { img: tools.getDownladUrl(file[0].fid) }, () => {
+                    this.loading = false
+                    this.queryUser()
+                  })
+                })
+              }
             })
           }
         })
+        if (avatarImgVisible) {
+          this.$alert('您上传的不是图片')
+          this.loading = false
+        }
       })
     },
   },
