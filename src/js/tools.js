@@ -2,7 +2,6 @@
 import qs from 'qs'
 import axios from 'axios'
 import sparkMd5 from 'spark-md5'
-import { MessageBox } from 'element-ui'
 
 // 后端接口的服务器基础地址
 const SERVER_BASE_URL = 'https://huhuiyu.top/teach_project_service'
@@ -28,7 +27,7 @@ let tools = {}
 // 3：应答结果的处理回调function，4：请求的方式（可选，默认为post）
 
 tools.empty = () => {}
-tools.ajax = (path, params, cb, handleMessage, method) => {
+tools.ajax = (path, params, cb, method) => {
   // 完整的请求路径
   let url = SERVER_BASE_URL + path
   // 请求参数的处理（需要qs）
@@ -53,15 +52,12 @@ tools.ajax = (path, params, cb, handleMessage, method) => {
   // 应答结果的处理
   promise
     .then((resp) => {
-      console.log('ajax请求结果：', resp)
+      console.log('ajax请求结果参数：', params)
+      console.log('ajax请求结果结果：', resp.data)
       // 保存token
       saveToken(resp.data)
       // 回调只需要应答的服务器端数据，不需要完整的resp信息
       cb(resp.data)
-      if (!resp.data.success && !handleMessage) {
-        MessageBox({ type: 'error', message: resp.data.message, title: '教学管理系统' })
-        return
-      }
     })
     // es6的箭头函数
     .catch((error) => {

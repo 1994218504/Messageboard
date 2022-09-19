@@ -149,7 +149,8 @@ li {
   cursor: pointer;
   margin-left: 32px;
   display: flex;
-  align-items: center;
+  align-items: self-end;
+  padding-bottom: 2rem;
 }
 .commentslists > li:last-child > div:hover {
   color: #409eff;

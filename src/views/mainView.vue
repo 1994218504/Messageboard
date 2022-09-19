@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-loading="bodyloading">
     <div class="quanping">
       <el-header class="center_top">
         <div class="top_left">
@@ -178,6 +178,7 @@ export default {
         title: '',
         info: '',
       },
+      bodyloading: false,
     }
   },
   methods: {
@@ -267,8 +268,8 @@ export default {
     //留言的点赞与取消
     praiseclick(info) {
       tools.ajax('/message/support', { umid: info }, (data) => {
+        data.success ? this.$message({ message: data.message, type: 'success' }) : this.$alert(data.message)
         this.queryboard()
-        this.$message({ message: data.message, type: 'success' })
       })
     },
     // 举报
@@ -290,6 +291,7 @@ export default {
         this.publishVisible = false
         if (data.success) {
           this.$message({ type: 'success', message: this.publishquery.title + '发布成功' })
+          this.queryboard()
         } else {
           this.$message({ type: 'danger', message: data.message })
         }

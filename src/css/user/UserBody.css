@@ -40,10 +40,32 @@
 .index_top > div:nth-child(3) {
   line-height: 104px;
   margin-left: 250px;
-  font-size: 3rem;
+  display: flex;
 }
+.index_top > div:nth-child(3) > span {
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 10px;
+}
+.index_top > div:nth-child(3) .el-input {
+  width: 33%;
+}
+
+.index_top > div:nth-child(3) > span:nth-child(1) {
+  margin-right: 10px;
+}
+.index_top > div:nth-child(3) > div:nth-child(3) {
+  margin-left: 10px;
+}
+
 /* 编辑按钮 */
 .index_top > div:nth-child(4) {
   display: flex;
   justify-content: flex-end;
+  height: 42px;
+}
+/* 返回我的主页 */
+.index_user_body:hover {
+  color: #409eff;
+  cursor: pointer;
 }

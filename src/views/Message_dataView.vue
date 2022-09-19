@@ -33,7 +33,7 @@
         <!-- 帖子信息 -->
         <el-main class="userinfo">
           <div>标题：{{ messageinfo.title }}</div>
-          <div class="center_info" v-html="messageinfo.info">
+          <div class="center_info" v-html="messageinfo.info" v-if="messageinfo">
             {{ messageinfo.info }}
           </div>
           <div class="center_click">
@@ -125,7 +125,7 @@
     <!-- 评论 -->
 
     <div class="bushcomments">
-      <el-form status-icon :model="addreplay" :rules="rules">
+      <el-form status-icon :model="addreplay">
         <el-form-item prop="info">
           <el-input placeholder="请输入评论内容" v-model="addreplay.info" clearable>
             <li slot="append">
@@ -156,10 +156,6 @@ export default {
     return {
       title: '具体评论界面',
       umid: '',
-      // 校验规则
-      rules: {
-        info: [{ required: true, message: '内容必须填写' }],
-      },
       messagequery: {
         umid: '',
         orderBy: 1,
@@ -194,6 +190,9 @@ export default {
       this.umid = this.messagequery.umid
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
+        if (this.messageinfo == null) {
+          this.messageinfo = false
+        }
         if (this.messageinfo.userInfo.img == '') {
           this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
         }
@@ -272,6 +271,15 @@ export default {
     queryconcern() {
       tools.ajax('/message/querySupportUserList', { umid: this.umid }, (data) => {
         this.concernlist = data.list
+        if (this.concernlist == null) {
+          return
+        } else {
+          for (let i = 0; i < this.concernlist.length; i++) {
+            if (this.concernlist[i].userInfo.img == '') {
+              this.concernlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+            }
+          }
+        }
       })
     },
     // 点赞人员的关注和取消关注
