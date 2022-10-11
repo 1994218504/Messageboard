@@ -2,7 +2,9 @@
 import qs from 'qs'
 import axios from 'axios'
 import sparkMd5 from 'spark-md5'
-
+// import store from '@/store/index'
+// import { MessageBox } from 'element-ui'
+// import router from '@/router/index'
 // 后端接口的服务器基础地址
 const SERVER_BASE_URL = 'https://huhuiyu.top/teach_project_service'
 // 本地存储token的名称
@@ -71,6 +73,15 @@ tools.md5 = (info) => {
     return sparkMd5.hash(info)
   }
   return ''
+}
+// 将正则校验封装到插件
+tools.regValidate = (rule, value, cb, reg, message) => {
+  // logger.debug(rule)
+  if (reg.test(value)) {
+    cb()
+  } else {
+    cb(new Error(message))
+  }
 }
 
 // ajax文件上传

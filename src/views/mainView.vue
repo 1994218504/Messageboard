@@ -52,7 +52,7 @@
           <!-- 左边的留言主体信息 -->
           <div>
             <el-row v-for="d in boardlist" :key="d.umid">
-              <el-card class="liuyanflex" shadow="hover">
+              <el-card class="liuyanflex" shadow="hover" @click="message_data(d.umid)">
                 <div @click="userBody(d.user.username)">
                   <img :src="d.userInfo.img" alt="" />
                 </div>
@@ -148,7 +148,6 @@
 </template>
 
 <script>
-import '@/js/index.js'
 import tools from '@/js/tools'
 let app
 export default {
@@ -313,11 +312,17 @@ export default {
       }
     },
   },
+  computed: {
+    users() {
+      return this.$store.state.loginInfo
+    },
+  },
   created() {
     app = this
     this.queryuser()
     this.queryboard()
     this.isLogin()
+    console.log('查看使用vuex来记录的用户信息', this.users)
   },
 }
 </script>

@@ -24,6 +24,7 @@ li {
 }
 .box_show {
   width: 60%;
+  min-width: 600px;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(203, 75, 75, 0.1);
   padding: 1rem 0 5.5rem 0;
@@ -90,6 +91,7 @@ li {
 .center_info {
   display: flex;
   align-items: center;
+  word-break: break-all;
 }
 /* 留言左下角的点赞和举报 */
 .center_click {
@@ -168,6 +170,7 @@ li {
   left: 50%;
   width: 60%;
   transform: translateX(-50%);
+  min-width: 600px;
 }
 .bushcomments li .el-button {
   border: 1px solid #dcdfe6;
@@ -187,4 +190,7 @@ li {
 }
 .commentslistconcern {
   align-items: center;
+}
+.box_show > main {
+  min-width: 600px;
 }

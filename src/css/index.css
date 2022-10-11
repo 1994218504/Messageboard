@@ -114,9 +114,10 @@ li {
 }
 .mainflex > div:first-child {
   width: 75%;
+  min-width: 500px;
 }
 .mainflex > div:last-child {
-  width: 25%;
+  width: 288px;
 }
 
 /* 分开距离 */
@@ -130,6 +131,7 @@ li {
 /* 压力盒子 */
 .el-card .el-card__body {
   width: 100%;
+  /* min-width: 425px; */
 }
 
 /* 头像 */

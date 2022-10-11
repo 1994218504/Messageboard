@@ -59,10 +59,10 @@
                 <div class="commentslists">
                   <li>
                     <div>
-                      <img :src="d.userInfo.img" alt="" />
+                      <img @click="Message_data(d.user.nickname)" :src="d.userInfo.img" alt="" />
                     </div>
                     <div>
-                      <div>{{ d.user.nickname }}</div>
+                      <div @click="Message_data(d.user.nickname)">{{ d.user.nickname }}</div>
                       <p>{{ d.info }}</p>
                       <div>{{ d.lastupdate | formatDate }}</div>
                     </div>
@@ -178,7 +178,7 @@ export default {
         nickname: '',
       },
       // 帖子的点赞用户信息
-      concernlist: {},
+      concernlist: [],
     }
   },
   methods: {
@@ -271,13 +271,9 @@ export default {
     queryconcern() {
       tools.ajax('/message/querySupportUserList', { umid: this.umid }, (data) => {
         this.concernlist = data.list
-        if (this.concernlist == null) {
-          return
-        } else {
-          for (let i = 0; i < this.concernlist.length; i++) {
-            if (this.concernlist[i].userInfo.img == '') {
-              this.concernlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
-            }
+        for (let i = 0; i < this.concernlist.length; i++) {
+          if (this.concernlist[i].userInfo.img == '') {
+            this.concernlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
           }
         }
       })
@@ -302,10 +298,20 @@ export default {
     jumpRouting(index) {
       this.$router.push(index)
     },
+    // 通过留言评论进入别人的用户主页
+    Message_data(nickname) {
+      location = location.href + '/userbody?' + nickname + '&' + this.user.username
+    },
+    // computed: {
+    //   user() {
+    //     return this.$store.state.loginInfo
+    //   },
+    // },
   },
   created() {
     app = this
     app.querymessagedata()
+    console.log('查看是否有角色信息', this.user)
   },
 }
 </script>

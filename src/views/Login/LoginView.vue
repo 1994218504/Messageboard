@@ -42,8 +42,11 @@ export default {
       // 校验规则
       rules: {
         username: [
-          { required: true, message: '登录名称必须填写' },
-          { min: 4, max: 16, message: '登录名称长度在 3 到 5 个字符' },
+          {
+            validator: (r, v, cb) => {
+              tools.regValidate(r, v, cb, /^[a-zA-Z][\S]{3,15}$/g, '用户名必须以字母且开头长度为4-16')
+            },
+          },
         ],
         password: [
           { required: true, message: '密码必须填写' },
