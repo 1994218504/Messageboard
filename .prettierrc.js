@@ -1,14 +1,14 @@
 module.exports = {
   // 不需要分号
   semi: false,
-  // 单引号
+  // 字符串单引号
   singleQuote: true,
-  // 结束标记断行问题
+  // 下面两项可以避免较长的代码出现结束标签断行
   htmlWhitespaceSensitivity: 'strict',
   printWidth: 400,
-  proseWrap: 'preserve',
-  // JSON字段自动补齐逗号
+  // json项后面自动补逗号
   trailingComma: 'es5',
-  // 强制使用windows系统
+  // 散文换行配置
+  proseWrap: 'preserve',
   endOfLine: 'crlf',
 }

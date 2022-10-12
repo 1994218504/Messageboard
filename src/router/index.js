@@ -1,31 +1,23 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// import HomeView from '../views/HomeView.vue'
+// import test from './test'
+// import page from './study'
+// import message from './message'
+// import user from './user'
 
 Vue.use(VueRouter)
 
 const routes = [
-  //路由配置说明
-
-  // path参数是地址访问路径
-  // name参数是随意
-  // component参数是vue文件路径
-  // 列如path是/abc,文件时AbcView.vue
-  // 表示地址栏输入服务器地址/abc看到的时AbcView.vue编译后的页面问题
-
-  {
-    path: '/login',
-    name: 'home',
-    component: () => import('../views/Login/LoginView.vue'),
-  },
-  {
-    path: '/test',
-    name: 'home',
-    component: () => import('../views/TestView.vue'),
-  },
   {
     path: '/',
     name: 'home',
     component: () => import('../views/HomeView.vue'),
+  },
+  {
+    path: '/login',
+    name: 'login',
+    component: () => import('../views/Login/LoginView.vue'),
   },
   {
     path: '/index',
@@ -43,6 +35,10 @@ const routes = [
     component: () => import('../views/user/UserbodyView.vue'),
   },
 ]
+// .concat(test)
+// .concat(page)
+// .concat(message)
+// .concat(user)
 
 const router = new VueRouter({
   mode: 'history',

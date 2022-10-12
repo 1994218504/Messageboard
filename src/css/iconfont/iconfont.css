@@ -6,10 +6,7 @@
   -moz-osx-font-smoothing: grayscale;
 }
 /* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
-/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
-/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
-/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
-/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
+
 @font-face {
   font-family: 'iconfont'; /* Project id 2916542 */
   src: url('//at.alicdn.com/t/c/font_2916542_kbz5b2dsbz.woff2?t=1663505825385') format('woff2'), url('//at.alicdn.com/t/c/font_2916542_kbz5b2dsbz.woff?t=1663505825385') format('woff'), url('//at.alicdn.com/t/c/font_2916542_kbz5b2dsbz.ttf?t=1663505825385') format('truetype');

@@ -7,7 +7,7 @@ li {
 }
 /* 背景 */
 .quanping {
-  width: 100%;
+  width: 100vw;
   height: 100vh;
   background-image: url(https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355);
   background-size: cover;

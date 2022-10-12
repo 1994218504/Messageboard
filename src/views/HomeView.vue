@@ -4,7 +4,6 @@
   </div>
 </template>
 <script>
-let app
 export default {
   name: 'TestAjaxView',
   data() {
@@ -14,8 +13,6 @@ export default {
   },
   methods: {},
   created() {
-    app = this
-    console.log(app.title)
     this.$router.push('/login')
   },
 }
