@@ -149,6 +149,7 @@
 
 <script>
 import tools from '@/js/tools'
+import logger from '@/js/logger'
 let app
 export default {
   name: 'HomeView',
@@ -231,20 +232,29 @@ export default {
     // 获取用户信息
     queryuser() {
       this.boardloging = true
-      tools.ajax('/user/auth/getUserInfo', {}, (data) => {
-        console.log('用户信息', data)
-        app.user = data.tbUser
-        app.userInfo = data.tbUserInfo
-        if (this.userInfo.img == '') {
-          this.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
-        }
-        app.userOther = data.userOtherInfo
-        if (data.success) {
-          this.boardloging = false
-        } else {
-          this.$alert('信息获取异常')
-        }
-      })
+      tools.ajax(
+        '/user/auth/getUserInfo',
+        {},
+        (data) => {
+          if (data.success) {
+            app.user = data.tbUser
+            app.userInfo = data.tbUserInfo
+            if (this.userInfo.img == '') {
+              this.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+            }
+            app.userOther = data.userOtherInfo
+            if (data.success) {
+              this.boardloging = false
+            } else {
+              this.$alert('信息获取异常')
+            }
+          } else {
+            this.boardloging = false
+            this.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+          }
+        },
+        true
+      )
     },
     // 导航条上面的点击效果
     //开始查询留言版信息
@@ -258,7 +268,7 @@ export default {
             }
           }
           this.boardpage = data.page
-          console.log('留言版信息', data.list)
+          logger.debug('留言版信息', data.list)
         } else {
           this.$message({ message: data.message, type: 'danger' })
         }
@@ -314,7 +324,7 @@ export default {
   },
   computed: {
     users() {
-      return this.$store.state.loginInfo
+      return this.$store.state.loginUser
     },
   },
   created() {
@@ -322,7 +332,7 @@ export default {
     this.queryuser()
     this.queryboard()
     this.isLogin()
-    console.log('查看使用vuex来记录的用户信息', this.users)
+    logger.debug('使用vuex查看登录用户信息', this.users)
   },
 }
 </script>

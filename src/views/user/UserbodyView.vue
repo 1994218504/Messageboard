@@ -42,9 +42,10 @@
 </template>
 <script>
 import tools from '@/js/tools'
-let app
+import logger from '@/js/logger'
+
 export default {
-  name: 'TestAjaxView',
+  name: 'UserBody',
   data() {
     return {
       title: '我的主页',
@@ -64,23 +65,10 @@ export default {
     }
   },
   methods: {
-    // 获取地址栏信息
-    queryLoction() {
-      let Names = location.search
-      let index = Names.lastIndexOf('&')
-      if (index > -1) {
-        this.username = Names.substring(index + 1)
-        let usernames = Names.substring(1, index)
-        this.queryUser()
-        if (this.username == usernames) return (this.Iusername = false)
-      } else {
-        this.username = Names.substring(1)
-        this.Iusername = false
-        this.queryUser()
-      }
-    },
     // 查询用户信息
     queryUser() {
+      this.username = location.search
+      logger.debug('查看我选中的用户名字', this.username)
       tools.ajax('/user/auth/getUserInfoByName', { username: this.username }, (data) => {
         this.tbUser = data.tbUser
         this.tbUserInfo = data.tbUserInfo
@@ -139,7 +127,7 @@ export default {
     },
     modifyNickname() {
       tools.ajax('/user/auth/updateUserInfo', this.modifyInfo, (data) => {
-        console.log(data.success)
+        logger.debug(data.success)
         data.success == true ? this.$message({ type: 'success', message: data.message }) : this.$message.error(data.message)
         this.queryUser()
         this.Visible.nickname = true
@@ -147,8 +135,7 @@ export default {
     },
   },
   created() {
-    app = this
-    app.queryLoction()
+    this.queryUser()
   },
 }
 </script>

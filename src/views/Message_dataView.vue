@@ -149,9 +149,10 @@
 </template>
 <script>
 import tools from '@/js/tools'
+import logger from '@/js/logger'
 let app
 export default {
-  name: 'TestAjaxView',
+  name: 'MessageDate',
   data() {
     return {
       title: '具体评论界面',
@@ -186,7 +187,7 @@ export default {
     querymessagedata() {
       let queryString = location.search.replace('?', '')
       this.messagequery.umid = queryString.replace('umid=', '')
-      console.log(queryString)
+      logger.debug(queryString)
       this.umid = this.messagequery.umid
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
@@ -203,7 +204,7 @@ export default {
           }
         }
         this.messagepage = data.page
-        console.log(data.page)
+        logger.debug(data.page)
       })
       this.queryconcern()
     },
@@ -214,7 +215,7 @@ export default {
         if (data.success) {
           this.$message({ type: 'success', message: data.message })
         } else {
-          console.log(data.message)
+          logger.debug(data.message)
         }
       })
     },
@@ -300,7 +301,7 @@ export default {
     },
     // 通过留言评论进入别人的用户主页
     Message_data(nickname) {
-      location = location.href + '/userbody?' + nickname + '&' + this.user.username
+      location = location.href + '/userbody?' + nickname
     },
     // computed: {
     //   user() {
@@ -311,7 +312,7 @@ export default {
   created() {
     app = this
     app.querymessagedata()
-    console.log('查看是否有角色信息', this.user)
+    logger.debug('查看是否有角色信息', this.user)
   },
 }
 </script>

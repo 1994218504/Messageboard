@@ -282,7 +282,7 @@ axios.interceptors.response.use(
 
 tools.ajax = (url, param, cb, handleMessage, method, returnPromise) => {
   // 处理参数
-  logger.debug('ajax请求参数：', url, param, cb, handleMessage, method)
+  // logger.debug('ajax请求参数：', url, param, cb, handleMessage, method)
   cb = cb ? cb : tools.empty
   method = method ? method : 'post'
   // 发起请求
@@ -316,7 +316,7 @@ tools.ajax = (url, param, cb, handleMessage, method, returnPromise) => {
       }
       // 应答结果为错误且不需要处理的就直接弹出对话框
       if (!resp.data.success && !handleMessage) {
-        MessageBox({ type: 'error', message: resp.data.message, title: '大三学习期间的报错' })
+        MessageBox({ type: 'error', message: resp.data.message, title: '留言板报错' })
         return
       }
       // logger.debug('自己处理应答结果')
@@ -325,7 +325,7 @@ tools.ajax = (url, param, cb, handleMessage, method, returnPromise) => {
     .catch((error) => {
       logger.debug('ajax请求错误：', error)
       if (!handleMessage) {
-        MessageBox({ type: 'error', message: '访问数据失败：' + error, title: '教学管理系统' })
+        MessageBox({ type: 'error', message: '访问数据失败：' + error, title: '留言板报错' })
         return
       }
       // logger.debug('自己处理错误结果')

@@ -47,7 +47,7 @@ export default {
     sendCode() {
       this.sendsCode.phone = this.updatePhone.phone //这上面用v-model='updatePhone.phone'
       // this.updatePhone.phone = this.sendsCode.phone//这上面用v-model='sendsCode.phone'
-      console.log('查看参数', this.sendsCode)
+      logger.debug('查看参数', this.sendsCode)
       tools.ajax('/tool/sendValidateCode', app.sendsCode, (data) => {
         app.$alert(data.message)
       })
@@ -65,7 +65,7 @@ export default {
   },
   created() {
     app = this
-    console.log(app.title)
+    logger.debug(app.title)
     app.getImageCode()
   },
 }

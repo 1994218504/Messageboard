@@ -5,6 +5,7 @@
 li {
   list-style: none;
 }
+
 /* 背景 */
 .quanping {
   width: 100vw;
@@ -91,11 +92,13 @@ li {
   cursor: pointer;
   width: 2rem;
   height: 2rem;
+  border: 1px rgb(114, 112, 92) solid;
   border-radius: 50%;
 }
+
 /* 主体页面 */
 .data_message_main {
-  background-color: #fff;
+  /* background-color: #fff; */
 }
 .el-main {
   display: flex;

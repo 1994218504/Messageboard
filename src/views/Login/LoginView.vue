@@ -11,7 +11,7 @@
             </el-input>
           </el-form-item>
           <el-form-item prop="password">
-            <el-input type="password" show-password v-model="user.password" placeholder="密码">
+            <el-input type="password" show-password v-model="pwodpss" placeholder="密码">
               <i slot="prefix" class="el-input__icon iconfont">&#xe749;</i>
               <i slot="prepend">密码:</i>
             </el-input>
@@ -28,9 +28,10 @@
 </template>
 <script>
 import tools from '@/js/tools'
+import logger from '@/js/logger'
 let app
 export default {
-  name: 'TestAjaxView',
+  name: 'LoginLogout',
   data() {
     return {
       title: '用户登录',
@@ -38,6 +39,7 @@ export default {
         username: '',
         password: '',
       },
+      pwodpss: '',
       loading: false,
       // 校验规则
       rules: {
@@ -60,20 +62,14 @@ export default {
       app.$router.push('/user/RegView')
     },
     login() {
-      app.user.password = tools.md5(app.user.password)
+      this.user.password = tools.md5(this.pwodpss)
       app.loading = true
-      tools.ajax('/user/auth/login', app.user, (data) => {
+      tools.ajax('/user/auth/login', app.user, () => {
         app.loading = false
-        app.user.password = ''
-        app.$message({
-          message: data.tbUser.nickname + '登录成功',
-          type: 'success',
-        })
-        if (data.success) {
-          this.$router.push('/index')
-          return
-        }
-        // app.$alert(data.message, '黑暗骑士')
+        this.$store
+          .dispatch('updateUserInfo')
+          .then(this.$router.push('/index'))
+          .catch((app.loading = true))
       })
     },
     reset() {
@@ -85,7 +81,7 @@ export default {
   },
   created() {
     app = this
-    console.log(app.title)
+    logger.debug(app.title)
   },
 }
 </script>

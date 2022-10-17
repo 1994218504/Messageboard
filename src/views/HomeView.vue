@@ -1,19 +1,31 @@
 <template>
   <div>
-    <div>{{ title }}</div>
+    <div></div>
   </div>
 </template>
 <script>
+import tools from '@/js/tools'
 export default {
-  name: 'TestAjaxView',
+  name: 'LoginAndIndex',
   data() {
     return {
-      title: 'ajax测试页面',
+      title: '登录界面',
     }
   },
   methods: {},
   created() {
-    this.$router.push('/login')
+    tools.ajax(
+      '/user/auth/getUserInfo',
+      {},
+      (data) => {
+        if (data.success) {
+          this.$router.push('/index')
+        } else {
+          this.$router.push('/login')
+        }
+      },
+      true
+    )
   },
 }
 </script>
