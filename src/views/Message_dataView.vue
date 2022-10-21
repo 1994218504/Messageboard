@@ -125,16 +125,19 @@
     <!-- 评论 -->
 
     <div class="bushcomments">
-      <el-form status-icon :model="addreplay">
-        <el-form-item prop="info">
-          <el-input placeholder="请输入评论内容" v-model="addreplay.info" clearable>
-            <li slot="append">
-              <el-button @click="AddReplayclick"> 发布评论</el-button>
-            </li>
-          </el-input>
-        </el-form-item>
-      </el-form>
+      <div>
+        <el-form status-icon :model="addreplay">
+          <el-form-item prop="info">
+            <el-input placeholder="请输入评论内容" v-model="addreplay.info" clearable>
+              <li slot="append">
+                <el-button @click="AddReplayclick"> 发布评论</el-button>
+              </li>
+            </el-input>
+          </el-form-item>
+        </el-form>
+      </div>
     </div>
+
     <!-- 举报 -->
     <el-dialog title="举报留言" :center="true" :close-on-click-modal="false" :visible.sync="reportVisible">
       <el-input v-model="reportInfo" placeholder="举报原因">
@@ -165,7 +168,10 @@ export default {
         pageSize: 5,
       },
       // 评论排序方式，1：按照评论时间升序(默认)，2：按照评论时间降序，3：按照点赞数降序，4：按照点赞数升序
-      messageinfo: {}, //发帖人的信息
+      messageinfo: {
+        user: '',
+        userInfo: '',
+      }, //发帖人的信息
       reportVisible: false,
       // 帖子举报原因
       reportInfo: '',
@@ -191,12 +197,15 @@ export default {
       this.umid = this.messagequery.umid
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
+        logger.debug('mei you tou pian jin ru zi dong fu zhi mo ren t pian')
         if (this.messageinfo == null) {
           this.messageinfo = false
         }
         if (this.messageinfo.userInfo.img == '') {
           this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+          logger.debug('mei you tou pian jin ru zi dong fu zhi mo ren t pian')
         }
+
         this.messagelist = data.list
         for (let i = 0; i < this.messagelist.length; i++) {
           if (this.messagelist[i].userInfo.img == '') {

@@ -2,12 +2,23 @@
   <div>
     <div v-loading="loading">
       <el-page-header @back="jumpRouting('/index')" content="用户"> </el-page-header>
-      {{ tbUserInfo }}
       <div class="conter">
+        <!-- 背景图片 -->
         <div class="index_top">
-          <div></div>
+          <!-- IP属地 -->
+          <div>
+            <div>
+              <i class="fa-solid fa-location-dot"></i>
+              <span>IP属地未知</span>
+            </div>
+            <div>
+              <i class="fa-solid fa-location-dot"></i>
+              <span>IP属地未知</span>
+            </div>
+          </div>
+          <!-- 头像 -->
           <div class="index_touxiang">
-            <img :src="tbUserInfo.img" alt="" />
+            <img :src="users.tbUserInfo.img" alt="" />
             <span @click="avatarModify()" v-if="Visible.ModifyVisible">
               <div>
                 <i class="iconfont">&#xe8bc;</i>
@@ -15,26 +26,76 @@
               <i>修改头像</i>
             </span>
           </div>
+          <!-- 修改昵称 -->
           <div v-if="Visible.nickname">
-            <div style="font-size: 3rem">{{ tbUser.nickname }}</div>
-            <span @click="showModifyNickname()" v-if="Visible.ModifyVisible"><i class="iconfont">&#xe651;</i>修改</span>
+            <div class="tbUserNiCkname">
+              <div>{{ users.tbUser.nickname }}</div>
+              <span @click="showModifyNickname()" v-if="Visible.ModifyVisible"><i class="iconfont">&#xe651;</i>修改</span>
+            </div>
+            <div class="tbUserInfo">{{ users.tbUserInfo.info }}</div>
+          </div>
+          <div class="MondifytbUserNickname" v-else>
+            <div style="display: flex">
+              <div style="width: 60px">昵称:</div>
+              <div>
+                <div> <el-input clearable v-model="modifyInfoNickname"></el-input></div>
+                <div><el-button @click="modifyNickname()">修改</el-button></div>
+                <el-button @click="Visible.nickname = true">取消</el-button>
+              </div>
+            </div>
+            <div class="tbUserInfo">{{ users.tbUserInfo.info }}</div>
+          </div>
+        </div>
+        <!-- 隐藏信息 -->
+        <div>
+          <!-- 自己账户的查看详细信息 -->
+          <div class="tbUserInfo">
+            <el-collapse>
+              <el-collapse-item title="查看详细详细" name="1">
+                <div class="tbUserInfoFlex">
+                  <div>微信:</div>
+                  <div>{{ users.tbUserInfo.wechat }}</div>
+                </div>
+                <div class="tbUserInfoFlex">
+                  <div>QQ:</div>
+                  <div>{{ users.tbUserInfo.qq }}</div>
+                </div>
+                <div class="tbUserInfoFlex">
+                  <div>电话:</div>
+                  <div>{{ users.tbUserInfo.phone }}</div>
+                </div>
+                <div class="tbUserInfoFlex">
+                  <div>邮箱:</div>
+                  <div>{{ users.tbUserInfo.email }}</div>
+                </div>
+              </el-collapse-item>
+            </el-collapse>
+          </div>
+          <!-- 当为自己的用户界面时可以编辑自己的用户信息 -->
+          <div v-if="Visible.Iusername">
+            <el-button v-if="Visible.ModifyVisible == false" @click="Visible.ModifyVisible = true" type="primary">编辑个人信息</el-button>
+            <div
+              @click="
+                Visible.ModifyVisible = false
+                Visible.nickname = true
+              "
+              v-else
+              ><span>返回我的主页</span><i class="iconfont">&#xe65f;</i></div
+            >
           </div>
           <div v-else>
-            <span>昵称:</span>
-            <el-input clearable v-model="modifyInfo.nickname"></el-input>
-            <div>
-              <el-button @click="modifyNickname()">修改</el-button>
-              <el-button @click="Visible.nickname = true">取消</el-button>
-            </div>
-          </div>
-          <div>
-            <el-button v-if="Visible.ModifyVisible == false" @click="Visible.ModifyVisible = true" type="primary">编辑个人信息</el-button>
-            <div @click="Visible.ModifyVisible = false" class="index_user_body" v-else><span>返回我的主页</span><i class="iconfont">&#xe65f;</i></div>
+            <el-button>关注</el-button>
           </div>
         </div>
       </div>
-      <div v-if="!Iusername">我自己的主页 </div>
-      <div v-else>别的主页</div>
+      <div class="user_body_main">
+        <div>
+          <div v-if="Visible.Iusername">我自己的主页 </div>
+          <div v-else>别的主页</div>
+        </div>
+        {{ Visible.Iusername }}
+        <div style="margin: 100px">1</div>
+      </div>
     </div>
     <div></div>
     <div></div>
@@ -49,31 +110,53 @@ export default {
   data() {
     return {
       title: '我的主页',
-      username: '',
-      Iusername: true,
-      tbUser: {},
-      tbUserInfo: {},
-      userOtherInfo: {},
+      queryString: '',
+      users: {
+        tbUser: {},
+        tbUserInfo: {},
+        userOtherInfo: {},
+      },
+      file: {
+        files: '',
+        fileInfo: '修改用户头像',
+      },
       Visible: {
+        Iusername: true, //是否为我的页面
         ModifyVisible: false, //修改头像的visible
-        nickname: true,
+        nickname: true, //修改昵称时的visible
       },
       loading: false,
       // 传递图片的格式限制
-      avatarImg: ['jpg', 'jpeg', 'png', 'tif', 'bmp', 'gif', 'jfif'],
-      modifyInfo: {},
+      modifyInfoNickname: '',
+      heigth: 0,
     }
   },
+
   methods: {
-    // 查询用户信息
+    queryLocstionUser() {
+      this.loading = true
+      this.queryString = location.search.replace('?', '')
+      this.queryUser()
+    },
+    // 获取信息
     queryUser() {
-      this.username = location.search
-      logger.debug('查看我选中的用户名字', this.username)
-      tools.ajax('/user/auth/getUserInfoByName', { username: this.username }, (data) => {
-        this.tbUser = data.tbUser
-        this.tbUserInfo = data.tbUserInfo
-        this.userOtherInfo = data.userOtherInfo
-      })
+      logger.debug('进入信息更改页面')
+      if (this.user.tbUser.username == this.queryString) {
+        //是登录用户
+        this.users.tbUser = this.user.tbUser
+        this.users.tbUserInfo = this.user.tbUserInfo
+        this.users.userOtherInfo = this.user.userOtherInfo
+        this.Visible.Iusername = true
+      } else {
+        //查看别人登录界面
+        this.Visible.Iusername = false
+        tools.ajax('/user/auth/getUserInfoByName', { username: this.queryString }, (data) => {
+          this.users.tbUser = data.tbUser
+          this.users.tbUserInfo = data.tbUserInfo
+          this.users.userOtherInfo = data.userOtherInfo
+        })
+      }
+      this.loading = false
     },
     // 退出
     jumpRouting(index) {
@@ -81,64 +164,77 @@ export default {
     },
     // 修改头像
     avatarModify() {
-      let avatarImgVisible = true
-      tools.openFile((file) => {
-        this.loading = true
-        let selectedFile = file
-        let selectedFileIndexImg = selectedFile.name.substring(selectedFile.name.lastIndexOf('.') + 1)
-        if (selectedFile == null) {
-          this.$alert('没有选中图片')
-          return
-        }
-        this.avatarImg.forEach((item) => {
-          if (selectedFileIndexImg == item) {
-            avatarImgVisible = false
-            tools.upload(selectedFile, { fileinfo: '修改头像' }, (data) => {
-              if (data.success) {
-                tools.ajax('/user/file/queryAll', {}, (data) => {
-                  let file = data.list
-                  tools.ajax('/user/auth/updateUserInfo', { img: tools.getDownladUrl(file[0].fid) }, () => {
-                    data.success ? this.$message({ type: 'success', message: data.message }) : this.$alert(data.message)
-                    this.queryUser()
-                    this.loading = false
-                  })
-                })
-              }
-            })
-          }
-        })
-        // 关闭遮罩层
-        this.Visible.ModifyVisible = false
-        if (avatarImgVisible) {
-          this.$alert('您上传的不是图片')
-          this.Visible.ModifyVisible = true
-          this.loading = false
+      this.loading = true
+      this.Visible.ModifyVisible = true
+      this.file.files = ''
+      tools.openFile((selfile) => {
+        logger.debug('选择的文件', selfile)
+        this.file.files = selfile
+        if (!this.file.files) {
+          logger.debug('没有选择图片')
+        } else {
+          tools.upload('/user/file/upload', { fileinfo: this.file.fileInfo }, this.file.files.file, (data) => {
+            if (data.success) {
+              this.queryfile()
+              this.Visible.ModifyVisible = false
+            } else {
+              this.$message.error(data.message)
+            }
+          })
         }
       })
+    },
+    queryfile() {
+      tools.ajax(
+        '/user/file/queryAll',
+        {},
+        (data) => {
+          if (data.success) {
+            let imgFid = data.list[0].fid
+            tools.ajax('/user/auth/updateUserInfo', { img: tools.getDownloadUrl(imgFid), sex: this.users.tbUserInfo.sex }, (data) => {
+              this.queryUser()
+              if (data.success) {
+                this.$message({ type: 'success', message: data.message })
+                this.$store.dispatch('updateUserInfo')
+                this.queryUser()
+                this.loading = false
+              } else {
+                this.$message.error(data.message)
+              }
+            })
+          } else {
+            this.$message.error(data.message)
+          }
+        },
+        true
+      )
     },
     // 修改昵称
     showModifyNickname() {
       this.Visible.nickname = false
-      let info = JSON.parse(JSON.stringify(this.tbUserInfo))
-      delete info.email
-      delete info.phone
-      info.nickname = this.tbUser.nickname
-      this.modifyInfo = info
+      let info = this.users.tbUser.nickname
+      this.modifyInfoNickname = info
     },
     modifyNickname() {
-      tools.ajax('/user/auth/updateUserInfo', this.modifyInfo, (data) => {
-        logger.debug(data.success)
-        data.success == true ? this.$message({ type: 'success', message: data.message }) : this.$message.error(data.message)
+      tools.ajax('/user/auth/updateUserInfo', { nickname: this.modifyInfoNickname, sex: this.users.tbUserInfo.sex }, (data) => {
+        data.success ? this.$message({ type: 'success', message: data.message }) : this.$message.error(data.message)
         this.queryUser()
-        this.Visible.nickname = true
+        // this.Visible.nickname = true
       })
     },
   },
+  computed: {
+    user() {
+      return this.$store.state.loginUser
+    },
+  },
   created() {
-    this.queryUser()
+    this.queryLocstionUser()
+    logger.debug('查看user参数', this.user)
   },
 }
 </script>
 <style scoped>
 @import url(@/css/user/UserBody.css);
+@import 'https://cdn.bootcdn.net/ajax/libs/font-awesome/6.2.0/css/all.css';
 </style>

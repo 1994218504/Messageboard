@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 // import HomeView from '../views/HomeView.vue'
-// import test from './test'
+import test from './test'
 // import page from './study'
 // import message from './message'
 // import user from './user'
@@ -34,8 +34,7 @@ const routes = [
     name: 'user',
     component: () => import('../views/user/UserbodyView.vue'),
   },
-]
-// .concat(test)
+].concat(test)
 // .concat(page)
 // .concat(message)
 // .concat(user)

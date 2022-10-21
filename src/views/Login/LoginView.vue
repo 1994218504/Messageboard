@@ -50,11 +50,8 @@ export default {
             },
           },
         ],
-        password: [
-          { required: true, message: '密码必须填写' },
-          { min: 3, max: 18, message: '登录密码长度为6-18位' },
-        ],
       },
+      password: [{ required: true, message: '密码必须填写' }],
     }
   },
   methods: {
@@ -69,8 +66,9 @@ export default {
         this.$store
           .dispatch('updateUserInfo')
           .then(this.$router.push('/index'))
-          .catch((app.loading = true))
+          .catch((app.loading = false))
       })
+      app.loading = false
     },
     reset() {
       app.user = {

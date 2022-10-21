@@ -247,7 +247,7 @@ tools.empty = () => {}
 
 // ajax
 axios.interceptors.request.use((config) => {
-  logger.debug('请求配置信息：', config)
+  // logger.debug('请求配置信息：', config)
   // 处理json参数
   config.data = qs.stringify(config.data, { allowDots: true })
   // 处理get请求（如果链接带有?查询参数就拼接&，否则就直接拼接查询参数）

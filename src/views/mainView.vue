@@ -24,7 +24,7 @@
           <li>
             <el-dropdown @command="userCommand" trigger="click">
               <span>
-                <img :src="userInfo.img" alt="" />
+                <img :src="user.tbUserInfo.img" alt="" />
               </span>
               <el-dropdown-menu slot="dropdown">
                 <el-dropdown-item command="user">
@@ -102,17 +102,17 @@
               <el-card shadow="hover">
                 <div class="reightuser">
                   <div style="cursor: pointer" @click="userMain">
-                    <img :src="userInfo.img" alt="" />
+                    <img :src="user.tbUserInfo.img" alt="" />
                   </div>
-                  <div style="cursor: pointer" @click="userMain"> {{ user.nickname }} </div>
+                  <div style="cursor: pointer" @click="userMain"> {{ user.tbUser.nickname }} </div>
                   <div style="display: flex">
                     <div>
                       <li>留言</li>
-                      <li>{{ userOther.message }}</li>
+                      <li>{{ user.userOtherInfo.message }}</li>
                     </div>
                     <div>
                       <li>评论</li>
-                      <li>{{ userOther.reply }}</li>
+                      <li>{{ user.userOtherInfo.reply }}</li>
                     </div>
                   </div>
                   <div>
@@ -157,10 +157,6 @@ export default {
     return {
       title: 'liuguanghui的vue脚手架项目开发中',
       tab: 1,
-      // 用户信息
-      user: {},
-      userInfo: {},
-      userOther: {},
       // 查询留言
       boardpage: { pageSize: 5 },
       boardquery: {
@@ -214,10 +210,10 @@ export default {
     },
     // 进入我的主页的方法
     userMain() {
-      location = location.href + '/userbody?' + this.user.username
+      location = location.href + '/userbody?' + this.user.tbUser.username
     },
     userBody(username) {
-      location = location.href + '/userbody?' + username + '&' + this.user.username
+      location = location.href + '/userbody?' + username
     },
     // 退出
     userup() {
@@ -228,33 +224,6 @@ export default {
           message: '成功退出',
         })
       })
-    },
-    // 获取用户信息
-    queryuser() {
-      this.boardloging = true
-      tools.ajax(
-        '/user/auth/getUserInfo',
-        {},
-        (data) => {
-          if (data.success) {
-            app.user = data.tbUser
-            app.userInfo = data.tbUserInfo
-            if (this.userInfo.img == '') {
-              this.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
-            }
-            app.userOther = data.userOtherInfo
-            if (data.success) {
-              this.boardloging = false
-            } else {
-              this.$alert('信息获取异常')
-            }
-          } else {
-            this.boardloging = false
-            this.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
-          }
-        },
-        true
-      )
     },
     // 导航条上面的点击效果
     //开始查询留言版信息
@@ -310,29 +279,17 @@ export default {
     message_data(umid) {
       location.href = location.href + '/messagedata?umid=' + umid
     },
-    isLogin() {
-      if (!this.user) {
-        this.$alert('未登录，前登录后再访问', '提示', {
-          showClose: false,
-          confinButtonText: '确定',
-          callback: () => {
-            this.$router.push('/login')
-          },
-        })
-      }
-    },
   },
   computed: {
-    users() {
+    user() {
       return this.$store.state.loginUser
     },
   },
   created() {
     app = this
-    this.queryuser()
     this.queryboard()
-    this.isLogin()
-    logger.debug('使用vuex查看登录用户信息', this.users)
+
+    logger.debug('查看登录用户信息', this.user)
   },
 }
 </script>

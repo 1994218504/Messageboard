@@ -1,13 +1,16 @@
 .conter {
-  width: 80vw;
+  width: 890px;
   margin: 0 auto;
 }
 .index_top > div:first-child {
   width: 100%;
-  height: 65vh;
+  height: 300px;
   background-image: url(https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=355);
   background-size: cover;
-  background-position: center;
+  /* background-position: center; */
+  /* background-position-x: 0%; */
+  background-position-y: 10%;
+  position: relative;
 }
 /* 头像 */
 .index_top > .index_touxiang {
@@ -22,6 +25,33 @@
   left: 50px;
   border: 4px solid #fff;
 }
+/* ip地址 */
+.index_top > div:first-child > div:first-child {
+  padding: 5px;
+  backdrop-filter: blur(4px);
+  filter: blur(4px);
+  /* -webkit-filter: blur(4px); Chrome, Opera */
+  /* -moz-filter: blur(4px); */
+  /* -ms-filter: blur(4px); */
+  position: absolute;
+  z-index: 10;
+  background: rgba(18, 18, 18, 0.12);
+  right: 30px;
+  bottom: 15px;
+}
+.index_top > div:first-child > div > i {
+  margin-right: 10px;
+}
+.index_top > div:first-child > div:last-child {
+  padding: 5px;
+  position: absolute;
+  z-index: 11;
+  background: rgba(18, 18, 18, 0.12);
+  right: 30px;
+  bottom: 15px;
+  color: #fff;
+}
+
 /* 修改图片的遮罩层 */
 .index_top > .index_touxiang span {
   position: absolute;
@@ -35,37 +65,86 @@
   justify-content: center;
   align-items: center;
   cursor: pointer;
+  color: #fff;
 }
-/* nickname */
-.index_top > div:nth-child(3) {
-  line-height: 104px;
-  margin-left: 250px;
+/* tbUser.nickname */
+.tbUserNiCkname {
   display: flex;
+  line-height: 78px;
+  margin-left: 230px;
+  font-size: 3rem;
 }
-.index_top > div:nth-child(3) > span {
+/* tbUserInfo.infp */
+.tbUserInfo {
+  line-height: 26px;
+  margin-left: 230px;
+  font-size: 1rem;
+}
+/* 修改界面的样式 */
+.index_top > div:nth-child(3) span {
   font-size: 1rem;
   cursor: pointer;
   margin-left: 10px;
 }
 .index_top > div:nth-child(3) .el-input {
-  width: 33%;
+  width: 90%;
 }
-
-.index_top > div:nth-child(3) > span:nth-child(1) {
+.index_top > div:nth-child(3) .el-input__inner {
+  width: 100%;
+  height: 42px;
+}
+.index_top > div:nth-child(3) .el-button {
+  padding: 11px 20px;
+}
+.index_top > div:nth-child(3) span {
+  font-size: 1rem;
+  cursor: pointer;
+  margin-left: 10px;
   margin-right: 10px;
 }
-.index_top > div:nth-child(3) > div:nth-child(3) {
-  margin-left: 10px;
+
+.MondifytbUserNickname > div:nth-child(1) {
+  margin: 18px 0 18px 230px;
+}
+.MondifytbUserNickname > div:nth-child(1) > div:nth-child(1) {
+  line-height: 42px;
+}
+.MondifytbUserNickname > div:nth-child(1) > div,
+.MondifytbUserNickname > div:nth-child(1) > div > div {
+  display: flex;
 }
 
 /* 编辑按钮 */
-.index_top > div:nth-child(4) {
+.conter > div:nth-child(2) {
+  display: block;
   display: flex;
-  justify-content: flex-end;
-  height: 42px;
+  justify-content: space-between;
+  line-height: 47px;
+}
+.conter > div:nth-child(2) > div:nth-child(2) > div {
+  cursor: pointer;
 }
 /* 返回我的主页 */
 .index_user_body:hover {
   color: #409eff;
   cursor: pointer;
+}
+/* 调整折叠版的位置 */
+.tbUserInfo {
+  margin-left: 230px;
+}
+.tbUserInfoFlex {
+  display: flex;
+}
+.el-collapse-item__header,
+.el-collapse-item__wrap,
+.el-collapse {
+  border: 0px;
+}
+.el-collapse-item__header {
+  display: block;
+  font-size: 1rem;
+}
+.el-collapse-item__arrow {
+  margin-left: 5px;
 }

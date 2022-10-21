@@ -93,6 +93,14 @@ li {
   align-items: center;
   word-break: break-all;
 }
+.center_info img,
+.center_info video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  /* background-size: cover;
+  background-position: center center; */
+}
 /* 留言左下角的点赞和举报 */
 .center_click {
   display: flex;
@@ -165,6 +173,15 @@ li {
 }
 /* 发布评论信息 */
 .bushcomments {
+  position: fixed;
+  bottom: 0px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  background-color: hsla(0, 0%, 100%, 0.5);
+  height: 84px;
+}
+.bushcomments > div {
   position: fixed;
   bottom: 0px;
   left: 50%;
