@@ -53,8 +53,13 @@
         </el-main>
         <!-- 评论信息 -->
         <el-main class="comments_concern">
-          <el-tabs v-model="activeName" type="card" @tab-click="handleClick">
-            <el-tab-pane label="评论" name="first">
+          <el-tabs value="first" type="card" @tab-click="handleClick">
+            <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
+              <div class="hottestLatese">
+                <span @click="hottestLateseTab()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
+                <span>|</span>
+                <span @click="hottestLateseTab()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
+              </div>
               <div v-for="d in messagelist" :key="d.umrid">
                 <div class="commentslists">
                   <li>
@@ -68,17 +73,17 @@
                     </div>
                   </li>
                   <li>
-                    <div @click="DeleMessageList(d.umrid)" v-if="d.mine">
-                      <i class="input_icon iconfont">&#xe68e;</i>
-                      <div>删除</div>
+                    <div v-if="d.praise == false">
+                      <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
+                      <span @click="Commentsclick(d.umrid)">点赞{{ d.praiseCount }}</span>
                     </div>
-                    <div @click="Commentsclick(d.umrid)" v-if="d.praise == false">
-                      <i class="input_icon iconfont">&#xec7f;</i>
-                      <span>点赞{{ d.praiseCount }}</span>
+                    <div class="praises" v-else>
+                      <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
+                      <span @click="Commentsclick(d.umrid)">已点赞{{ d.praiseCount }}</span>
                     </div>
-                    <div @click="Commentsclick(d.umrid)" class="praises" v-else>
-                      <i class="input_icon iconfont">&#xec7f;</i>
-                      <span>已点赞{{ d.praiseCount }}</span>
+                    <div v-if="d.mine">
+                      <i @click="DeleMessageList(d.umrid)" class="input_icon iconfont">&#xe68e;</i>
+                      <div @click="DeleMessageList(d.umrid)">删除</div>
                     </div>
                     <div>
                       <i class="input_icon iconfont">&#xe66b;</i>
@@ -88,10 +93,6 @@
                 </div>
                 <hr />
               </div>
-              <div class="pagecenter" v-if="messagepage.pageCount >= 2">
-                <el-pagination background @current-change="querymessagedata" :current-page.sync="messagepage.pageNumber" :page-size="messagepage.pageSize" :total.sync="messagepage.total" layout=" total,prev, pager, next, jumper"> </el-pagination>
-              </div>
-              <div v-else> </div>
             </el-tab-pane>
             <el-tab-pane label="点赞" name="second">
               <div v-for="d in concernlist" :key="d.umrid">
@@ -160,12 +161,13 @@ export default {
     return {
       title: '具体评论界面',
       umid: '',
+      tab: 1, //最新与最热的区别
       messagequery: {
         umid: '',
         orderBy: 1,
       },
       messagepage: {
-        pageSize: 5,
+        pageSize: 900,
       },
       // 评论排序方式，1：按照评论时间升序(默认)，2：按照评论时间降序，3：按照点赞数降序，4：按照点赞数升序
       messageinfo: {
@@ -175,9 +177,8 @@ export default {
       reportVisible: false,
       // 帖子举报原因
       reportInfo: '',
-      // 评论和点赞
-      activeName: 'first',
-      messagelist: {}, //下面评论人的信息
+      //下面评论人的信息
+      messagelist: [],
       // 留言
       addreplay: {
         info: '',
@@ -186,33 +187,85 @@ export default {
       },
       // 帖子的点赞用户信息
       concernlist: [],
+      loading: {
+        postloading: false,
+      },
     }
   },
   methods: {
     // 查询贴子信息
     querymessagedata() {
+      this.messagelist = []
+      this.loading.postloading = true
       let queryString = location.search.replace('?', '')
       this.messagequery.umid = queryString.replace('umid=', '')
       logger.debug(queryString)
       this.umid = this.messagequery.umid
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
-        logger.debug('mei you tou pian jin ru zi dong fu zhi mo ren t pian')
         if (this.messageinfo.userInfo.img == '') {
           this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
-          logger.debug('mei you tou pian jin ru zi dong fu zhi mo ren t pian')
         }
-
-        this.messagelist = data.list
+        // 判断最新最热
+        let datalsit = data.list
+        if (this.tab == 1) {
+          logger.debug('最新排序')
+          this.postLatest(datalsit)
+          this.tab = 2
+        } else {
+          logger.debug('最热排序')
+          this.postHottest(datalsit)
+          this.tab = 1
+        }
+        // 判断评论没有图片的时候
+        this.messagelist = datalsit
         for (let i = 0; i < this.messagelist.length; i++) {
           if (this.messagelist[i].userInfo.img == '') {
             this.messagelist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
           }
         }
+        if (data.success) {
+          this.loading.postloading = false
+        }
         this.messagepage = data.page
-        logger.debug(data.page)
       })
       this.queryconcern()
+    },
+    hottestLateseTab() {
+      if (this.tab == 2) {
+        logger.debug('最新排序')
+        this.querymessagedata()
+      } else {
+        logger.debug('最热排序')
+        this.querymessagedata()
+      }
+    },
+    // 帖子最新时间
+    postLatest(info) {
+      let arrLength = info && info.length
+      for (let i = 0; i < arrLength; i++) {
+        for (let j = i; j > 0; j--) {
+          if (info[j].lastupdate > info[j - 1].lastupdate) {
+            ;[info[j], info[j - 1]] = [info[j - 1], info[j]]
+          }
+        }
+      }
+      return info
+    },
+
+    // 帖子最热
+    postHottest(info) {
+      let arrLength = info && info.length
+      logger.debug('查看帖子消息', info)
+      for (let i = 0; i < arrLength; i++) {
+        for (let j = i; j > 0; j--) {
+          if (info[j].praiseCount > info[j - 1].praiseCount) {
+            ;[info[j], info[j - 1]] = [info[j - 1], info[j]]
+          }
+        }
+      }
+      logger.debug('查看帖子的最热消息', info)
+      return info
     },
     // 关注和取消关注
     concern() {
@@ -227,11 +280,13 @@ export default {
     },
     // 举报
     reportclick() {
+      this.loading.postloading = true
       tools.ajax('/message/examine', { umid: this.umid, info: app.reportInfo }, (data) => {
         this.reportVisible = false
         if (data.success) {
           this.$message({ message: '举报成功', type: 'success' })
           this.reportInfo = ''
+          this.loading.postloading = false
         } else {
           this.$message({ message: '举报失败', tyep: 'danger' })
         }
@@ -252,10 +307,12 @@ export default {
     handleClick() {},
     // 评论的点赞方法
     Commentsclick(umid) {
+      this.loading.postloading = true
       tools.ajax('/message/supportReply', { umrid: umid }, (data) => {
         this.querymessagedata()
         if (data.success) {
           this.$message({ type: 'success', message: data.message })
+          this.loading.postloading = false
         } else {
           this.$message({ type: 'danger', message: '点赞失败，请重试' })
         }
@@ -263,12 +320,14 @@ export default {
     },
     // 发布评论
     AddReplayclick() {
+      this.loading.postloading = true
       this.addreplay.umid = this.umid
       tools.ajax('/message/addReply', this.addreplay, (data) => {
         this.querymessagedata()
         if (data.success) {
           this.addreplay.info = ''
           this.$message({ tyep: 'success', message: this.addreplay.info + '评论发布成功' })
+          this.loading.postloading = false
         } else {
           this.$alert(data.message)
         }
@@ -285,6 +344,7 @@ export default {
         }
       })
     },
+
     // 点赞人员的关注和取消关注
     dianzanguanzhu(username) {
       tools.ajax('/message/followUser', { username: username }, () => {

@@ -101,13 +101,17 @@
 
 /* 编辑按钮 */
 .conter > div:nth-child(2) {
-  display: block;
   display: flex;
   justify-content: space-between;
   line-height: 47px;
+  padding-bottom: 10px;
+}
+.conter > div:nth-child(2) > div:nth-child(2) {
+  display: flex;
 }
 .conter > div:nth-child(2) > div:nth-child(2) > div {
   cursor: pointer;
+  margin: 0 5px;
 }
 /* 返回我的主页 */
 .index_user_body:hover {

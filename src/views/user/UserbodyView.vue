@@ -12,10 +12,6 @@
               <i class="fa-solid fa-location-dot"></i>
               <span>IP属地未知</span>
             </div>
-            <!-- <div>
-              <i class="fa-solid fa-location-dot"></i>
-              <span>IP属地未知</span>
-            </div> -->
           </div>
           <!-- 头像 -->
           <div class="index_touxiang">
@@ -74,18 +70,23 @@
           </div>
           <!-- 当为自己的用户界面时可以编辑自己的用户信息 -->
           <div v-if="Visible.Iusername">
-            <el-button v-if="Visible.ModifyVisible == false" @click="Visible.ModifyVisible = true" type="primary">编辑个人信息</el-button>
-            <div
-              @click="
-                Visible.ModifyVisible = false
-                Visible.nickname = true
-              "
-              v-else
-              ><span>返回我的主页</span><i class="iconfont">&#xe65f;</i></div
-            >
+            <div>
+              <el-button v-if="Visible.ModifyVisible == false" @click="Visible.ModifyVisible = true" type="primary">编辑个人信息</el-button>
+              <div @click="closeClikeModifyNickname()" v-else> <span>返回我的主页</span><i class="iconfont">&#xe65f;</i> </div>
+            </div>
+            <div>
+              <el-badge :value="12" class="item">
+                <el-button>私信</el-button>
+              </el-badge>
+            </div>
           </div>
           <div v-else>
-            <el-button>关注</el-button>
+            <div>
+              <el-button>关注</el-button>
+            </div>
+            <div>
+              <el-button>私信</el-button>
+            </div>
           </div>
         </div>
       </div>
@@ -224,6 +225,10 @@ export default {
         this.queryUser()
         // this.Visible.nickname = true
       })
+    },
+    closeClikeModifyNickname() {
+      this.Visible.ModifyVisible = false
+      this.Visible.nickname = true
     },
   },
   computed: {

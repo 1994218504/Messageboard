@@ -5,6 +5,11 @@ let routers = [
     name: 'test',
     component: () => import('../views/test/HomeView.vue'),
   },
+  {
+    path: '/test/test',
+    name: 'test',
+    component: () => import('../views/test/TestView.vue'),
+  },
   // {
   //   path: '/test/ws',
   //   name: 'test',

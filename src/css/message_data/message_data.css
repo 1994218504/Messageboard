@@ -211,3 +211,23 @@ li {
 .box_show > main {
   min-width: 600px;
 }
+/* 最新最热 */
+.hottestLatese i {
+  margin-left: 5px;
+}
+.hottestLatese span {
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 5px;
+}
+
+.hottestLatese > span:nth-child(2) {
+  margin: 0 10px;
+}
+.hottestLatese .fontcolor,
+.hottestLatese .fontcolor i {
+  color: #9499a0;
+}
+.hottestLatese .fontcolor:hover {
+  color: #008ac5;
+}
