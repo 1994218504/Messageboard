@@ -7,14 +7,15 @@
         <div class="index_top">
           <!-- IP属地 -->
           <div>
+            <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=532" alt="" />
             <div>
               <i class="fa-solid fa-location-dot"></i>
               <span>IP属地未知</span>
             </div>
-            <div>
+            <!-- <div>
               <i class="fa-solid fa-location-dot"></i>
               <span>IP属地未知</span>
-            </div>
+            </div> -->
           </div>
           <!-- 头像 -->
           <div class="index_touxiang">
@@ -88,6 +89,8 @@
           </div>
         </div>
       </div>
+      <div></div>
+      <hr />
       <div class="user_body_main">
         <div>
           <div v-if="Visible.Iusername">我自己的主页 </div>

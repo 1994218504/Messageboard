@@ -95,11 +95,72 @@ li {
   border: 1px rgb(114, 112, 92) solid;
   border-radius: 50%;
 }
-
-/* 主体页面 */
-.data_message_main {
-  /* background-color: #fff; */
+/* 侧边栏的设置为登录状态 */
+.right_drawer_login_in a {
+  text-decoration: none;
+  color: #000;
 }
+.right_drawer_login_in a:hover {
+  color: #409eff;
+}
+.right_drawer,
+.right_drawer_login_in {
+  cursor: pointer;
+}
+.right_drawer_login_in > div:nth-child(2) {
+  cursor: default;
+}
+.el-drawer {
+  width: 20% !important;
+}
+.right_drawer {
+  display: flex;
+}
+.right_drawer img,
+.right_drawer_login_in img {
+  height: 56px;
+  object-fit: cover;
+  border-radius: 50%;
+}
+.right_drawer > div,
+.right_drawer_login_in > div {
+  margin-left: 10px;
+}
+.right_drawer > div:last-child {
+  display: flex;
+  align-items: center;
+}
+/* 侧边栏样式设置，登录状态 */
+.right_drawer_login_in > div:first-child {
+  display: flex;
+  justify-content: center;
+}
+.right_drawer_login_in > div:first-child > img {
+  height: 84px;
+}
+.right_drawer_login_in > div:nth-child(2) {
+  margin-top: 5px;
+  text-align: center;
+  font-size: 1.5rem;
+}
+.right_drawer_login_in > div > a > i {
+  margin: 5px;
+}
+.right_drawer_login_in > div:nth-child(3),
+.right_drawer_login_in > div:nth-child(4),
+.right_drawer_login_in > div:nth-child(5),
+.right_drawer_login_in > div:nth-child(6) {
+  margin: 5px 0;
+  font-size: 1.1rem;
+  padding: 5px 0;
+}
+.right_drawer_login_in > div:nth-child(3):hover,
+.right_drawer_login_in > div:nth-child(4):hover,
+.right_drawer_login_in > div:nth-child(5):hover,
+.right_drawer_login_in > div:nth-child(6):hover {
+  background-color: rgba(181, 179, 152, 0.2);
+}
+/* 主体页面 */
 .el-main {
   display: flex;
   width: 75vw;
@@ -231,4 +292,19 @@ li {
 }
 .praise {
   color: #409eff;
+}
+/* 没有登录的情况直接进入主页，进行操作时提示需要先登录 */
+.VisibleLogin {
+  width: 40%;
+  margin: 0 auto;
+  /* margin-top: 30%; */
+}
+.VisibleLogin_div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.dialog-footer {
+  display: flex;
+  justify-content: space-between;
 }

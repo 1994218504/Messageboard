@@ -198,9 +198,6 @@ export default {
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
         logger.debug('mei you tou pian jin ru zi dong fu zhi mo ren t pian')
-        if (this.messageinfo == null) {
-          this.messageinfo = false
-        }
         if (this.messageinfo.userInfo.img == '') {
           this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
           logger.debug('mei you tou pian jin ru zi dong fu zhi mo ren t pian')

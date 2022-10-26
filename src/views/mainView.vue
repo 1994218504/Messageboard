@@ -1,5 +1,5 @@
 <template>
-  <div v-loading="bodyloading">
+  <div>
     <div class="quanping">
       <el-header class="center_top">
         <div class="top_left">
@@ -22,25 +22,9 @@
             <i class="el-input__icon iconfont" @click="queryboard">&#xe86e;</i>
           </div>
           <li>
-            <el-dropdown @command="userCommand" trigger="click">
-              <span>
-                <img :src="user.tbUserInfo.img" alt="" />
-              </span>
-              <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item command="user">
-                  <i class="el-input__icon iconfont">&#xe749;</i>
-                  我的主页
-                </el-dropdown-item>
-                <el-dropdown-item>
-                  <i class="el-input__icon iconfont">&#xe64b;</i>
-                  设置
-                </el-dropdown-item>
-                <el-dropdown-item command="tuichu">
-                  <i class="el-input__icon iconfont">&#xe653;</i>
-                  退出
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
+            <span @click="Visible.drawerVisible = true">
+              <img :src="user.tbUserInfo.img" alt="" />
+            </span>
           </li>
         </div>
       </el-header>
@@ -52,17 +36,17 @@
           <!-- 左边的留言主体信息 -->
           <div>
             <el-row v-for="d in boardlist" :key="d.umid">
-              <el-card class="liuyanflex" shadow="hover" @click="message_data(d.umid)">
-                <div @click="userBody(d.user.username)">
+              <el-card class="liuyanflex" shadow="always" @click="message_data(d.umid)">
+                <div @click="userMains(d.user.username)">
                   <img :src="d.userInfo.img" alt="" />
                 </div>
                 <div class="userInfo">
                   <div @click="message_data(d.umid)">{{ d.title }}</div>
                   <div>
-                    <div @click="userBody(d.user.username)">
+                    <div @click="userMains(d.user.username)">
                       {{ d.user.nickname }}
                     </div>
-                    <div @click="userBody(d.user.username)">
+                    <div @click="userMains(d.user.username)">
                       {{ d.user.username }}
                     </div>
                   </div>
@@ -80,20 +64,10 @@
                         点赞{{ d.praiseCount }}
                       </span>
                     </div>
-                    <div @click="reportVisible = true"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
+                    <div @click="user.isLogin ? (Visible.reportVisible = true) : (Visible.loginVisible = false)"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
                   </div>
                 </div>
               </el-card>
-              <!-- 举报留言 -->
-              <el-dialog title="留言" :center="true" :close-on-click-modal="false" :visible.sync="reportVisible">
-                <el-input v-model="reportInfo" placeholder="举报原因">
-                  <i slot="prepend">举报原因</i>
-                </el-input>
-                <span class="reportfooter" slot="footer">
-                  <el-button @click="reportVisible = false">取 消</el-button>
-                  <el-button type="primary" @click="reportclick(d.umid)">确 定</el-button>
-                </span>
-              </el-dialog>
             </el-row>
           </div>
           <!-- 右边的个人信息 -->
@@ -116,7 +90,7 @@
                     </div>
                   </div>
                   <div>
-                    <el-button @click="publishVisible = true"> 留言 </el-button>
+                    <el-button @click="user.isLogin ? (Visible.publishVisible = true) : (Visible.loginVisible = false)"> 留言 </el-button>
                   </div>
                 </div>
               </el-card>
@@ -131,8 +105,37 @@
         <el-pagination background @current-change="queryboard" :current-page.sync="boardpage.pageNumber" :page-size.sync="boardpage.pageSize" :total.sync="boardpage.total" layout=" total,prev, pager, next, jumper"> </el-pagination>
       </div>
     </div>
+    <!-- 侧边栏 -->
+    <el-drawer title="侧边栏功能导航" :visible.sync="Visible.drawerVisible" direction="rtl" :close-on-click-modal="true">
+      <div class="right_drawer" v-if="!user.isLogin">
+        <div @click="loctionlogin()">
+          <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
+        </div>
+        <div>
+          <el-button @click="loctionlogin()">请登录</el-button>
+        </div>
+      </div>
+      <div class="right_drawer_login_in" v-else>
+        <div @click="userMain()">
+          <img :src="user.tbUserInfo.img" alt="" />
+        </div>
+        <div>{{ user.tbUser.username }}</div>
+        <div>
+          <a @click="userMain()" href="javascript:viod(0)"> <i class="iconfont">&#xe749;</i>个人主页</a>
+        </div>
+        <div>
+          <a @click="userMain()" href="javascript:viod(0)"> <i class="iconfont">&#xe86f;</i>消息中心 </a>
+        </div>
+        <div>
+          <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe64b;</i> 相关设计 </a>
+        </div>
+        <div>
+          <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe605;</i> 退出登录</a>
+        </div>
+      </div>
+    </el-drawer>
     <!-- 发布留言 -->
-    <el-dialog class="publishVisible" title="发布留言" :center="true" :visible.sync="publishVisible" :close-on-click-modal="true" @closed="queryboard">
+    <el-dialog class="publishVisible" title="发布留言" :center="true" :visible.sync="Visible.publishVisible" :close-on-click-modal="true" @closed="queryboard">
       <el-input v-model="publishquery.title">
         <i slot="prepend">留言标题</i>
       </el-input>
@@ -140,8 +143,26 @@
         <i slot="prepend">留言信息</i>
       </el-input>
       <span class="reportfooter" slot="footer">
-        <el-button @click="publishVisible = false">取 消</el-button>
+        <el-button @click="Visible.publishVisible = false">取 消</el-button>
         <el-button type="primary" @click="publishclick()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 举报留言 -->
+    <el-dialog title="留言" :center="true" :close-on-click-modal="false" :visible.sync="Visible.reportVisible">
+      <el-input v-model="reportInfo" placeholder="举报原因">
+        <i slot="prepend">举报原因</i>
+      </el-input>
+      <span class="reportfooter" slot="footer">
+        <el-button @click="Visible.reportVisible = false">取 消</el-button>
+        <el-button type="primary" @click="reportclick(d.umid)">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 请先登录 -->
+    <el-dialog class="VisibleLogin" :center="true" :visible.sync="Visible.loginVisible" :close-on-click-modal="true">
+      <div class="VisibleLogin_div">请先登录</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="Visible.loginVisible = false">取 消</el-button>
+        <el-button type="primary" @click="visibleLogin()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -167,14 +188,20 @@ export default {
       // 页面
       boardloging: false,
       reportInfo: '',
-      reportVisible: false,
-      // 发布留言信息
-      publishVisible: false,
+      Visible: {
+        //举报loading
+        reportVisible: false,
+        // 发布留言信息
+        publishVisible: false,
+        // 侧边栏的visible
+        drawerVisible: false,
+        // 请先登录
+        loginVisible: false,
+      },
       publishquery: {
         title: '',
         info: '',
       },
-      bodyloading: false,
     }
   },
   methods: {
@@ -200,25 +227,31 @@ export default {
         behavior: 'smooth',
       })
     },
-    // 点击头像下拉时的command
-    userCommand(info) {
-      if ('user' == info) {
-        app.userMain()
-      } else if ('tuichu' == info) {
-        app.userup()
-      }
+    // 进入login界面
+    loctionlogin() {
+      this.$router.push('/login')
+    },
+    visibleLogin() {
+      this.Visible.loginVisible = false
+      this.loctionlogin()
     },
     // 进入我的主页的方法
     userMain() {
-      location = location.href + '/userbody?' + this.user.tbUser.username
+      if (this.user.tbUser.username != null) {
+        location = location.href + '/userbody?' + this.user.tbUser.username
+      } else {
+        this.loctionlogin()
+      }
     },
-    userBody(username) {
-      location = location.href + '/userbody?' + username
+    userMains(loction) {
+      location = location.href + '/userbody?' + loction
     },
     // 退出
     userup() {
-      tools.ajax('/user/auth/logout', {}, () => {
-        this.$router.push('/login')
+      tools.ajax('/user/auth/logout', {}, (data) => {
+        if (data.success) {
+          this.$store.commit('removeUserInfo')
+        }
         this.$message({
           type: 'success',
           message: '成功退出',
@@ -253,7 +286,7 @@ export default {
     // 举报
     reportclick(umid) {
       tools.ajax('/message/examine', { umid: umid, info: app.reportInfo }, (data) => {
-        this.reportVisible = false
+        this.Visible.reportVisible = false
         if (data.success) {
           this.$message({ message: '举报成功', type: 'success' })
         } else {
@@ -266,7 +299,7 @@ export default {
       this.boardloging = true
       tools.ajax('/message/add', this.publishquery, (data) => {
         this.boardloging = false
-        this.publishVisible = false
+        this.Visible.publishVisible = false
         if (data.success) {
           this.$message({ type: 'success', message: this.publishquery.title + '发布成功' })
           this.queryboard()
@@ -288,8 +321,12 @@ export default {
   created() {
     app = this
     this.queryboard()
-
-    logger.debug('查看登录用户信息', this.user)
+    if (this.user.tbUserInfo.img == null) {
+      this.user.tbUserInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+      logger.debug('查看没有登录有哪些参数', this.user.tbUser.accessKey)
+    } else {
+      logger.debug('查看没有登录有哪些参数', this.user)
+    }
   },
 }
 </script>

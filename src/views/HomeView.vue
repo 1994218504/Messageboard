@@ -4,7 +4,7 @@
   </div>
 </template>
 <script>
-import tools from '@/js/tools'
+// import tools from '@/js/tools'
 export default {
   name: 'LoginAndIndex',
   data() {
@@ -14,18 +14,7 @@ export default {
   },
   methods: {},
   created() {
-    tools.ajax(
-      '/user/auth/getUserInfo',
-      {},
-      (data) => {
-        if (data.success) {
-          this.$router.push('/index')
-        } else {
-          this.$router.push('/login')
-        }
-      },
-      true
-    )
+    this.$router.push('/index')
   },
 }
 </script>
