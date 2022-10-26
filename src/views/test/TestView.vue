@@ -25,6 +25,7 @@
 </template>
 <script>
 import tools from '@/js/tools'
+import logger from '@/js/logger'
 let app = null
 export default {
   name: 'PhoneView',
