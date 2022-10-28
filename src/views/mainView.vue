@@ -64,7 +64,7 @@
                         点赞{{ d.praiseCount }}
                       </span>
                     </div>
-                    <div @click="user.isLogin ? (Visible.reportVisible = true) : (Visible.loginVisible = false)"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
+                    <div @click="reportclickLoading(d.umid)"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
                   </div>
                 </div>
               </el-card>
@@ -90,7 +90,7 @@
                     </div>
                   </div>
                   <div>
-                    <el-button @click="user.isLogin ? (Visible.publishVisible = true) : (Visible.loginVisible = false)"> 留言 </el-button>
+                    <el-button @click="publishclicIsLogin()"> 留言 </el-button>
                   </div>
                 </div>
               </el-card>
@@ -130,18 +130,18 @@
           <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe64b;</i> 相关设计 </a>
         </div>
         <div>
-          <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe605;</i> 退出登录</a>
+          <a @click="userup()" href="javascript:viod(0)"><i class="iconfont">&#xe605;</i> 退出登录</a>
         </div>
       </div>
     </el-drawer>
     <!-- 发布留言 -->
     <el-dialog class="publishVisible" title="发布留言" :center="true" :visible.sync="Visible.publishVisible" :close-on-click-modal="true" @closed="queryboard">
-      <el-input v-model="publishquery.title">
-        <i slot="prepend">留言标题</i>
-      </el-input>
-      <el-input v-model="publishquery.info">
-        <i slot="prepend">留言信息</i>
-      </el-input>
+      <el-form>
+        <el-form-item placeholder="标题">
+          <el-input placeholder="标题" v-model="publishquery.title"></el-input>
+        </el-form-item>
+      </el-form>
+      <wang-editor-comp @editor-created="editorCreated" @editor-change="editorChange"></wang-editor-comp>
       <span class="reportfooter" slot="footer">
         <el-button @click="Visible.publishVisible = false">取 消</el-button>
         <el-button type="primary" @click="publishclick()">确 定</el-button>
@@ -171,8 +171,10 @@
 <script>
 import tools from '@/js/tools'
 import logger from '@/js/logger'
+import WangEditorComp from '@/components/WangEditorComp.vue'
 let app
 export default {
+  components: { WangEditorComp },
   name: 'HomeView',
   data() {
     return {
@@ -201,6 +203,12 @@ export default {
       publishquery: {
         title: '',
         info: '',
+      },
+      // 富文本
+      demo: {
+        info: '',
+        htmlInfo: '',
+        text: '',
       },
     }
   },
@@ -250,7 +258,9 @@ export default {
     userup() {
       tools.ajax('/user/auth/logout', {}, (data) => {
         if (data.success) {
+          this.Visible.drawerVisible = false
           this.$store.commit('removeUserInfo')
+          this.$router.push('/index')
         }
         this.$message({
           type: 'success',
@@ -278,21 +288,43 @@ export default {
     },
     //留言的点赞与取消
     praiseclick(info) {
-      tools.ajax('/message/support', { umid: info }, (data) => {
-        data.success ? this.$message({ message: data.message, type: 'success' }) : this.$alert(data.message)
-        this.queryboard()
-      })
+      if (this.user.isLogin == true) {
+        tools.ajax('/message/support', { umid: info }, (data) => {
+          data.success ? this.$message({ message: data.message, type: 'success' }) : this.$alert(data.message)
+          this.queryboard()
+        })
+      } else {
+        this.Visible.loginVisible = true
+      }
+    },
+    reportclickLoading() {
+      if (this.user.isLogin == true) {
+        this.Visible.reportVisible = true
+      } else {
+        this.Visible.loginVisible = true
+      }
     },
     // 举报
     reportclick(umid) {
-      tools.ajax('/message/examine', { umid: umid, info: app.reportInfo }, (data) => {
-        this.Visible.reportVisible = false
-        if (data.success) {
-          this.$message({ message: '举报成功', type: 'success' })
-        } else {
-          this.$message({ message: '举报失败', tyep: 'danger' })
-        }
-      })
+      if (this.user.isLogin) {
+        tools.ajax('/message/examine', { umid: umid, info: app.reportInfo }, (data) => {
+          this.Visible.reportVisible = false
+          if (data.success) {
+            this.$message({ message: '举报成功', type: 'success' })
+          } else {
+            this.$message({ message: '举报失败', tyep: 'danger' })
+          }
+        })
+      } else {
+        this.Visible.loginVisible = true
+      }
+    },
+    publishclicIsLogin() {
+      if (this.user.isLogin == true) {
+        this.Visible.publishVisible = true
+      } else {
+        this.Visible.loginVisible = true
+      }
     },
     // 发布留言
     publishclick() {
@@ -310,7 +342,18 @@ export default {
     },
     // 点击留言跳转评论
     message_data(umid) {
-      location.href = location.href + '/messagedata?umid=' + umid
+      this.$router.push('/index/messagedata/' + umid)
+    },
+    editorCreated(editor) {
+      logger.debug('富文本框实例对象，', editor)
+    },
+    editorChange(info, text) {
+      // 富文本框值变化后触发本事件，第一个参数是第文本框的html格式内容，二个参数是纯文本内容,可以用于判定是否输入了信息
+      this.demo.htmlInfo = info
+      this.demo.text = text
+      if (text != null) {
+        this.publishquery.info = this.demo.htmlInfo
+      }
     },
   },
   computed: {

@@ -75,8 +75,9 @@ li {
 .main_top_left > div:last-child > li:last-child {
   color: #828488;
 }
-.box_show > .el-main > div {
+.box_show > .userinfo > div {
   padding: 1rem;
+  width: 100%;
 }
 .userinfo > div:first-child {
   font-size: 2rem;
@@ -119,8 +120,12 @@ li {
 .comments_concern .el-tab-pane > div > div {
   display: flex;
   justify-content: space-between;
+  padding: 15px 16px 0 16px;
 }
 /* 右边内容 */
+.commentslists {
+  border-top: 1px solid #666b74;
+}
 .commentslists > li:first-child > div:first-child,
 .commentslistconcern > li:first-child > div:first-child {
   margin-top: 10px;
@@ -144,7 +149,7 @@ li {
 }
 .commentslists > li:first-child > div:last-child > div:last-child,
 .commentslistconcern > li:first-child > div:last-child > div:last-child {
-  padding-bottom: 2rem;
+  padding-bottom: 10px;
 }
 .commentslists > li:first-child,
 .commentslistconcern > li:first-child {
@@ -160,7 +165,7 @@ li {
   margin-left: 32px;
   display: flex;
   align-items: self-end;
-  padding-bottom: 2rem;
+  padding-bottom: 16px;
 }
 .commentslists > li:last-child > div:hover {
   color: #409eff;
@@ -178,7 +183,7 @@ li {
   left: 50%;
   transform: translateX(-50%);
   width: 100%;
-  background-color: hsla(0, 0%, 100%, 0.5);
+  background-color: hsla(197, 38%, 57%, 0.5);
   height: 84px;
 }
 .bushcomments > div {
@@ -208,10 +213,17 @@ li {
 .commentslistconcern {
   align-items: center;
 }
+.comments_concern {
+  width: 100%;
+}
 .box_show > main {
+  width: 100%;
   min-width: 600px;
 }
 /* 最新最热 */
+.hottestLatese {
+  padding: 16px;
+}
 .hottestLatese i {
   margin-left: 5px;
 }
@@ -230,4 +242,11 @@ li {
 }
 .hottestLatese .fontcolor:hover {
   color: #008ac5;
+}
+.comments_concern .el-loading-mask {
+  display: flex;
+  justify-content: center;
+}
+.comments_concern .el-loading-spinner {
+  width: auto;
 }

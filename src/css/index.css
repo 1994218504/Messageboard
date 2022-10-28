@@ -82,6 +82,7 @@ li {
   align-items: center;
   justify-content: center;
   border-radius: 5px;
+  color: antiquewhite;
 }
 .top_right div i:hover {
   color: antiquewhite;
@@ -307,4 +308,8 @@ li {
 .dialog-footer {
   display: flex;
   justify-content: space-between;
+}
+/* 发布留言市弹出的富文本框距离页面顶部的高度 */
+.el-dialog__wrapper {
+  top: -60px;
 }

@@ -5,7 +5,7 @@
     <div>
       <div class="box_show">
         <!-- 发帖人信息 -->
-        <el-header class="main_top">
+        <div class="main_top">
           <div>
             <div class="main_top_left">
               <div>
@@ -29,9 +29,9 @@
               <div></div>
             </div>
           </div>
-        </el-header>
+        </div>
         <!-- 帖子信息 -->
-        <el-main class="userinfo">
+        <div class="userinfo">
           <div>标题：{{ messageinfo.title }}</div>
           <div class="center_info" v-html="messageinfo.info" v-if="messageinfo">
             {{ messageinfo.info }}
@@ -50,16 +50,17 @@
               <span>举报</span>
             </div>
           </div>
-        </el-main>
+        </div>
         <!-- 评论信息 -->
-        <el-main class="comments_concern">
+        <div class="comments_concern">
           <el-tabs value="first" type="card" @tab-click="handleClick">
             <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
               <div class="hottestLatese">
-                <span @click="hottestLateseTab()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
+                <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
                 <span>|</span>
-                <span @click="hottestLateseTab()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
+                <span @click="hottestLateseTabTwo()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
               </div>
+              <div> 发布评论（有待后续改进） </div>
               <div v-for="d in messagelist" :key="d.umrid">
                 <div class="commentslists">
                   <li>
@@ -68,7 +69,7 @@
                     </div>
                     <div>
                       <div @click="Message_data(d.user.nickname)">{{ d.user.nickname }}</div>
-                      <p>{{ d.info }}</p>
+                      <p v-html="d.info"></p>
                       <div>{{ d.lastupdate | formatDate }}</div>
                     </div>
                   </li>
@@ -91,7 +92,6 @@
                     </div>
                   </li>
                 </div>
-                <hr />
               </div>
             </el-tab-pane>
             <el-tab-pane label="点赞" name="second">
@@ -120,11 +120,10 @@
               </div>
             </el-tab-pane>
           </el-tabs>
-        </el-main>
+        </div>
       </div>
     </div>
     <!-- 评论 -->
-
     <div class="bushcomments">
       <div>
         <el-form status-icon :model="addreplay">
@@ -138,7 +137,6 @@
         </el-form>
       </div>
     </div>
-
     <!-- 举报 -->
     <el-dialog title="举报留言" :center="true" :close-on-click-modal="false" :visible.sync="reportVisible">
       <el-input v-model="reportInfo" placeholder="举报原因">
@@ -161,7 +159,7 @@ export default {
     return {
       title: '具体评论界面',
       umid: '',
-      tab: 1, //最新与最热的区别
+      tab: 2, //最新与最热的区别
       messagequery: {
         umid: '',
         orderBy: 1,
@@ -195,30 +193,15 @@ export default {
   methods: {
     // 查询贴子信息
     querymessagedata() {
-      this.messagelist = []
       this.loading.postloading = true
-      let queryString = location.search.replace('?', '')
-      this.messagequery.umid = queryString.replace('umid=', '')
-      logger.debug(queryString)
-      this.umid = this.messagequery.umid
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
         if (this.messageinfo.userInfo.img == '') {
           this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
         }
         // 判断最新最热
-        let datalsit = data.list
-        if (this.tab == 1) {
-          logger.debug('最新排序')
-          this.postLatest(datalsit)
-          this.tab = 2
-        } else {
-          logger.debug('最热排序')
-          this.postHottest(datalsit)
-          this.tab = 1
-        }
+        this.messagelist = data.list
         // 判断评论没有图片的时候
-        this.messagelist = datalsit
         for (let i = 0; i < this.messagelist.length; i++) {
           if (this.messagelist[i].userInfo.img == '') {
             this.messagelist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
@@ -231,41 +214,17 @@ export default {
       })
       this.queryconcern()
     },
-    hottestLateseTab() {
-      if (this.tab == 2) {
-        logger.debug('最新排序')
-        this.querymessagedata()
-      } else {
-        logger.debug('最热排序')
-        this.querymessagedata()
-      }
+    hottestLateseTabOne() {
+      this.tab = 2
+      logger.debug('点击最新', this.tab)
+      this.messagequery.orderBy = 1
+      this.querymessagedata()
     },
-    // 帖子最新时间
-    postLatest(info) {
-      let arrLength = info && info.length
-      for (let i = 0; i < arrLength; i++) {
-        for (let j = i; j > 0; j--) {
-          if (info[j].lastupdate > info[j - 1].lastupdate) {
-            ;[info[j], info[j - 1]] = [info[j - 1], info[j]]
-          }
-        }
-      }
-      return info
-    },
-
-    // 帖子最热
-    postHottest(info) {
-      let arrLength = info && info.length
-      logger.debug('查看帖子消息', info)
-      for (let i = 0; i < arrLength; i++) {
-        for (let j = i; j > 0; j--) {
-          if (info[j].praiseCount > info[j - 1].praiseCount) {
-            ;[info[j], info[j - 1]] = [info[j - 1], info[j]]
-          }
-        }
-      }
-      logger.debug('查看帖子的最热消息', info)
-      return info
+    hottestLateseTabTwo() {
+      this.tab = 1
+      logger.debug('点击最热', this.tab)
+      this.messagequery.orderBy = 3
+      this.querymessagedata()
     },
     // 关注和取消关注
     concern() {
@@ -377,6 +336,8 @@ export default {
   },
   created() {
     app = this
+    this.umid = this.$route.params.umid
+    this.messagequery.umid = this.umid
     app.querymessagedata()
     logger.debug('查看是否有角色信息', this.user)
   },

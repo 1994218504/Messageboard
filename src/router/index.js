@@ -22,7 +22,7 @@ const routes = [
     component: () => import('../views/mainView.vue'),
   },
   {
-    path: '/index/messagedata',
+    path: '/index/messagedata/:umid',
     name: 'messagedatainfex',
     component: () => import('../views/Message_dataView.vue'),
   },
