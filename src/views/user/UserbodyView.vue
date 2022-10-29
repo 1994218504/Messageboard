@@ -98,35 +98,42 @@
           </div>
         </div>
       </div>
+      <!-- 修改用户附加信息 -->
       <div class="mondifyUser" v-if="Visible.ModifyVisible != false">
         <div>
           <el-form>
             <el-form-item>
               <div class="modifyUser_item">
                 <div>性别:</div>
-                <div style="border-bottom: 1px solid #dcdfe6; padding-left: 15px" v-if="Visible.ModifyInfoVisible">{{ user.tbUserInfo.sex }}</div>
-                <el-input v-else :readonly="isReadonly" step="10" v-model="updateModifyINfo.sex"></el-input>
+                <div style="border-bottom: 1px solid #dcdfe6; padding-left: 15px" v-if="Visible.ModifyInfoVisible">
+                  {{ isSex() }}
+                </div>
+                <el-radio-group v-else v-model="updateModifyINfo.sex">
+                  <el-radio label="m">男</el-radio>
+                  <el-radio label="n">女</el-radio>
+                  <el-radio label="f">保密</el-radio>
+                </el-radio-group>
               </div>
             </el-form-item>
             <el-form-item>
               <div class="modifyUser_item">
                 <div>介绍:</div>
                 <div style="border-bottom: 1px solid #dcdfe6; padding-left: 15px" v-if="Visible.ModifyInfoVisible">{{ user.tbUserInfo.info }}</div>
-                <el-input v-else :readonly="isReadonly" v-model="updateModifyINfo.info"></el-input>
+                <el-input v-else v-model="updateModifyINfo.info"></el-input>
               </div>
             </el-form-item>
             <el-form-item>
               <div class="modifyUser_item">
                 <div>Q Q:</div>
                 <div style="border-bottom: 1px solid #dcdfe6; padding-left: 15px; margin-left: 15px" v-if="Visible.ModifyInfoVisible">{{ user.tbUserInfo.qq }}</div>
-                <el-input v-else style="margin-left: 15px" :readonly="isReadonly" v-model="updateModifyINfo.qq"></el-input>
+                <el-input v-else style="margin-left: 15px" v-model="updateModifyINfo.qq"></el-input>
               </div>
             </el-form-item>
             <el-form-item>
               <div class="modifyUser_item">
                 <div>微信:</div>
                 <div style="border-bottom: 1px solid #dcdfe6; padding-left: 15px" v-if="Visible.ModifyInfoVisible">{{ user.tbUserInfo.wechat }}</div>
-                <el-input v-else :readonly="isReadonly" v-model="updateModifyINfo.wechat"></el-input>
+                <el-input v-else v-model="updateModifyINfo.wechat"></el-input>
               </div>
             </el-form-item>
           </el-form>
@@ -140,7 +147,7 @@
           </div>
           <span slot="footer" v-if="!Visible.ModifyInfoVisible">
             <el-button @click="Visible.ModifyInfoVisible = true">取 消</el-button>
-            <el-button type="primary" @click="modifyAjax()">保 存</el-button>
+            <el-button type="primary" @click="modifyTranslation()">保 存</el-button>
           </span>
         </div>
       </div>
@@ -193,7 +200,6 @@ export default {
         sex: '',
         wechat: '',
       },
-      isReadonly: false,
     }
   },
 
@@ -202,6 +208,16 @@ export default {
       this.loading = true
       this.queryString = location.search.replace('?', '')
       this.queryUser()
+    },
+    // 判断性别
+    isSex() {
+      if (this.user.tbUserInfo.sex == 'm') {
+        return '男'
+      } else if (this.user.tbUserInfo.sex == 'n') {
+        return '女'
+      } else {
+        return '保密'
+      }
     },
     // 获取信息
     queryUser() {
@@ -269,6 +285,11 @@ export default {
       this.modifyAjax()
       this.Visible.nickname = true
     },
+    modifyTranslation() {
+      this.Visible.ModifyInfoVisible = true
+      this.modifyAjax()
+    },
+    // 修改附加信息的ajax
     modifyAjax() {
       this.loading = true
       tools.ajax('/user/auth/updateUserInfo', this.updateModifyINfo, (data) => {
@@ -281,7 +302,6 @@ export default {
             .catch()
         }
       })
-      this.Visible.ModifyVisible = false
     },
     showClikenModifyNuckname() {
       this.Visible.ModifyVisible = true
