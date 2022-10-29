@@ -24,7 +24,7 @@ li {
 }
 .box_show {
   width: 60%;
-  min-width: 600px;
+  min-width: 768px;
   margin: 0 auto;
   box-shadow: 0 2px 12px 0 rgba(203, 75, 75, 0.1);
   padding: 1rem 0 5.5rem 0;
@@ -124,7 +124,7 @@ li {
 }
 /* 右边内容 */
 .commentslists {
-  border-top: 1px solid #666b74;
+  border-top: 1px solid #bdbdbd;
 }
 .commentslists > li:first-child > div:first-child,
 .commentslistconcern > li:first-child > div:first-child {

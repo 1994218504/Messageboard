@@ -45,7 +45,7 @@
               <i class="el-input_icon iconfont">&#xec7f;</i>
               <span>已点赞{{ messageinfo.praiseCount }}</span>
             </div>
-            <div @click="reportVisible = true">
+            <div @click="Visible.reportVisible = true">
               <i class="el-input_icon iconfont">&#xe66b;</i>
               <span>举报</span>
             </div>
@@ -93,6 +93,10 @@
                   </li>
                 </div>
               </div>
+              <div class="pagecenter" v-if="messagepage.pageCount >= 2">
+                <page-comp :page.sync="messagepage" @change-page="querymessagedata" layout=" total,prev,pager,next"></page-comp>
+              </div>
+              <div v-else> </div>
             </el-tab-pane>
             <el-tab-pane label="点赞" name="second">
               <div v-for="d in concernlist" :key="d.umrid">
@@ -118,6 +122,9 @@
                 </div>
                 <hr />
               </div>
+              <div class="pagecenter" v-if="messagepage.pageCount >= 2">
+                <page-comp :page.sync="messagepage" @change-page="querymessagedata" layout=" total,prev,pager,next"></page-comp>
+              </div>
             </el-tab-pane>
           </el-tabs>
         </div>
@@ -138,13 +145,21 @@
       </div>
     </div>
     <!-- 举报 -->
-    <el-dialog title="举报留言" :center="true" :close-on-click-modal="false" :visible.sync="reportVisible">
-      <el-input v-model="reportInfo" placeholder="举报原因">
+    <el-dialog title="举报留言" :center="true" :close-on-click-modal="false" :visible.sync="Visible.reportVisible">
+      <el-input v-model="repsort.reportInfo" placeholder="举报原因">
         <li slot="prepend">举报原因</li>
       </el-input>
       <span class="reportfooter" slot="footer">
-        <el-button @click="reportVisible = false">取 消</el-button>
+        <el-button @click="Visible.reportVisible = false">取 消</el-button>
         <el-button type="primary" @click="reportclick()">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 提示登录的情况 -->
+    <el-dialog class="VisibleLogin" :center="true" :visible.sync="Visible.loginVisible" :close-on-click-modal="true">
+      <div class="VisibleLogin_div">请先登录</div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="Visible.loginVisible = false">取 消</el-button>
+        <el-button type="primary" @click="visibleLogin()">确 定</el-button>
       </span>
     </el-dialog>
   </div>
@@ -152,8 +167,10 @@
 <script>
 import tools from '@/js/tools'
 import logger from '@/js/logger'
+import PageComp from '@/components/PageComp.vue'
 let app
 export default {
+  components: { PageComp },
   name: 'MessageDate',
   data() {
     return {
@@ -165,16 +182,24 @@ export default {
         orderBy: 1,
       },
       messagepage: {
-        pageSize: 900,
+        pageSize: 5,
       },
       // 评论排序方式，1：按照评论时间升序(默认)，2：按照评论时间降序，3：按照点赞数降序，4：按照点赞数升序
       messageinfo: {
         user: '',
         userInfo: '',
-      }, //发帖人的信息
-      reportVisible: false,
+      },
+      Visible: {
+        //发帖人的信息
+        reportVisible: false,
+        // 登录的组件
+        loginVisible: false,
+      },
       // 帖子举报原因
-      reportInfo: '',
+      repsort: {
+        reportInfo: '',
+        umid: '',
+      },
       //下面评论人的信息
       messagelist: [],
       // 留言
@@ -191,6 +216,10 @@ export default {
     }
   },
   methods: {
+    //进入登录界面
+    visibleLogin() {
+      this.$router.push('/login')
+    },
     // 查询贴子信息
     querymessagedata() {
       this.loading.postloading = true
@@ -228,23 +257,28 @@ export default {
     },
     // 关注和取消关注
     concern() {
-      tools.ajax('/message/followUser', { username: this.messageinfo.user.username }, (data) => {
-        this.querymessagedata()
-        if (data.success) {
-          this.$message({ type: 'success', message: data.message })
-        } else {
-          logger.debug(data.message)
-        }
-      })
+      if (this.user.isLogin == true) {
+        tools.ajax('/message/followUser', { username: this.messageinfo.user.username }, (data) => {
+          this.querymessagedata()
+          if (data.success) {
+            this.$message({ type: 'success', message: data.message })
+          } else {
+            logger.debug(data.message)
+          }
+        })
+      } else {
+        this.Visible.loginVisible = true
+      }
     },
     // 举报
     reportclick() {
       this.loading.postloading = true
-      tools.ajax('/message/examine', { umid: this.umid, info: app.reportInfo }, (data) => {
-        this.reportVisible = false
+      this.repsort.umid = this.umid
+      tools.ajax('/message/examine', this.repsort, (data) => {
+        this.Visible.reportVisible = false
         if (data.success) {
           this.$message({ message: '举报成功', type: 'success' })
-          this.reportInfo = ''
+          this.repsort.reportInfo = ''
           this.loading.postloading = false
         } else {
           this.$message({ message: '举报失败', tyep: 'danger' })
@@ -306,9 +340,13 @@ export default {
 
     // 点赞人员的关注和取消关注
     dianzanguanzhu(username) {
-      tools.ajax('/message/followUser', { username: username }, () => {
-        this.queryconcern()
-      })
+      if (this.user.isLogin == true) {
+        tools.ajax('/message/followUser', { username: username }, () => {
+          this.queryconcern()
+        })
+      } else {
+        this.Visible.loginVisible = true
+      }
     },
     // 删除自己发布的评论
     DeleMessageList(umrid) {
@@ -328,11 +366,11 @@ export default {
     Message_data(nickname) {
       location = location.href + '/userbody?' + nickname
     },
-    // computed: {
-    //   user() {
-    //     return this.$store.state.loginInfo
-    //   },
-    // },
+  },
+  computed: {
+    user() {
+      return this.$store.state.loginUser
+    },
   },
   created() {
     app = this

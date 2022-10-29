@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="quanping">
-      <el-header class="center_top">
+      <div class="center_top">
         <div class="top_left">
           <li @click="pinghuagundong1()">
             Home
@@ -23,14 +23,15 @@
           </div>
           <li>
             <span @click="Visible.drawerVisible = true">
-              <img :src="user.tbUserInfo.img" alt="" />
+              <img v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
+              <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
             </span>
           </li>
         </div>
-      </el-header>
+      </div>
     </div>
     <div class="data_message_main">
-      <el-main v-loading="boardloging">
+      <div v-loading="boardloging">
         <!-- {{ boardlist }} -->
         <div class="mainflex">
           <!-- 左边的留言主体信息 -->
@@ -52,6 +53,7 @@
                   </div>
                   <div>{{ d.lastupdate | formatDate }}</div>
                   <div>
+                    <div><i class="iconfont">&#xe604;</i> {{ d.hits }} </div>
                     <div @click="message_data(d.umid)" v-if="d.replyCount != 0"><i class="el-input__icon iconfont">&#xe891;</i> {{ d.replyCount }}条评论 </div>
                     <div @click="message_data(d.umid)" v-else><i class="el-input__icon iconfont">&#xe891;</i> 我去评论 </div>
                     <div @click="praiseclick(d.umid)">
@@ -76,10 +78,11 @@
               <el-card shadow="hover">
                 <div class="reightuser">
                   <div style="cursor: pointer" @click="userMain">
-                    <img :src="user.tbUserInfo.img" alt="" />
+                    <img v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
+                    <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
                   </div>
                   <div style="cursor: pointer" @click="userMain"> {{ user.tbUser.nickname }} </div>
-                  <div style="display: flex">
+                  <div v-if="user.isLogin" style="display: flex">
                     <div>
                       <li>留言</li>
                       <li>{{ user.userOtherInfo.message }}</li>
@@ -89,20 +92,23 @@
                       <li>{{ user.userOtherInfo.reply }}</li>
                     </div>
                   </div>
-                  <div>
+                  <div v-if="user.isLogin">
                     <el-button @click="publishclicIsLogin()"> 留言 </el-button>
+                  </div>
+                  <div v-else>
+                    <el-button @click="loctionlogin()">登录</el-button>
                   </div>
                 </div>
               </el-card>
             </el-row>
           </div>
         </div>
-      </el-main>
+      </div>
     </div>
     <div> 个性消息还未想好 </div>
     <div class="data_message_main">
       <div class="mainpagefooter">
-        <el-pagination background @current-change="queryboard" :current-page.sync="boardpage.pageNumber" :page-size.sync="boardpage.pageSize" :total.sync="boardpage.total" layout=" total,prev, pager, next, jumper"> </el-pagination>
+        <page-comp :page.sync="boardpage" @change-page="queryboard" layout=" total,prev,pager,next"></page-comp>
       </div>
     </div>
     <!-- 侧边栏 -->
@@ -130,7 +136,7 @@
           <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe64b;</i> 相关设计 </a>
         </div>
         <div>
-          <a @click="userup()" href="javascript:viod(0)"><i class="iconfont">&#xe605;</i> 退出登录</a>
+          <a @click="userup()"><i class="iconfont">&#xe605;</i> 退出登录</a>
         </div>
       </div>
     </el-drawer>
@@ -172,9 +178,10 @@
 import tools from '@/js/tools'
 import logger from '@/js/logger'
 import WangEditorComp from '@/components/WangEditorComp.vue'
+import PageComp from '@/components/PageComp.vue'
 let app
 export default {
-  components: { WangEditorComp },
+  components: { WangEditorComp, PageComp },
   name: 'HomeView',
   data() {
     return {
@@ -260,7 +267,8 @@ export default {
         if (data.success) {
           this.Visible.drawerVisible = false
           this.$store.commit('removeUserInfo')
-          this.$router.push('/index')
+          logger.debug('退出登录后查看信息', this.user)
+          // this.$router.push('/login')
         }
         this.$message({
           type: 'success',
@@ -364,12 +372,7 @@ export default {
   created() {
     app = this
     this.queryboard()
-    if (this.user.tbUserInfo.img == null) {
-      this.user.tbUserInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
-      logger.debug('查看没有登录有哪些参数', this.user.tbUser.accessKey)
-    } else {
-      logger.debug('查看没有登录有哪些参数', this.user)
-    }
+    logger.debug('查看没有登录有哪些参数', this.user)
   },
 }
 </script>

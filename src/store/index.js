@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import tools from '@/js/tools'
+import logger from '@/js/logger'
 
 Vue.use(Vuex)
 const LOCAL_USER_KEY = 'liuguanghui-liuyanban-message'
@@ -47,8 +48,9 @@ export default new Vuex.Store({
       SERVER_USER.saveUser(user)
       state.loginUser = SERVER_USER.loadUser()
     },
-    removeUserInfo() {
+    removeUserInfo(state) {
       localStorage.removeItem(LOCAL_USER_KEY)
+      state.loginUser = SERVER_USER.loadUser()
     },
   },
   actions: {
@@ -57,9 +59,11 @@ export default new Vuex.Store({
         tools.ajax('/user/auth/getUserInfo', {}, (data) => {
           let user = { isLogin: data.success }
           if (data.success) {
+            logger.debug('我已经进入vuex修改储存的用户信息')
             user.tbUser = data.tbUser
             user.tbUserInfo = data.tbUserInfo
             user.userOtherInfo = data.userOtherInfo
+
             commit('serUserInfo', user)
             a()
           } else {

@@ -178,11 +178,13 @@ li {
   justify-content: center;
 }
 .mainflex > div:first-child {
-  width: 75%;
-  min-width: 700px;
+  width: 60%;
+  min-width: 768px;
 }
 .mainflex > div:last-child {
-  width: 288px;
+  margin-top: 100px;
+  width: 270px;
+  min-width: 250px;
 }
 
 /* 分开距离 */
@@ -249,11 +251,17 @@ li {
   justify-content: flex-end;
 }
 .userInfo > div:last-child > div {
-  margin: 0 5px;
+  line-height: 40px;
+  margin: 0 8px;
 }
+
 .userInfo > div:last-child > div:hover {
   cursor: pointer;
   color: #409eff;
+}
+.userInfo > div:last-child > div:first-child:hover {
+  cursor: default;
+  color: #000;
 }
 /* 举报的按钮 */
 .mainpagefooter {
