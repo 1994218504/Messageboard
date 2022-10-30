@@ -47,9 +47,7 @@
                     <div @click="userMains(d.user.username)">
                       {{ d.user.nickname }}
                     </div>
-                    <div @click="userMains(d.user.username)">
-                      {{ d.user.username }}
-                    </div>
+                    <div @click="userMains(d.user.username)"> （{{ d.user.username }}） </div>
                   </div>
                   <div>{{ d.lastupdate | formatDate }}</div>
                   <div>
@@ -78,7 +76,7 @@
               <el-card shadow="hover">
                 <div class="reightuser">
                   <div style="cursor: pointer" @click="userMain">
-                    <img v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
+                    <img class="imgstyle" v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
                     <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
                   </div>
                   <div style="cursor: pointer" @click="userMain"> {{ user.tbUser.nickname }} </div>
@@ -253,13 +251,13 @@ export default {
     // 进入我的主页的方法
     userMain() {
       if (this.user.tbUser.username != null) {
-        location = location.href + '/userbody?' + this.user.tbUser.username
+        this.$router.push('/index/userbody/' + encodeURIComponent(this.user.tbUser.username))
       } else {
         this.loctionlogin()
       }
     },
     userMains(loction) {
-      location = location.href + '/userbody?' + loction
+      this.$router.push('/index/userbody/' + encodeURIComponent(loction))
     },
     // 退出
     userup() {
@@ -268,7 +266,6 @@ export default {
           this.Visible.drawerVisible = false
           this.$store.commit('removeUserInfo')
           logger.debug('退出登录后查看信息', this.user)
-          // this.$router.push('/login')
         }
         this.$message({
           type: 'success',
@@ -350,7 +347,7 @@ export default {
     },
     // 点击留言跳转评论
     message_data(umid) {
-      this.$router.push('/index/messagedata/' + umid)
+      this.$router.push('/index/messagedata/' + encodeURIComponent(umid))
     },
     editorCreated(editor) {
       logger.debug('富文本框实例对象，', editor)

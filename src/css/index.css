@@ -5,7 +5,9 @@
 li {
   list-style: none;
 }
-
+img {
+  object-fit: cover;
+}
 /* 背景 */
 .quanping {
   width: 100%;
@@ -209,11 +211,8 @@ li {
   cursor: pointer;
   width: 3rem;
   height: 3rem;
-  border: 1px rgb(114, 112, 92) solid;
   border-radius: 50%;
-  background-size: cover;
-  background-repeat: no-repeat;
-  background-position: center;
+  object-fit: cover;
 }
 /* 留言的具体信息 */
 /* 标题 */
@@ -320,4 +319,11 @@ li {
 /* 发布留言市弹出的富文本框距离页面顶部的高度 */
 .el-dialog__wrapper {
   top: -60px;
+}
+/* 图片旋转 */
+.imgstyle {
+  transition: all 0.75s ease;
+}
+.imgstyle:hover {
+  transform: rotate(360deg);
 }

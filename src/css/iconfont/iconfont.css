@@ -1,13 +1,131 @@
+@font-face {
+  font-family: "iconfont"; /* Project id 2916542 */
+  src: url('iconfont.woff2?t=1667138501330') format('woff2'),
+       url('iconfont.woff?t=1667138501330') format('woff'),
+       url('iconfont.ttf?t=1667138501330') format('truetype');
+}
+
 .iconfont {
-  font-family: 'iconfont' !important;
+  font-family: "iconfont" !important;
+  font-size: 16px;
   font-style: normal;
   -webkit-font-smoothing: antialiased;
-  -webkit-text-stroke-width: 0.2px;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* CDN 服务仅供平台体验和调试使用，平台不承诺服务的稳定性，企业客户需下载字体包自行发布使用并做好备份。 */
-@font-face {
-  font-family: 'iconfont'; /* Project id 2916542 */
-  src: url('//at.alicdn.com/t/c/font_2916542_7vqaxbbqo2g.woff2?t=1666782365941') format('woff2'), url('//at.alicdn.com/t/c/font_2916542_7vqaxbbqo2g.woff?t=1666782365941') format('woff'), url('//at.alicdn.com/t/c/font_2916542_7vqaxbbqo2g.ttf?t=1666782365941') format('truetype');
+.icon-Gradient-Tool:before {
+  content: "\e672";
 }
+
+.icon-chakan:before {
+  content: "\e604";
+}
+
+.icon-xiugai1:before {
+  content: "\e623";
+}
+
+.icon-paixu:before {
+  content: "\e603";
+}
+
+.icon-tuichudenglu:before {
+  content: "\e605";
+}
+
+.icon-xiaoxi:before {
+  content: "\e86f";
+}
+
+.icon-xiangyoujiantou:before {
+  content: "\e65f";
+}
+
+.icon-xiugai:before {
+  content: "\e651";
+}
+
+.icon-xiangji:before {
+  content: "\e8bc";
+}
+
+.icon-shanchu:before {
+  content: "\e68e";
+}
+
+.icon-chakantiezigengduojubao:before {
+  content: "\e66b";
+}
+
+.icon-pinglun:before {
+  content: "\e891";
+}
+
+.icon-dianzan:before {
+  content: "\ec7f";
+}
+
+.icon-rennao:before {
+  content: "\e63f";
+}
+
+.icon-xinxi:before {
+  content: "\e64c";
+}
+
+.icon-jubao:before {
+  content: "\e621";
+}
+
+.icon-shangjiantou:before {
+  content: "\e602";
+}
+
+.icon-denglu:before {
+  content: "\e653";
+}
+
+.icon-shezhi:before {
+  content: "\e64b";
+}
+
+.icon-renwu-ren:before {
+  content: "\e749";
+}
+
+.icon-sousuo:before {
+  content: "\e86e";
+}
+
+.icon-xinxiang:before {
+  content: "\e708";
+}
+
+.icon-bilibili:before {
+  content: "\e601";
+}
+
+.icon-Bzhan:before {
+  content: "\e68a";
+}
+
+.icon-qq:before {
+  content: "\e600";
+}
+
+.icon-wechat-fill:before {
+  content: "\e883";
+}
+
+.icon-lianjie:before {
+  content: "\e6c8";
+}
+
+.icon-github-fill:before {
+  content: "\e885";
+}
+
+.icon-bzhan:before {
+  content: "\e634";
+}
+

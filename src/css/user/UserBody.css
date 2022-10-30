@@ -1,8 +1,10 @@
-.conter {
-  width: 890px;
+.conter,
+.user_body_main {
+  width: 1000px;
   min-width: 768px;
   margin: 0 auto;
-  box-shadow: 12px 12px 2px 1px rgba(0, 0, 255, 0.2);
+  box-shadow: 0px 0px 5px 10px rgba(0, 0, 255, 0.2);
+  border-radius: 10px;
 }
 .index_top > div:first-child img {
   width: 100%;
@@ -148,6 +150,7 @@
   margin: 0 auto;
   margin-top: 50px;
   box-shadow: 0px 0px 5px 10px rgba(0, 0, 255, 0.2);
+  border-radius: 10px;
 }
 .mondifyUser > div > span {
   display: flex;
@@ -191,5 +194,97 @@
 }
 /* ===================================================================== */
 .user_body_main {
-  margin-top: 1000px;
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 10px;
+}
+.user_body_main_left {
+  flex: 7;
+  padding: 10px;
+  margin: 0 10px;
+}
+.user_body_main_right {
+  flex: 3;
+  padding: 10px;
+  margin: 0 10px;
+}
+/* 我的留言的布局 */
+.forListMessageConern {
+  padding: 10px 10px 0 10px;
+}
+.pageStyle {
+  text-align: center;
+}
+
+.messageList,
+.conernStyle {
+  cursor: pointer;
+}
+.messageList > div:nth-child(1),
+.conernStyle > div:nth-child(1) {
+  display: flex;
+  height: 40px;
+}
+.messageList > div:nth-child(1) img,
+.conernStyle > div:nth-child(1) img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+.messageList > div:nth-child(1) > div:nth-child(2),
+.conernStyle > div:nth-child(1) > div:nth-child(2) {
+  line-height: 40px;
+}
+.messageList > div:nth-child(1) > div:nth-child(2) > span:nth-child(1),
+.conernStyle > div:nth-child(1) > div:nth-child(2) > span:nth-child(1) {
+  font-size: 1rem;
+  margin: 0 10px;
+}
+.messageList > div:nth-child(1) > div:nth-child(2) > span:nth-child(2),
+.conernStyle > div:nth-child(1) > div:nth-child(2) > span:nth-child(2) {
+  font-size: 0.75rem;
+  color: rgb(144, 147, 153);
+}
+.messageList > div:nth-child(2) {
+  color: rgb(144, 147, 153);
+}
+.messageList > div:nth-child(3) {
+  font-size: 1.5rem;
+  padding: 10px;
+  cursor: pointer;
+}
+.messageList > div:nth-child(4) {
+  color: rgb(144, 147, 153);
+}
+.messageList > div:nth-child(4) i {
+  /* margin: 0 0 0 20px; */
+}
+.messageList > div:last-child,
+.conernStyleHr {
+  border-top: 1px solid #ccc;
+  margin-top: 10px;
+}
+.conernStyle {
+  display: flex;
+  justify-content: space-between;
+}
+/* 个人信息 */
+.user_body_main_right > div:nth-child(1) {
+  height: 40px;
+  line-height: 40px;
+}
+.user_body_main_right_input button {
+  width: 100%;
+}
+.user_body_main_right > div > div {
+  display: flex;
+  justify-content: space-between;
+}
+.user_body_main_right > div:last-child {
+  margin: 20px 0;
+  padding: 20px 0;
+}
+.user_body_main_right > div:last-child > div {
+  margin: 20px;
 }

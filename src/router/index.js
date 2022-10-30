@@ -27,7 +27,7 @@ const routes = [
     component: () => import('../views/Message_dataView.vue'),
   },
   {
-    path: '/index/userbody',
+    path: '/index/userbody/:username',
     name: 'user',
     component: () => import('../views/user/UserbodyView.vue'),
   },

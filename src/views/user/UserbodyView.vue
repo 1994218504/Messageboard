@@ -1,7 +1,7 @@
 <template>
   <div>
     <div v-loading="loading">
-      <el-page-header @back="jumpRouting('/index')" content="用户"> </el-page-header>
+      <el-page-header @back="jumpRouting()" content="用户"> </el-page-header>
       <div class="conter">
         <!-- 背景图片 -->
         <div class="index_top">
@@ -151,24 +151,131 @@
           </span>
         </div>
       </div>
-      <div class="user_body_main">
-        <div>
-          <div v-if="Visible.Iusername">我自己的主页 </div>
-          <div v-else>别的主页</div>
+      <div class="user_body_main" v-else>
+        <div class="user_body_main_left">
+          <el-tabs v-model="activeName">
+            <el-tab-pane label="动态" name="first">
+              <div v-for="d in messageList" :key="d.umid" class="forListMessageConern">
+                <div class="messageList" @click="queryMessage_date(d.umid)">
+                  <div>
+                    <div>
+                      <img :src="d.userInfo.img" alt="" />
+                    </div>
+                    <div>
+                      <span>{{ d.user.nickname }}</span>
+                      <span>（{{ d.user.username }}）</span>
+                    </div>
+                  </div>
+                  <div><i class="iconfont">&#xe634;</i>发布于：{{ d.lastupdate | formatDate }}</div>
+                  <div>{{ d.title }} </div>
+                  <div>
+                    <span><i class="iconfont">&#xe604;</i> {{ d.hits }}</span>
+                    <span><i class="iconfont">&#xec7f;</i> {{ d.praiseCount }}</span>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+              <div class="pageStyle" v-if="messagePage.pageCount > 1">
+                <page-comp :page.sync="messagePage" @change-page="queryMessageAjax()" layout=" total,prev,pager,next"></page-comp>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="评论" name="second">
+              <div v-for="d in replyByList" :key="d.umrid" class="forListMessageConern">
+                <div class="messageList" @click="queryMessage_date(d.umid)">
+                  <div>
+                    <div>
+                      <img :src="d.userInfo.img" alt="" />
+                    </div>
+                    <div>
+                      <span>{{ d.user.nickname }}</span>
+                      <span>（{{ d.user.username }}）</span>
+                    </div>
+                  </div>
+                  <div><i class="iconfont">&#xe634;</i>发布于：{{ d.lastupdate | formatDate }}</div>
+                  <div>{{ d.info }} </div>
+                  <div> </div>
+                </div>
+              </div>
+              <div class="pageStyle" v-if="replyPage.pageCount > 1">
+                <page-comp :page.sync="replyPage" @change-page="queryReplyBy()" layout=" total,prev,pager,next"></page-comp>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="关注" name="third">
+              <div v-for="d in concernList" :key="d.user.username" class="forListMessageConern">
+                <div class="conernStyle">
+                  <div>
+                    <div>
+                      <img :src="d.userInfo.img" alt="" />
+                    </div>
+                    <div>
+                      <span>{{ d.user.nickname }}</span>
+                      <span>（{{ d.user.username }}）</span>
+                    </div>
+                  </div>
+                  <div>
+                    <el-button @click="queryReturnAjax(d.user.username)" v-if="d.userOtherInfo.mineFollow">取消关注</el-button>
+                    <el-button @click="queryReturnAjax(d.user.username)" v-else type="primary">关注</el-button>
+                  </div>
+                </div>
+                <div class="conernStyleHr"></div>
+                <div class="pageStyle" v-if="messagePage.pageCount > 1">
+                  <page-comp :page.sync="concernPage" @change-page="queryConcernAjax()" layout=" total,prev,pager,next"></page-comp>
+                </div>
+              </div>
+            </el-tab-pane>
+            <el-tab-pane label="粉丝" name="fourth">
+              <div v-for="d in followersList" :key="d.user.username" class="forListMessageConern">
+                <div class="conernStyle">
+                  <div>
+                    <div>
+                      <img :src="d.userInfo.img" alt="" />
+                    </div>
+                    <div>
+                      <span>{{ d.user.nickname }}</span>
+                      <span>（{{ d.user.username }}）</span>
+                    </div>
+                  </div>
+                  <div>
+                    <el-button @click="queryReturnAjax(d.user.username)" v-if="d.userOtherInfo.mineFollow">取消关注</el-button>
+                    <el-button @click="queryReturnAjax(d.user.username)" v-else type="primary">关注</el-button>
+                  </div>
+                </div>
+                <div class="conernStyleHr"></div>
+                <div class="pageStyle" v-if="messagePage.pageCount > 1">
+                  <page-comp :page.sync="concernPage" @change-page="queryConcernAjax()" layout=" total,prev,pager,next"></page-comp>
+                </div> </div
+            ></el-tab-pane>
+          </el-tabs>
         </div>
-        {{ Visible.Iusername }}
-        <div style="margin: 100px">1</div>
+        <div class="user_body_main_right">
+          <div><i class="iconfont">&#xe672;</i> 用户创作信息</div>
+          <div class="user_body_main_right_input">
+            <el-button>发表动态</el-button>
+          </div>
+          <div>
+            <div>
+              <div>关注数</div>
+              <div v-if="user.isLogin == true">{{ user.userOtherInfo.follow }}</div>
+              <div v-else>{{ users.userOtherInfo.follow }}</div>
+            </div>
+            <div>
+              <div>粉丝数</div>
+              <div v-if="user.isLogin == true">{{ user.userOtherInfo.followMe }}</div>
+              <div v-else>{{ users.userOtherInfo.followMe }}</div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
-    <div></div>
-    <div></div>
   </div>
 </template>
 <script>
 import tools from '@/js/tools'
 import logger from '@/js/logger'
+import PageComp from '@/components/PageComp.vue'
 let app
 export default {
+  components: { PageComp },
   name: 'UserBody',
   data() {
     return {
@@ -191,7 +298,6 @@ export default {
         ModifyInfoVisible: true,
       },
       loading: false,
-      // 传递图片的格式限制
       updateModifyINfo: {
         img: '',
         info: '',
@@ -200,13 +306,46 @@ export default {
         sex: '',
         wechat: '',
       },
+      // 标签
+      activeName: 'first',
+      // 个人动态
+      queryMessage: {
+        orderBy: 1,
+        info: '',
+      },
+      messageList: [],
+      messagePage: { pageSize: 5 },
+      // 个人评论
+      queryReplyBy: {
+        username: '',
+        orderBy: 3,
+      },
+      replyByList: [],
+      replyPage: {
+        pageSize: 5,
+      },
+      // 关注列表
+      queryConern: {
+        username: '',
+      },
+      concernList: [],
+      concernPage: {
+        pageSize: 5,
+      },
+      queryFollowers: {
+        username: '',
+      },
+      followersList: [],
+      followersPage: {
+        pageSize: 5,
+      },
     }
   },
 
   methods: {
     queryLocstionUser() {
       this.loading = true
-      this.queryString = location.search.replace('?', '')
+      this.queryString = decodeURIComponent(this.$route.params.username)
       this.queryUser()
     },
     // 判断性别
@@ -226,17 +365,23 @@ export default {
         //查看别人登录界面
         this.isUser = false
         this.Visible.Iusername = false
+        this.loading = true
         tools.ajax('/user/auth/getUserInfoByName', { username: this.queryString }, (data) => {
           this.users.tbUser = data.tbUser
           this.users.tbUserInfo = data.tbUserInfo
           this.users.userOtherInfo = data.userOtherInfo
+          this.loading = true
         })
       }
       this.loading = false
     },
     // 退出
-    jumpRouting(index) {
-      this.$router.push(index)
+    jumpRouting() {
+      if (decodeURIComponent(this.$route.hash)) {
+        this.$router.push('/index/userbody/' + encodeURIComponent(decodeURIComponent(this.$route.hash).replace('#', '')))
+      } else {
+        this.$router.push('/index')
+      }
     },
     // 修改头像
     avatarModify() {
@@ -324,6 +469,64 @@ export default {
       this.showModinfyInfo()
       this.Visible.ModifyInfoVisible = false
     },
+    // 个人动态
+    queryMessageAjax() {
+      this.queryMessage.info = this.queryString
+      this.loading = true
+      tools.ajax('/message/queryAll', tools.concatJson(this.queryMessage, this.page), (data) => {
+        this.messageList = data.list
+        this.loading = false
+        this.messagePage = data.page
+      })
+    },
+    queryMessage_date(umid) {
+      this.$router.push({
+        path: '/index/messagedata/' + encodeURIComponent(umid),
+        hash: encodeURIComponent(this.queryString),
+      })
+    },
+    // 个人评论
+    queryReplyByAjax() {
+      this.loading = true
+      tools.ajax('/message/queryReplyByUsername', tools.concatJson(this.queryReplyBy, this.replyPage), (data) => {
+        this.loading = false
+        this.replyByList = data.list
+        this.replyPage = data.page
+      })
+    },
+    // 关注
+    queryConcernAjax() {
+      this.queryConern.username = this.queryString
+      this.loading = true
+      tools.ajax('/message/queryFollowUserListByName', tools.concatJson(this.queryConern, this.concernPage), (data) => {
+        this.loading = false
+        this.concernList = data.list
+        this.concernPage = data.page
+      })
+    },
+    // 取消关注与回关
+    queryReturnAjax(usernameS) {
+      this.loading = true
+      tools.ajax('/message/followUser', { username: usernameS }, (data) => {
+        if (data.success) {
+          this.$message({ message: data.message, type: 'success' })
+          // this.queryConcernAjax()
+        } else {
+          this.$message.error(data.message)
+        }
+        this.loading = false
+      })
+    },
+    // 粉丝
+    queryFollowersAjax() {
+      this.queryFollowers.username = this.queryString
+      this.loading = true
+      tools.ajax('/message/queryFollowMeUserListByName', tools.concatJson(this.queryFollowers, this.followersPage), (data) => {
+        this.followersList = data.list
+        this.followersPage = data.page
+        this.loading = false
+      })
+    },
   },
   computed: {
     user() {
@@ -333,6 +536,11 @@ export default {
   created() {
     app = this
     this.queryLocstionUser()
+    this.queryMessageAjax()
+    this.queryMessageAjax()
+    this.queryReplyByAjax()
+    this.queryConcernAjax()
+    this.queryFollowersAjax()
     logger.debug('查看user参数', this.user)
   },
 }

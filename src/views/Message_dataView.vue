@@ -1,7 +1,7 @@
 <template>
   <div class="center">
     <!-- {{ messageinfo }} -->
-    <el-page-header @back="jumpRouting('/index')" content="留言详细信息"> </el-page-header>
+    <el-page-header @back="jumpRouting()" content="留言详细信息"> </el-page-header>
     <div>
       <div class="box_show">
         <!-- 发帖人信息 -->
@@ -53,14 +53,21 @@
         </div>
         <!-- 评论信息 -->
         <div class="comments_concern">
-          <el-tabs value="first" type="card" @tab-click="handleClick">
+          <el-tabs value="first" type="card">
             <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
               <div class="hottestLatese">
                 <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
                 <span>|</span>
                 <span @click="hottestLateseTabTwo()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
               </div>
-              <div> 发布评论（有待后续改进） </div>
+              <div class="message_list_plun">
+                <div>
+                  <textarea v-model="addreplay.info" placeholder="发条友善的评论吧"></textarea>
+                </div>
+                <div style="padding-top: 8px">
+                  <el-button @click="AddReplayclick()">发送</el-button>
+                </div>
+              </div>
               <div v-for="d in messagelist" :key="d.umrid">
                 <div class="commentslists">
                   <li>
@@ -137,7 +144,7 @@
           <el-form-item prop="info">
             <el-input placeholder="请输入评论内容" v-model="addreplay.info" clearable>
               <li slot="append">
-                <el-button @click="AddReplayclick"> 发布评论</el-button>
+                <el-button @click="AddReplayclick()"> 发布评论</el-button>
               </li>
             </el-input>
           </el-form-item>
@@ -296,8 +303,7 @@ export default {
         }
       })
     },
-    // 评论和点赞
-    handleClick() {},
+
     // 评论的点赞方法
     Commentsclick(umid) {
       this.loading.postloading = true
@@ -359,12 +365,16 @@ export default {
         }
       })
     },
-    jumpRouting(index) {
-      this.$router.push(index)
+    jumpRouting() {
+      if (decodeURIComponent(this.$route.hash)) {
+        this.$router.push('/index/userbody/' + encodeURIComponent(decodeURIComponent(this.$route.hash).replace('#', '')))
+      } else {
+        this.$router.push('/index')
+      }
     },
     // 通过留言评论进入别人的用户主页
     Message_data(nickname) {
-      location = location.href + '/userbody?' + nickname
+      this.$router.push('/index/userbody/' + encodeURIComponent(nickname))
     },
   },
   computed: {
@@ -374,7 +384,7 @@ export default {
   },
   created() {
     app = this
-    this.umid = this.$route.params.umid
+    this.umid = decodeURIComponent(this.$route.params.umid)
     this.messagequery.umid = this.umid
     app.querymessagedata()
     logger.debug('查看是否有角色信息', this.user)

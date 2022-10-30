@@ -250,3 +250,41 @@ li {
 .comments_concern .el-loading-spinner {
   width: auto;
 }
+/* 发布评论 */
+.message_list_plun {
+  /* width: 78%; */
+  height: 100%;
+  margin: 0 1%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.message_list_plun > div:nth-child(1) {
+  width: 78%;
+}
+.message_list_plun > div:nth-child(2),
+.message_list_plun > div:nth-child(2) button {
+  height: 56px;
+  padding: 12px 33.5px;
+}
+.message_list_plun textarea {
+  width: 100%;
+  height: 3.5rem;
+  line-height: 1.2;
+  letter-spacing: 1px;
+  padding: 0.5rem 0.2rem;
+  background-image: url('../img/avatar.png');
+  background-repeat: no-repeat;
+  background-position: 100%;
+  background-size: 13%;
+  border-radius: 5px;
+  background-color: #f1f2f3;
+  border: 1px solid #f1f2f3;
+  transition: all 0.3s;
+  outline: none;
+  border-color: #c9ccd0;
+}
+.message_list_plun:focus {
+  outline: none;
+  border-color: #c9ccd0;
+}
