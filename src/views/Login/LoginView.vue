@@ -62,11 +62,13 @@ export default {
       this.user.password = tools.md5(this.pwodpss)
       app.loading = true
       tools.ajax('/user/auth/login', app.user, () => {
+        app.loading = false
         this.$store
           .dispatch('updateUserInfo')
-          .then(this.$router.push('/index'), (this.loading = false))
+          .then(this.$router.push('/index'))
           .catch((app.loading = false))
       })
+      app.loading = false
     },
     reset() {
       app.user = {

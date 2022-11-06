@@ -103,7 +103,7 @@
         </div>
       </div>
     </div>
-    <div> {{ textInfo }} </div>
+    <div> 个性消息还未想好 </div>
     <div class="data_message_main">
       <div class="mainpagefooter">
         <page-comp :page.sync="boardpage" @change-page="queryboard" layout=" total,prev,pager,next"></page-comp>
@@ -177,7 +177,6 @@ import tools from '@/js/tools'
 import logger from '@/js/logger'
 import WangEditorComp from '@/components/WangEditorComp.vue'
 import PageComp from '@/components/PageComp.vue'
-// import axios from 'axios'
 let app
 export default {
   components: { WangEditorComp, PageComp },
@@ -216,8 +215,6 @@ export default {
         htmlInfo: '',
         text: '',
       },
-      // 文本逐渐出现
-      textInfo: '',
     }
   },
   methods: {
@@ -363,28 +360,6 @@ export default {
         this.publishquery.info = this.demo.htmlInfo
       }
     },
-    randomCopyweiting() {
-      // axios({
-      //   method: 'post',
-      //   url: 'https://api.gmit.vip/Api/WaSentence',
-      //   data: {
-      //     format: 'json',
-      //   },
-      //   headers: { 'access-control-allow-origin': '*' },
-      // })
-      //   .then((resp) => {
-      //     console.log(resp)
-      //   })
-      //   .catch((error) => {
-      //     console.log({ code: 500, success: false, message: '访问数据失败！', error: error })
-      //   })
-      fetch('https://api.gmit.vip/Api/WaSentence')
-        .then((response) => response.json())
-        .then((res) => {
-          app.textInfo = res.data.text
-        })
-        .catch(console.error())
-    },
   },
   computed: {
     user() {
@@ -394,8 +369,7 @@ export default {
   created() {
     app = this
     this.queryboard()
-    // this.randomCopyweiting()
-    // logger.debug('查看没有登录有哪些参数', this.user)
+    logger.debug('查看没有登录有哪些参数', this.user)
   },
 }
 </script>
