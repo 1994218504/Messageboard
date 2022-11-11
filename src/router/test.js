@@ -10,6 +10,11 @@ let routers = [
     name: 'test',
     component: () => import('../views/test/TestView.vue'),
   },
+  {
+    path: '/test/info',
+    name: 'test',
+    component: () => import('../views/test/TestInfoView.vue'),
+  },
   // {
   //   path: '/test/ws',
   //   name: 'test',

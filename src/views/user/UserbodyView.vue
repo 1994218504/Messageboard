@@ -159,7 +159,7 @@
                 <div class="messageList" @click="queryMessage_date(d.umid)">
                   <div>
                     <div>
-                      <img :src="d.userInfo.img" alt="" />
+                      <img :src="user.tbUserInfo.img" alt="" />
                     </div>
                     <div>
                       <span>{{ d.user.nickname }}</span>
@@ -443,7 +443,7 @@ export default {
           this.$message({ type: 'success', message: data.message })
           this.$store
             .dispatch('updateUserInfo')
-            .then(app.showModinfyInfo, (this.loading = false))
+            .then(app.showModinfyInfo, (app.loading = false))
             .catch()
         }
       })

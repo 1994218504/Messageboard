@@ -29,6 +29,9 @@
           </li>
         </div>
       </div>
+      <div class="wenan">
+        <p>{{ info }}<span>|</span></p>
+      </div>
     </div>
     <div class="data_message_main">
       <div v-loading="boardloging">
@@ -215,9 +218,13 @@ export default {
         htmlInfo: '',
         text: '',
       },
+      textinfo: '',
+      info: '',
+      index: 1,
     }
   },
   methods: {
+    //上面的导航条
     pinghuagundong1() {
       this.tab = 1
       // tabScorllto.get(this.tab)
@@ -226,6 +233,7 @@ export default {
         behavior: 'smooth',
       })
     },
+    //上面的导航条
     pinghuagundong2() {
       this.tab = 2
       window.scrollTo({
@@ -233,6 +241,7 @@ export default {
         behavior: 'smooth',
       })
     },
+    //上面的导航条
     pinghuagundong3() {
       this.tab = 3
       window.scrollTo({
@@ -244,6 +253,7 @@ export default {
     loctionlogin() {
       this.$router.push('/login')
     },
+    // 退出
     visibleLogin() {
       this.Visible.loginVisible = false
       this.loctionlogin()
@@ -253,9 +263,10 @@ export default {
       if (this.user.tbUser.username != null) {
         this.$router.push('/index/userbody/' + encodeURIComponent(this.user.tbUser.username))
       } else {
-        this.loctionlogin()
+        this.Visible.loginVisible = true
       }
     },
+    // 进入别人的首页
     userMains(loction) {
       this.$router.push('/index/userbody/' + encodeURIComponent(loction))
     },
@@ -302,6 +313,7 @@ export default {
         this.Visible.loginVisible = true
       }
     },
+    // 举报前是否登录
     reportclickLoading() {
       if (this.user.isLogin == true) {
         this.Visible.reportVisible = true
@@ -324,6 +336,7 @@ export default {
         this.Visible.loginVisible = true
       }
     },
+    // 发布留言前是否登录
     publishclicIsLogin() {
       if (this.user.isLogin == true) {
         this.Visible.publishVisible = true
@@ -360,6 +373,46 @@ export default {
         this.publishquery.info = this.demo.htmlInfo
       }
     },
+    // 随机文案的api
+    suijiwenan() {
+      fetch('https://api.gmit.vip/Api/WaSentence')
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.code == 200) {
+            this.textinfo = ' '
+            this.textinfo = res.data.text
+            logger.debug('调用')
+            this.chuxian()
+          }
+        })
+        .catch((this.textinfo = '报错了,出bug了!'))
+    },
+    // 字体出现
+    chuxian() {
+      let time
+      time = setInterval(() => {
+        this.info = this.textinfo.substring(-1, this.index)
+        this.index++
+        if (this.index > this.textinfo.length) {
+          clearInterval(time)
+          this.xiaoshi()
+        }
+      }, 200)
+    },
+    // 文字消失
+    xiaoshi() {
+      let time
+      setTimeout(() => {
+        time = setInterval(() => {
+          this.info = this.textinfo.substring(-1, this.index)
+          this.index--
+          if (this.index == 0) {
+            clearInterval(time)
+            this.suijiwenan()
+          }
+        }, 100)
+      }, 1000)
+    },
   },
   computed: {
     user() {
@@ -370,6 +423,7 @@ export default {
     app = this
     this.queryboard()
     logger.debug('查看没有登录有哪些参数', this.user)
+    this.suijiwenan()
   },
 }
 </script>

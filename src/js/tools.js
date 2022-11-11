@@ -262,6 +262,7 @@ axios.interceptors.request.use((config) => {
   let headers = config.headers ? config.headers : {}
   headers.token = serverInfo.loadToken()
   config.headers = headers
+  logger.debug('查看config', config)
   return config
 })
 
