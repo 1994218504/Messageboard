@@ -1,73 +1,37 @@
 <template>
   <div>
-    <div>{{ title }}</div>
-    <el-dialog title="手机修改" :visible.sync="utphoneVisible">
-      <el-form>
-        <el-form-item>
-          <el-input placeholder="输入手机号" v-model="updatePhone.phone"></el-input>
-        </el-form-item>
-        <el-image :src="hahha"></el-image>
-        <el-form-item>
-          <el-input placeholder="输入图片验证码" v-model="sendsCode.imageCode"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-input placeholder="手机验证码" v-model="updatePhone.code"></el-input>
-        </el-form-item>
-      </el-form>
-      <div slot="footer">
-        <button @click="sendCode">发送手机验证码</button>
-        <el-button @click="utphoneVisible = false">取 消</el-button>
-        <el-button type="primary" @click="updateUserPhone">确 定</el-button>
-      </div>
-    </el-dialog>
-    <el-button type="primary" @click="utphoneVisible = true">修改手机</el-button>
+    <div>{{ textinfo }}</div>
   </div>
 </template>
 <script>
-import tools from '@/js/tools'
+// import tools from "../../js/tools";
 import logger from '@/js/logger'
-let app = null
+
 export default {
-  name: 'PhoneView',
+  name: 'TestAjaxView',
   data() {
     return {
-      title: '手机',
-      hahha: {},
-      updatePhone: {
-        code: '',
-        phone: '',
-      },
-      utphoneVisible: false,
-      sendsCode: {
-        imageCode: '',
-        phone: '',
-      },
+      title: 'ajax测试页面',
+      textinfo: '',
     }
   },
   methods: {
-    sendCode() {
-      this.sendsCode.phone = this.updatePhone.phone //这上面用v-model='updatePhone.phone'
-      // this.updatePhone.phone = this.sendsCode.phone//这上面用v-model='sendsCode.phone'
-      logger.debug('查看参数', this.sendsCode)
-      tools.ajax('/tool/sendValidateCode', app.sendsCode, (data) => {
-        app.$alert(data.message)
-      })
-    },
-    getImageCode() {
-      tools.ajax('/tool/getImageCode', {}, (data) => {
-        this.hahha = data.message
-      })
-    },
-    updateUserPhone() {
-      tools.ajax('/user/auth/updateUserPhone', app.updatePhone, (data) => {
-        app.$alert(data.message)
-      })
+    postusidbf() {
+      fetch('https://api.gmit.vip/Api/WaSentence')
+        .then((response) => response.json())
+        .then((res) => {
+          if (res.code == 200) {
+            this.textinfo = ' '
+            this.textinfo = res.data.text
+            logger.debug('调用')
+          }
+        })
+        .catch((this.textinfo = '报错了,出bug了!'))
     },
   },
   created() {
-    app = this
-    logger.debug(app.title)
-    app.getImageCode()
+    this.postusidbf()
   },
 }
 </script>
+<style scoped></style>

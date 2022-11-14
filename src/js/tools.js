@@ -245,7 +245,7 @@ tools.serverInfo = serverInfo
 
 tools.empty = () => {}
 
-// ajax
+// ajax请求拦截器
 axios.interceptors.request.use((config) => {
   // logger.debug('请求配置信息：', config)
   // 处理json参数
@@ -262,9 +262,10 @@ axios.interceptors.request.use((config) => {
   let headers = config.headers ? config.headers : {}
   headers.token = serverInfo.loadToken()
   config.headers = headers
+  logger.debug('拦截器执行')
   return config
 })
-
+// ajax应答拦截器
 axios.interceptors.response.use(
   (response) => {
     // 正确应答处理

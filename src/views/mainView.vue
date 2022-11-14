@@ -180,6 +180,8 @@ import tools from '@/js/tools'
 import logger from '@/js/logger'
 import WangEditorComp from '@/components/WangEditorComp.vue'
 import PageComp from '@/components/PageComp.vue'
+import axios from 'axios'
+const instance = axios.create()
 let app
 export default {
   components: { WangEditorComp, PageComp },
@@ -375,17 +377,20 @@ export default {
     },
     // 随机文案的api
     suijiwenan() {
-      fetch('https://api.gmit.vip/Api/WaSentence')
-        .then((response) => response.json())
+      instance
+        .post('https://api.gmit.vip/Api/WaSentence')
         .then((res) => {
-          if (res.code == 200) {
+          logger.debug('随机文案', res)
+          if (res.data.code == 200) {
             this.textinfo = ' '
-            this.textinfo = res.data.text
+            this.textinfo = res.data.data.text
             logger.debug('调用')
             this.chuxian()
           }
         })
-        .catch((this.textinfo = '报错了,出bug了!'))
+        .catch((err) => {
+          logger.debug(err)((this.textinfo = '报错了,出bug了!'))
+        })
     },
     // 字体出现
     chuxian() {
