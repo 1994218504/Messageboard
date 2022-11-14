@@ -159,7 +159,7 @@
                 <div class="messageList" @click="queryMessage_date(d.umid)">
                   <div>
                     <div>
-                      <img :src="user.tbUserInfo.img" alt="" />
+                      <img :src="d.userInfo.img" alt="" />
                     </div>
                     <div>
                       <span>{{ d.user.nickname }}</span>
@@ -213,8 +213,10 @@
                     </div>
                   </div>
                   <div>
-                    <el-button @click="queryReturnAjax(d.user.username)" v-if="d.userOtherInfo.mineFollow">取消关注</el-button>
-                    <el-button @click="queryReturnAjax(d.user.username)" v-else type="primary">关注</el-button>
+                    <div v-if="isUser == true">
+                      <el-button @click="queryReturnAjax(d)" v-if="d.judgment == true">取消关注</el-button>
+                      <el-button @click="queryReturnAjax(d)" v-else type="primary">关注</el-button>
+                    </div>
                   </div>
                 </div>
                 <div class="conernStyleHr"></div>
@@ -236,8 +238,10 @@
                     </div>
                   </div>
                   <div>
-                    <el-button @click="queryReturnAjax(d.user.username)" v-if="d.userOtherInfo.mineFollow">取消关注</el-button>
-                    <el-button @click="queryReturnAjax(d.user.username)" v-else type="primary">关注</el-button>
+                    <div v-if="isUser == true">
+                      <el-button @click="queryReturnAjax(d)" v-if="d.judgment == true">取消关注</el-button>
+                      <el-button @click="queryReturnAjax(d)" v-else type="primary">关注</el-button>
+                    </div>
                   </div>
                 </div>
                 <div class="conernStyleHr"></div>
@@ -316,29 +320,19 @@ export default {
       messageList: [],
       messagePage: { pageSize: 5 },
       // 个人评论
-      queryReplyBy: {
-        username: '',
-        orderBy: 3,
-      },
       replyByList: [],
-      replyPage: {
-        pageSize: 5,
-      },
-      // 关注列表
-      queryConern: {
-        username: '',
-      },
+      replyPage: { pageSize: 5 },
+      // 关注列表和粉丝列表
+      queryusername: {},
       concernList: [],
       concernPage: {
         pageSize: 5,
-      },
-      queryFollowers: {
-        username: '',
       },
       followersList: [],
       followersPage: {
         pageSize: 5,
       },
+      // 判断是不是本人且登录
     }
   },
 
@@ -389,10 +383,10 @@ export default {
       this.Visible.ModifyVisible = true
       this.file.files = ''
       tools.openFile((selfile) => {
-        logger.debug('选择的文件', selfile)
+        // logger.debug('选择的文件', selfile)
         this.file.files = selfile
         if (!this.file.files) {
-          logger.debug('没有选择图片')
+          // logger.debug('没有选择图片')
         } else {
           tools.upload('/user/file/upload', { fileinfo: this.file.fileInfo }, this.file.files.file, (data) => {
             if (data.success) {
@@ -471,9 +465,14 @@ export default {
     },
     // 个人动态
     queryMessageAjax() {
-      this.queryMessage.info = this.queryString
+      if (this.queryString != this.user.tbUser.username) {
+        this.queryMessage.info = this.queryString
+      } else {
+        this.queryMessage.info = this.user.tbUser.username
+      }
       this.loading = true
       tools.ajax('/message/queryAll', tools.concatJson(this.queryMessage, this.page), (data) => {
+        logger.debug('sadfiojlmgrnlkmhg;动态', this.queryusername.username)
         this.messageList = data.list
         this.loading = false
         this.messagePage = data.page
@@ -487,43 +486,70 @@ export default {
     },
     // 个人评论
     queryReplyByAjax() {
+      if (this.queryString != this.user.tbUser.username) {
+        this.queryMessage.info = this.queryString
+      } else {
+        this.queryMessage.info = this.user.tbUser.username
+      }
+
       this.loading = true
       tools.ajax('/message/queryReplyByUsername', tools.concatJson(this.queryReplyBy, this.replyPage), (data) => {
+        logger.debug('sadfiojlmfjhhgrnlkm;评论', this.queryusername.username)
         this.loading = false
         this.replyByList = data.list
         this.replyPage = data.page
       })
     },
-    // 关注
-    queryConcernAjax() {
-      this.queryConern.username = this.queryString
-      this.loading = true
-      tools.ajax('/message/queryFollowUserListByName', tools.concatJson(this.queryConern, this.concernPage), (data) => {
-        this.loading = false
-        this.concernList = data.list
-        this.concernPage = data.page
-      })
-    },
     // 取消关注与回关
     queryReturnAjax(usernameS) {
       this.loading = true
-      tools.ajax('/message/followUser', { username: usernameS }, (data) => {
+      usernameS.judgment = false
+      tools.ajax('/message/followUser', { username: usernameS.user.username }, (data) => {
         if (data.success) {
           this.$message({ message: data.message, type: 'success' })
           // this.queryConcernAjax()
+          if (data.message == '关注用户成功') {
+            usernameS.judgment = true
+          }
         } else {
           this.$message.error(data.message)
         }
         this.loading = false
       })
     },
+    // 关注
+    queryConcernAjax() {
+      if (this.queryString != this.user.tbUser.username) {
+        this.queryusername.username = this.queryString
+      } else {
+        this.queryusername.username = this.user.tbUser.username
+      }
+      this.loading = true
+      tools.ajax('/message/queryFollowUserList', tools.concatJson(this.queryusername, this.concernPage), (data) => {
+        logger.debug('sadfiojlm,jhmgrnlkm;关注', this.queryusername.username)
+        this.loading = false
+        this.concernList = data.list
+        for (let i = 0; i < this.concernList.length; i++) {
+          this.concernList[i].judgment = true
+        }
+        this.concernPage = data.page
+      })
+    },
     // 粉丝
     queryFollowersAjax() {
-      this.queryFollowers.username = this.queryString
+      if (this.queryString != this.user.tbUser.username) {
+        this.queryusername.username = this.queryString
+      } else {
+        this.queryusername.username = this.user.tbUser.username
+      }
       this.loading = true
-      tools.ajax('/message/queryFollowMeUserListByName', tools.concatJson(this.queryFollowers, this.followersPage), (data) => {
+      tools.ajax('/message/queryFollowMeUserListByName', tools.concatJson(this.queryusername, this.followersPage), (data) => {
+        logger.debug('sadfiojlmgrmdfxgnxnlkm;粉丝', this.queryusername.username)
         this.followersList = data.list
         this.followersPage = data.page
+        for (let i = 0; i < this.followersList.length; i++) {
+          this.followersList[i].judgment = true
+        }
         this.loading = false
       })
     },
