@@ -233,14 +233,14 @@ export default {
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
         this.messageinfo = data.info
         if (this.messageinfo.userInfo.img == '') {
-          this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+          this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
         }
         // 判断最新最热
         this.messagelist = data.list
         // 判断评论没有图片的时候
         for (let i = 0; i < this.messagelist.length; i++) {
           if (this.messagelist[i].userInfo.img == '') {
-            this.messagelist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+            this.messagelist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
           }
         }
         if (data.success) {

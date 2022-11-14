@@ -24,7 +24,7 @@
           <li>
             <span @click="Visible.drawerVisible = true">
               <img v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
-              <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
+              <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544" alt="" />
             </span>
           </li>
         </div>
@@ -80,7 +80,7 @@
                 <div class="reightuser">
                   <div style="cursor: pointer" @click="userMain">
                     <img class="imgstyle" v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
-                    <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
+                    <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544" alt="" />
                   </div>
                   <div style="cursor: pointer" @click="userMain"> {{ user.tbUser.nickname }} </div>
                   <div v-if="user.isLogin" style="display: flex">
@@ -116,7 +116,7 @@
     <el-drawer title="侧边栏功能导航" :visible.sync="Visible.drawerVisible" direction="rtl" :close-on-click-modal="true">
       <div class="right_drawer" v-if="!user.isLogin">
         <div @click="loctionlogin()">
-          <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529" alt="" />
+          <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544" alt="" />
         </div>
         <div>
           <el-button @click="loctionlogin()">请登录</el-button>
@@ -292,7 +292,7 @@ export default {
           this.boardlist = data.list
           for (let i = 0; i < this.boardlist.length; i++) {
             if (this.boardlist[i].userInfo.img == '') {
-              this.boardlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+              this.boardlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
             }
           }
           this.boardpage = data.page

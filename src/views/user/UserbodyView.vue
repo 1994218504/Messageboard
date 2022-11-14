@@ -7,7 +7,7 @@
         <div class="index_top">
           <!-- IP属地 -->
           <div>
-            <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=532" alt="" />
+            <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=545" alt="" />
             <div>
               <i class="fa-solid fa-location-dot"></i>
               <span>IP属地未知</span>
