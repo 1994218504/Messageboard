@@ -1,3 +1,3 @@
 git push
-git push jihui
-#git remote add jihui git@jihulab.com:03211200/message.git
+git push jihulab
+#git remote add jihulab git@jihulab.com:03211200/message.git
