@@ -6,6 +6,27 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "785026",
+      "name": "关于我们",
+      "font_class": "guanyuwomen",
+      "unicode": "e655",
+      "unicode_decimal": 58965
+    },
+    {
+      "icon_id": "2451805",
+      "name": "关于我们",
+      "font_class": "guanyuwomen1",
+      "unicode": "e62f",
+      "unicode_decimal": 58927
+    },
+    {
+      "icon_id": "18610491",
+      "name": "连接",
+      "font_class": "lianjie1",
+      "unicode": "e612",
+      "unicode_decimal": 58898
+    },
+    {
       "icon_id": "6801681",
       "name": "设计创作系列",
       "font_class": "Gradient-Tool",

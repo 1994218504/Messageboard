@@ -13,3 +13,7 @@ body {
 .pd10 {
   padding: 1rem;
 }
+/* 颜色 */
+:root {
+  --box-show-cloro: 0 13px 15px 16px rgba(7, 17, 27, 0.06);
+}

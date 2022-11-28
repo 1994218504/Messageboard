@@ -197,7 +197,7 @@
                 </div>
               </div>
               <div class="pageStyle" v-if="replyPage.pageCount > 1">
-                <page-comp :page.sync="replyPage" @change-page="queryReplyBy()" layout=" total,prev,pager,next"></page-comp>
+                <page-comp :page.sync="replyPage" @change-page="queryReplyByAjax()" layout=" total,prev,pager,next"></page-comp>
               </div>
             </el-tab-pane>
             <el-tab-pane label="关注" name="third">
@@ -316,6 +316,7 @@ export default {
       queryMessage: {
         orderBy: 1,
         info: '',
+        username: '',
       },
       messageList: [],
       messagePage: { pageSize: 5 },
@@ -487,13 +488,13 @@ export default {
     // 个人评论
     queryReplyByAjax() {
       if (this.queryString != this.user.tbUser.username) {
-        this.queryMessage.info = this.queryString
+        this.queryMessage.username = this.queryString
       } else {
-        this.queryMessage.info = this.user.tbUser.username
+        this.queryMessage.username = this.user.tbUser.username
       }
 
       this.loading = true
-      tools.ajax('/message/queryReplyByUsername', tools.concatJson(this.queryReplyBy, this.replyPage), (data) => {
+      tools.ajax('/message/queryReplyByUsername', tools.concatJson(this.queryMessage, this.replyPage), (data) => {
         logger.debug('sadfiojlmfjhhgrnlkm;评论', this.queryusername.username)
         this.loading = false
         this.replyByList = data.list

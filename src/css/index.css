@@ -5,6 +5,10 @@
 li {
   list-style: none;
 }
+ul {
+  padding: 0px;
+  margin: 0px;
+}
 img {
   object-fit: cover;
 }
@@ -33,7 +37,7 @@ img {
 .wenan p {
   font-size: 2rem;
   text-indent: 2em;
-  width: 70%;
+  width: 75vw;
   color: #fff;
   z-index: 2;
 }
@@ -131,6 +135,18 @@ img {
   border: 1px rgb(114, 112, 92) solid;
   border-radius: 50%;
 }
+.top_right input {
+  padding-left: 20px;
+}
+.top_right input::-webkit-input-placeholder {
+  /* placeholder颜色  */
+  color: #aab2bd;
+  /* placeholder字体大小  */
+  font-size: 12px;
+  /* placeholder位置  */
+  text-align: left;
+}
+
 /* 侧边栏的设置为登录状态 */
 .right_drawer_login_in a {
   text-decoration: none;
@@ -203,9 +219,7 @@ img {
   margin: 0 auto;
   box-sizing: content-box;
 }
-.liuyanflex .el-card__body {
-  display: flex;
-}
+
 /* 居中 */
 .mainflex {
   width: 100%;
@@ -214,12 +228,12 @@ img {
 }
 .mainflex > div:first-child {
   width: 60%;
-  min-width: 768px;
+  min-width: 576px;
 }
 .mainflex > div:last-child {
   margin-top: 100px;
   width: 270px;
-  min-width: 250px;
+  min-width: 192px;
 }
 
 /* 分开距离 */
@@ -231,16 +245,21 @@ img {
   width: 100%;
 }
 /* 压力盒子 */
-.el-card .el-card__body {
-  width: 100%;
-  /* min-width: 425px; */
+.liuyanflex {
+  margin-top: 20px;
+  display: flex;
+  min-width: 576px;
+  padding: 20px;
+  border: 1px solid rgba(42, 40, 40, 0.1);
+  border-radius: 10px;
 }
-
+.liuyanflex:hover {
+  transition: all 0.6s ease-in;
+  box-shadow: var(--box-show-cloro);
+}
 /* 头像 */
 .liuyanflex img {
-  margin: 1rem 10px 0 0;
-  /* margin-top: 1rem; */
-  /* margin-right: 10px; */
+  margin-right: 10px;
   cursor: pointer;
   width: 3rem;
   height: 3rem;
@@ -249,73 +268,97 @@ img {
 }
 /* 留言的具体信息 */
 /* 标题 */
-.userInfo > div:first-child {
+
+.userInfo > div:nth-child(2) {
   height: 2rem;
   display: flex;
   align-items: center;
+  justify-content: center;
+  padding: 40px 0;
   font-size: 1.5rem;
   cursor: pointer;
   margin-bottom: 5px;
 }
-.userInfo > div:first-child:hover {
+.userInfo > div:nth-child(2):hover {
   color: aquamarine;
 }
 /* 用户名 */
-.userInfo > div:nth-child(2) {
+
+.userInfo > div:first-child {
+  padding-top: 10px;
   cursor: pointer;
   display: flex;
 }
-.userInfo > div:nth-child(2) > div {
+.userInfo > div:first-child > div {
   line-height: 21px;
   text-align: center;
 }
 /* 时间 */
-.userInfo > div:nth-child(2) > div:last-child,
-.userInfo > div:nth-child(3) {
+.userInfo > div:first-child > div:last-child,
+.userInfo > div:last-child > ul:first-child {
+  cursor: default;
   cursor: pointer;
   font-size: 0.8rem;
+  color: rgb(144, 147, 153);
+}
+.userInfo > div:last-child > ul:first-child:hover {
   color: rgb(144, 147, 153);
 }
 /* 下面的按纽兰 */
 .userInfo > div:last-child {
   width: 100%;
   display: flex;
+  justify-content: space-between;
+}
+.userInfo > div:last-child > ul {
+  line-height: 40px;
+}
+.userInfo > div:last-child > ul:last-child {
+  display: flex;
   justify-content: flex-end;
 }
-.userInfo > div:last-child > div {
-  line-height: 40px;
+.userInfo > div:last-child > ul:last-child > div {
   margin: 0 8px;
 }
 
-.userInfo > div:last-child > div:hover {
+.userInfo > div:last-child > ul:last-child > div:hover {
   cursor: pointer;
   color: #409eff;
 }
-.userInfo > div:last-child > div:first-child:hover {
+.userInfo > div:last-child > ul:last-child > div:nth-child(1):hover {
   cursor: default;
   color: #000;
 }
 /* 举报的按钮 */
 .mainpagefooter {
+  margin: 20px auto;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 /* 让右边我的信息居中显示 */
+.userInforinght {
+  margin-left: 10px;
+}
 .reightuser {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
 }
-.userInforinght .el-card .el-card__body div {
+.userInforinght .box_show_row_card {
+  padding: 20px;
   margin-top: 5px;
+  border-radius: 30px;
 }
 .userInforinght div img {
   width: 8rem;
   height: 8rem;
   border-radius: 50%;
-  border: 1px rgb(114, 112, 92) solid;
+  transition: all 0.75s ease;
+}
+.userInforinght div img:hover {
+  transform: rotate(360deg);
 }
 .reightuser > div:nth-child(3) li {
   display: flex;
@@ -324,10 +367,11 @@ img {
   margin: 3px 5px;
 }
 /* 右边个人信息最小显示框 */
-.userInforinght .el-card {
-  min-width: 70px;
+.box_show_row_card:hover {
+  transition: all 0.4s ease-in;
+  box-shadow: var(--box-show-cloro);
+  /* background-color: #000; */
 }
-
 .publishVisible .el-input {
   margin-top: 20px;
 }
@@ -353,10 +397,39 @@ img {
 .el-dialog__wrapper {
   top: -60px;
 }
-/* 图片旋转 */
-.imgstyle {
-  transition: all 0.75s ease;
+
+/* 底部的个性消息 */
+.body_fotter_back {
+  width: 100%;
+  background-color: rgba(58, 153, 212, 0.2);
 }
-.imgstyle:hover {
-  transform: rotate(360deg);
+.body_footer {
+  width: 75vw;
+  min-width: 768px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 25%);
+  justify-content: space-between;
+}
+.body_footer img {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+}
+.body_footer > div > div:first-child > div,
+.body_footer > div:nth-child(2) > div:last-child a,
+.body_footer > div:last-child > div:last-child {
+  text-align: center;
+}
+.body_footer > div > div {
+  margin-top: 20px;
+}
+.body_footer > div:nth-child(2) > div:last-child {
+  display: grid;
+  grid-template-columns: repeat(3, 33.33%);
+  grid-row-gap: 10px;
+}
+.body_footer > div:nth-child(2) > div:last-child a {
+  text-decoration: none;
+  text-align: center;
 }

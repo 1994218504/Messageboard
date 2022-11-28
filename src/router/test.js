@@ -3,23 +3,8 @@ let routers = [
   {
     path: '/test',
     name: 'test',
-    component: () => import('../views/test/HomeView.vue'),
-  },
-  {
-    path: '/test/test',
-    name: 'test',
-    component: () => import('../views/test/TestView.vue'),
-  },
-  {
-    path: '/test/info',
-    name: 'test',
     component: () => import('../views/test/TestInfoView.vue'),
   },
-  // {
-  //   path: '/test/ws',
-  //   name: 'test',
-  //   component: () => import('../views/test/WsView.vue'),
-  // },
 ]
 
 export default routers

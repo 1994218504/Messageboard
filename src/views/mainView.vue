@@ -18,7 +18,7 @@
         </div>
         <div class="top_right">
           <div>
-            <input v-model="boardquery.info" type="text" />
+            <input v-model="boardquery.info" type="text" placeholder="搜索文章" />
             <i class="el-input__icon iconfont" @click="queryboard">&#xe86e;</i>
           </div>
           <li>
@@ -39,77 +39,114 @@
         <div class="mainflex">
           <!-- 左边的留言主体信息 -->
           <div>
-            <el-row v-for="d in boardlist" :key="d.umid">
-              <el-card class="liuyanflex" shadow="always" @click="message_data(d.umid)">
+            <ul v-for="d in boardlist" :key="d.umid">
+              <li class="liuyanflex" shadow="always">
                 <div @click="userMains(d.user.username)">
                   <img :src="d.userInfo.img" alt="" />
                 </div>
                 <div class="userInfo">
-                  <div @click="message_data(d.umid)">{{ d.title }}</div>
                   <div>
                     <div @click="userMains(d.user.username)">
                       {{ d.user.nickname }}
                     </div>
                     <div @click="userMains(d.user.username)"> （{{ d.user.username }}） </div>
                   </div>
-                  <div>{{ d.lastupdate | formatDate }}</div>
+                  <div @click="message_data(d.umid)">{{ d.title }}</div>
                   <div>
-                    <div><i class="iconfont">&#xe604;</i> {{ d.hits }} </div>
-                    <div @click="message_data(d.umid)" v-if="d.replyCount != 0"><i class="el-input__icon iconfont">&#xe891;</i> {{ d.replyCount }}条评论 </div>
-                    <div @click="message_data(d.umid)" v-else><i class="el-input__icon iconfont">&#xe891;</i> 我去评论 </div>
-                    <div @click="praiseclick(d.umid)">
-                      <span v-if="d.praise" class="praise">
-                        <i class="el-input__icon iconfont">&#xec7f;</i>
-                        已点赞{{ d.praiseCount }}
-                      </span>
-                      <span v-else>
-                        <i class="el-input__icon iconfont">&#xec7f;</i>
-                        点赞{{ d.praiseCount }}
-                      </span>
-                    </div>
-                    <div @click="reportclickLoading(d.umid)"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
+                    <ul>{{
+                      d.lastupdate | formatDate
+                    }}</ul>
+                    <ul>
+                      <div><i class="iconfont">&#xe604;</i> {{ d.hits }} </div>
+                      <div @click="message_data(d.umid)" v-if="d.replyCount != 0"><i class="el-input__icon iconfont">&#xe891;</i> {{ d.replyCount }}条评论 </div>
+                      <div @click="message_data(d.umid)" v-else><i class="el-input__icon iconfont">&#xe891;</i> 我去评论 </div>
+                      <div @click="praiseclick(d.umid)">
+                        <span v-if="d.praise" class="praise">
+                          <i class="el-input__icon iconfont">&#xec7f;</i>
+                          已点赞{{ d.praiseCount }}
+                        </span>
+                        <span v-else>
+                          <i class="el-input__icon iconfont">&#xec7f;</i>
+                          点赞{{ d.praiseCount }}
+                        </span>
+                      </div>
+                      <div @click="reportclickLoading(d.umid)"><i class="el-input__icon iconfont">&#xe66b;</i> 举报 </div>
+                    </ul>
                   </div>
                 </div>
-              </el-card>
-            </el-row>
+              </li>
+            </ul>
           </div>
           <!-- 右边的个人信息 -->
           <div class="userInforinght">
-            <el-row>
-              <el-card shadow="hover">
-                <div class="reightuser">
-                  <div style="cursor: pointer" @click="userMain">
-                    <img class="imgstyle" v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
-                    <img v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544" alt="" />
+            <div class="box_show_row_card">
+              <div class="reightuser">
+                <div style="cursor: pointer" @click="userMain">
+                  <img class="imgstyle" v-if="user.isLogin" :src="user.tbUserInfo.img" alt="" />
+                  <img class="imgstyle" v-else src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544" alt="" />
+                </div>
+                <div style="cursor: pointer" @click="userMain"> {{ user.tbUser.nickname }} </div>
+                <div v-if="user.isLogin" style="display: flex">
+                  <div>
+                    <li>留言</li>
+                    <li>{{ user.userOtherInfo.message }}</li>
                   </div>
-                  <div style="cursor: pointer" @click="userMain"> {{ user.tbUser.nickname }} </div>
-                  <div v-if="user.isLogin" style="display: flex">
-                    <div>
-                      <li>留言</li>
-                      <li>{{ user.userOtherInfo.message }}</li>
-                    </div>
-                    <div>
-                      <li>评论</li>
-                      <li>{{ user.userOtherInfo.reply }}</li>
-                    </div>
-                  </div>
-                  <div v-if="user.isLogin">
-                    <el-button @click="publishclicIsLogin()"> 留言 </el-button>
-                  </div>
-                  <div v-else>
-                    <el-button @click="loctionlogin()">登录</el-button>
+                  <div>
+                    <li>评论</li>
+                    <li>{{ user.userOtherInfo.reply }}</li>
                   </div>
                 </div>
-              </el-card>
-            </el-row>
+                <div v-if="user.isLogin">
+                  <el-button @click="publishclicIsLogin()"> 留言 </el-button>
+                </div>
+                <div v-else>
+                  <el-button @click="loctionlogin()">登录</el-button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <div> 个性消息还未想好 </div>
-    <div class="data_message_main">
-      <div class="mainpagefooter">
-        <page-comp :page.sync="boardpage" @change-page="queryboard" layout=" total,prev,pager,next"></page-comp>
+    <div class="mainpagefooter"> <page-comp :page.sync="boardpage" @change-page="queryboard" layout=" total,prev,pager,next"></page-comp></div>
+    <!-- 底部个性消息 -->
+    <div class="body_fotter_back">
+      <div class="body_footer">
+        <div>
+          <div>
+            <div>
+              <i class="iconfont">&#xe655;</i>
+              关于
+            </div>
+          </div>
+          <div> 这里是简易留言板的操作系统，本系统由设计Element UI及刘光辉的指导设计，框架方面使用Vue2组件开发，使用便捷，操作简单，该还项目还处于开发中，系统不够完善，如果您好的意见或想法可以联系我，持续开发中。 </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <i class="iconfont">&#xe749;</i>
+              友情链接
+            </div>
+          </div>
+          <div>
+            <a target="_blank" href="https://liuguanghui.vip/">主页</a>
+            <a target="_blank" href="">墨池CEO</a>
+            <a target="_blank" href="https://huhuiyu.top/index-main.html#FrontPage">胡老师</a>
+            <a target="_blank" href="https://gaopeng623.top/">高鹏</a>
+            <a target="_blank" href="https://luizhen.top/">刘真</a>
+          </div>
+        </div>
+        <div>
+          <div>
+            <div>
+              <i class="iconfont">&#xe612;</i>
+              关于作者
+            </div>
+          </div>
+          <div>
+            <img src="https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=551" alt="" />
+          </div>
+        </div>
       </div>
     </div>
     <!-- 侧边栏 -->
@@ -434,6 +471,7 @@ export default {
 </script>
 
 <style scoped>
+@import url(@/css/common.css);
 @import url(@/css/index.css);
 .reportfooter {
   display: flex;
