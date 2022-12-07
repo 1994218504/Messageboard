@@ -5,7 +5,7 @@ import { MessageBox } from 'element-ui'
 import logger from '@/js/logger'
 import qs from 'qs'
 import axios from 'axios'
-import AutoWebSocket from '@/js/AutoWebSocket'
+// import AutoWebSocket from '@/js/AutoWebSocket'
 import router from '@/router/index'
 import store from '@/store/index'
 
@@ -377,7 +377,7 @@ tools.upload = (url, param, file, callback) => {
 tools.getDownloadUrl = (fid) => {
   return serverInfo.serverUrl + '/user/file/download?fid=' + fid
 }
-
+/*
 // websocket管理集合
 let wsMap = new Map()
 // websocket封装
@@ -390,6 +390,6 @@ tools.websocket = (app) => {
   wsMap.set(app, socket)
   socket.connect()
   return socket
-}
+} */
 
 export default tools

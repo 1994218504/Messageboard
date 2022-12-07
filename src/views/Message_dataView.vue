@@ -50,86 +50,97 @@
           </div>
         </div>
         <!-- 评论信息 -->
+        {{ messagepage.total }}
         <div class="comments_concern">
           <el-tabs v-model="activeName" type="card" @tab-click="ifTabs">
             <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
-              <div class="hottestLatese">
-                <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
-                <span>|</span>
-                <span @click="hottestLateseTabTwo()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
-              </div>
-              <div class="message_list_plun">
-                <div>
-                  <textarea v-model="addreplay.info" placeholder="发条友善的评论吧"></textarea>
+              <div v-loading="Visible.firstLoading" v-if="messagepage.total != 0">
+                <div class="hottestLatese">
+                  <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
+                  <span>|</span>
+                  <span @click="hottestLateseTabTwo()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
                 </div>
-                <div style="padding-top: 8px">
-                  <el-button @click="AddReplayclick()">发送</el-button>
+                <div class="message_list_plun">
+                  <div>
+                    <textarea v-model="addreplay.info" placeholder="发条友善的评论吧"></textarea>
+                  </div>
+                  <div style="padding-top: 8px">
+                    <el-button @click="AddReplayclick()">发送</el-button>
+                  </div>
                 </div>
-              </div>
-              <div v-for="d in messagelist" :key="d.umrid">
-                <div class="commentslists">
-                  <li>
-                    <div>
-                      <img @click="Message_data(d.user.username)" :src="d.userInfo.img" alt="" />
-                    </div>
-                    <div>
-                      <div @click="Message_data(d.user.username)">{{ d.user.nickname }}</div>
-                      <p v-html="d.info"></p>
-                    </div>
-                  </li>
-                  <li>
-                    <span>
-                      <div>{{ d.lastupdate | formatDate }}</div>
-                    </span>
-                    <span>
-                      <div v-if="d.praise == false">
-                        <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
-                        <span @click="Commentsclick(d.umrid)">点赞{{ d.praiseCount }}</span>
-                      </div>
-                      <div class="praises" v-else>
-                        <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
-                        <span @click="Commentsclick(d.umrid)">已点赞{{ d.praiseCount }}</span>
-                      </div>
-                      <div v-if="d.mine">
-                        <i @click="DeleMessageList(d.umrid)" class="input_icon iconfont">&#xe68e;</i>
-                        <div @click="DeleMessageList(d.umrid)">删除</div>
+                <div v-for="d in messagelist" :key="d.umrid">
+                  <div class="commentslists">
+                    <li>
+                      <div>
+                        <img @click="Message_data(d.user.username)" :src="d.userInfo.img" alt="" />
                       </div>
                       <div>
-                        <i class="input_icon iconfont">&#xe66b;</i>
-                        <div>举报</div>
+                        <div @click="Message_data(d.user.username)">{{ d.user.nickname }}</div>
+                        <p v-html="d.info"></p>
                       </div>
-                    </span>
-                  </li>
+                    </li>
+                    <li>
+                      <span>
+                        <div>{{ d.lastupdate | formatDate }}</div>
+                      </span>
+                      <span>
+                        <div v-if="d.praise == false">
+                          <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
+                          <span @click="Commentsclick(d.umrid)">点赞{{ d.praiseCount }}</span>
+                        </div>
+                        <div class="praises" v-else>
+                          <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
+                          <span @click="Commentsclick(d.umrid)">已点赞{{ d.praiseCount }}</span>
+                        </div>
+                        <div v-if="d.mine">
+                          <i @click="DeleMessageList(d.umrid)" class="input_icon iconfont">&#xe68e;</i>
+                          <div @click="DeleMessageList(d.umrid)">删除</div>
+                        </div>
+                        <div>
+                          <i class="input_icon iconfont">&#xe66b;</i>
+                          <div>举报</div>
+                        </div>
+                      </span>
+                    </li>
+                  </div>
+                </div>
+                <div class="pagecenter" v-if="messagepage.pageCount >= 2">
+                  <page-comp :page.sync="messagepage" @change-page="querymessagedata" layout=" total,prev,pager,next"></page-comp>
                 </div>
               </div>
-              <div class="pagecenter" v-if="messagepage.pageCount >= 2">
-                <page-comp :page.sync="messagepage" @change-page="querymessagedata" layout=" total,prev,pager,next"></page-comp>
+              <div v-else>
+                <el-empty description="没有热评"></el-empty>
               </div>
-              <div v-else> </div>
             </el-tab-pane>
+
             <el-tab-pane label="点赞" name="second">
-              <div v-for="d in concernlist" :key="d.umrid">
-                <div class="commentslistconcern">
-                  <li>
-                    <div @click="Message_data(d.user.username)" style="margin-top: 20px">
-                      <img :src="d.userInfo.img" alt="" />
-                    </div>
-                    <div @click="Message_data(d.user.username)">
-                      <div style="color: #fff">liu</div>
-                      <p>{{ d.user.nickname }}</p>
-                      <div></div>
-                    </div>
-                  </li>
-                  <li>
-                    <div v-if="d.userOtherInfo.mineFollow == false">
-                      <span @click="dianzanguanzhu(d.user.username)"> <el-button type="primary">关注</el-button></span>
-                    </div>
-                    <div @click="dianzanguanzhu(d.user.username)" v-else>
-                      <span> <el-button type="primary" plain>取消关注</el-button></span>
-                    </div>
-                  </li>
+              <div v-loading="Visible.secondLoading" v-if="messagepage.total != 0">
+                <div v-for="d in concernlist" :key="d.umrid">
+                  <div class="commentslistconcern">
+                    <li>
+                      <div @click="Message_data(d.user.username)" style="margin-top: 20px">
+                        <img :src="d.userInfo.img" alt="" />
+                      </div>
+                      <div @click="Message_data(d.user.username)">
+                        <div style="color: #fff">liu</div>
+                        <p>{{ d.user.nickname }}</p>
+                        <div></div>
+                      </div>
+                    </li>
+                    <li>
+                      <div v-if="d.userOtherInfo.mineFollow == false">
+                        <span @click="dianzanguanzhu(d.user.username)"> <el-button type="primary">关注</el-button></span>
+                      </div>
+                      <div @click="dianzanguanzhu(d.user.username)" v-else>
+                        <span> <el-button type="primary" plain>取消关注</el-button></span>
+                      </div>
+                    </li>
+                  </div>
+                  <hr />
                 </div>
-                <hr />
+              </div>
+              <div v-else>
+                <el-empty description="没有点赞"></el-empty>
               </div>
               <div class="pagecenter" v-if="messagepage.pageCount >= 2">
                 <page-comp :page.sync="messagepage" @change-page="querymessagedata" layout=" total,prev,pager,next"></page-comp>
@@ -203,6 +214,9 @@ export default {
         reportVisible: false,
         // 登录的组件
         loginVisible: false,
+        // 加载评论或者关注的
+        firstLoading: true,
+        secondLoading: true,
       },
       // 帖子举报原因
       repsort: {
@@ -233,8 +247,9 @@ export default {
     },
     // 查询贴子信息
     querymessagedata() {
-      this.loading.postloading = true
+      this.Visible.firstLoading = true
       tools.ajax('/message/queryDetail', tools.concatJson(this.messagequery, this.messagepage), (data) => {
+        this.Visible.firstLoading = false
         this.messageinfo = data.info
         if (this.messageinfo.userInfo.img == '') {
           this.messageinfo.userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
@@ -246,9 +261,6 @@ export default {
           if (this.messagelist[i].userInfo.img == '') {
             this.messagelist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
           }
-        }
-        if (data.success) {
-          this.loading.postloading = false
         }
         this.messagepage = data.page
       })
@@ -282,14 +294,14 @@ export default {
     },
     // 举报
     reportclick() {
-      this.loading.postloading = true
+      this.Visible.firstLoading = true
       this.repsort.umid = this.umid
       tools.ajax('/message/examine', this.repsort, (data) => {
         this.Visible.reportVisible = false
+        this.Visible.firstLoading = false
         if (data.success) {
           this.$message({ message: '举报成功', type: 'success' })
           this.repsort.reportInfo = ''
-          this.loading.postloading = false
         } else {
           this.$message({ message: '举报失败', tyep: 'danger' })
         }
@@ -297,7 +309,9 @@ export default {
     },
     // 帖子点赞
     praiseclick() {
+      this.Visible.firstLoading = true
       tools.ajax('/message/support', { umid: this.umid }, (data) => {
+        this.Visible.firstLoading = false
         if (data.success) {
           this.$message({ type: 'success', message: data.message })
           this.querymessagedata()
@@ -309,12 +323,12 @@ export default {
 
     // 评论的点赞方法
     Commentsclick(umid) {
-      this.loading.postloading = true
+      this.Visible.firstLoading = true
       tools.ajax('/message/supportReply', { umrid: umid }, (data) => {
         this.querymessagedata()
+        this.Visible.firstLoading = false
         if (data.success) {
           this.$message({ type: 'success', message: data.message })
-          this.loading.postloading = false
         } else {
           this.$message({ type: 'danger', message: '点赞失败，请重试' })
         }
@@ -322,14 +336,14 @@ export default {
     },
     // 发布评论
     AddReplayclick() {
-      this.loading.postloading = true
+      this.Visible.firstLoading = true
       this.addreplay.umid = this.umid
       tools.ajax('/message/addReply', this.addreplay, (data) => {
         this.querymessagedata()
+        this.Visible.firstLoading = false
         if (data.success) {
           this.addreplay.info = ''
           this.$message({ tyep: 'success', message: this.addreplay.info + '评论发布成功' })
-          this.loading.postloading = false
         } else {
           this.$alert(data.message)
         }
@@ -337,8 +351,12 @@ export default {
     },
     // 查询帖子点赞的用户信息
     queryconcern() {
+      this.Visible.secondLoading = true
       tools.ajax('/message/querySupportUserList', { umid: this.umid }, (data) => {
         this.concernlist = data.list
+        this.messagepage = data.page
+        logger.debug('------------------------------------')
+        this.Visible.secondLoading = false
         for (let i = 0; i < this.concernlist.length; i++) {
           if (this.concernlist[i].userInfo.img == '') {
             this.concernlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
@@ -349,17 +367,21 @@ export default {
 
     // 点赞人员的关注和取消关注
     dianzanguanzhu(username) {
+      this.Visible.firstLoading = true
       if (this.user.isLogin == true) {
+        this.Visible.firstLoading = false
         tools.ajax('/message/followUser', { username: username }, () => {
           this.queryconcern()
         })
       } else {
-        this.Visible.loginVisible = true
+        this.Visible.firstLoading = false
       }
     },
     // 删除自己发布的评论
     DeleMessageList(umrid) {
+      this.Visible.firstLoading = true
       tools.ajax('/message/manage/deletUserMessageReply', { umrid: umrid }, (data) => {
+        this.Visible.firstLoading = false
         if (data.success) {
           this.$message({ type: 'success', message: data.message })
           this.querymessagedata()
@@ -382,6 +404,9 @@ export default {
     ifTabs() {
       if (this.activeName == 'second') {
         this.queryconcern()
+      }
+      if (this.activeName == 'first') {
+        this.querymessagedata()
       }
       window.scrollTo({
         top: document.documentElement.scrollTop,
