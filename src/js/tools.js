@@ -98,7 +98,7 @@ tools.getBrowserInfo = () => {
 
 // 合并json对象
 tools.concatJson = (...jsons) => {
-  logger.debug('json参数列表：', jsons)
+  // logger.debug('json参数列表：', jsons)
   let result = {}
   jsons.forEach((json) => {
     for (const key in json) {
@@ -205,7 +205,7 @@ tools.copyText = async (str) => {
   // 尝试先用剪贴板api复制文本
   try {
     await navigator.clipboard.writeText(str)
-    logger.debug('剪贴板复制文本成功')
+    // logger.debug('剪贴板复制文本成功')
     return
   } catch (err) {
     logger.debug('剪贴板复制文本失败: ', err)
@@ -219,12 +219,12 @@ tools.copyText = async (str) => {
   input.setSelectionRange(0, input.value.length)
   document.execCommand('Copy')
   document.body.removeChild(input)
-  logger.debug('原始api复制文本成功')
+  // logger.debug('原始api复制文本成功')
 }
 
 // 将正则校验封装到插件
 tools.regValidate = (rule, value, cb, reg, message) => {
-  logger.debug(rule)
+  // logger.debug(rule)
   if (reg.test(value)) {
     cb()
   } else {
@@ -262,21 +262,20 @@ axios.interceptors.request.use((config) => {
   let headers = config.headers ? config.headers : {}
   headers.token = serverInfo.loadToken()
   config.headers = headers
-  logger.debug('拦截器执行')
   return config
 })
 // ajax应答拦截器
 axios.interceptors.response.use(
   (response) => {
     // 正确应答处理
-    logger.debug('应答结果信息：', response)
+    // logger.debug('应答结果信息：', response)
     // 保存token信息
     serverInfo.saveToken(response)
     return response
   },
   (error) => {
     // 正确应答处理
-    logger.debug('应答错误信息：', error)
+    // logger.debug('应答错误信息：', error)
     return Promise.reject(error)
   }
 )
@@ -300,7 +299,7 @@ tools.ajax = (url, param, cb, handleMessage, method, returnPromise) => {
   // 通用处理
   promise
     .then((resp) => {
-      logger.debug('ajax请求结果：', resp)
+      // logger.debug('ajax请求结果：', resp)
       logger.debug('ajax请求参数：', param)
       // 处理code1000需要登录的情况
       if (resp.data && resp.data.code && resp.data.code == 1000) {
@@ -324,7 +323,7 @@ tools.ajax = (url, param, cb, handleMessage, method, returnPromise) => {
       cb(resp.data)
     })
     .catch((error) => {
-      logger.debug('ajax请求错误：', error)
+      // logger.debug('ajax请求错误：', error)
       if (!handleMessage) {
         MessageBox({ type: 'error', message: '访问数据失败：' + error, title: '留言板报错' })
         return
@@ -340,7 +339,7 @@ const MAX_FILE_SIZE = 5 * 1024 * 1024
 const MAX_FILE_SIZE_MESSAGE = { code: 500, success: false, message: '上传文件大小不能超过5MB' }
 const fileAxios = axios.create()
 tools.upload = (url, param, file, callback) => {
-  logger.debug('上传信息：', url, param, file)
+  // logger.debug('上传信息：', url, param, file)
   if (file.size > MAX_FILE_SIZE) {
     callback(MAX_FILE_SIZE_MESSAGE)
     return
@@ -364,12 +363,12 @@ tools.upload = (url, param, file, callback) => {
   })
   promise
     .then((resp) => {
-      logger.debug('ajax应答结果：', resp.data)
+      // logger.debug('ajax应答结果：', resp.data)
       serverInfo.saveToken(resp.data)
       callback(resp.data)
     })
     .catch((error) => {
-      logger.debug('ajax处理发生错误：', error)
+      // logger.debug('ajax处理发生错误：', error)
       callback({ code: 500, success: false, message: '访问数据失败！', error: error })
     })
 }

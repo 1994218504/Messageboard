@@ -30,7 +30,7 @@
         </div>
       </div>
       <div class="wenan">
-        <p>{{ info }}<span>|</span></p>
+        <p>{{ text.info }}<span>|</span></p>
       </div>
     </div>
     <div class="data_message_main">
@@ -171,7 +171,7 @@
           <a @click="userMain()" href="javascript:viod(0)"> <i class="iconfont">&#xe86f;</i>消息中心 </a>
         </div>
         <div>
-          <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe64b;</i> 相关设计 </a>
+          <a @click="userMain()" href="javascript:viod(0)"><i class="iconfont">&#xe64b;</i> 相关设置 </a>
         </div>
         <div>
           <a @click="userup()"><i class="iconfont">&#xe605;</i> 退出登录</a>
@@ -222,7 +222,7 @@ const instance = axios.create()
 let app
 export default {
   components: { WangEditorComp, PageComp },
-  name: 'HomeView',
+  name: 'MainView',
   data() {
     return {
       title: 'liuguanghui的vue脚手架项目开发中',
@@ -257,9 +257,12 @@ export default {
         htmlInfo: '',
         text: '',
       },
-      textinfo: '',
-      info: '',
-      index: 1,
+      text: {
+        textinfo: '',
+        textinfos: '由于网络原因加载不出来，抱歉',
+        info: '',
+        index: -1,
+      },
     }
   },
   methods: {
@@ -417,25 +420,25 @@ export default {
       instance
         .post('https://api.gmit.vip/Api/WaSentence')
         .then((res) => {
-          logger.debug('随机文案', res)
           if (res.data.code == 200) {
-            this.textinfo = ' '
-            this.textinfo = res.data.data.text
-            logger.debug('调用')
+            this.text.textinfo = ' '
+            this.text.textinfo = res.data.data.text
             this.chuxian()
           }
         })
         .catch((err) => {
-          logger.debug(err)((this.textinfo = '报错了,出bug了!'))
+          logger.debug(err)((this.text.textinfo = '由于网络原因加载不出文案'))
+          this.chuxian()
         })
     },
     // 字体出现
     chuxian() {
       let time
+      this.text.index = 0
       time = setInterval(() => {
-        this.info = this.textinfo.substring(-1, this.index)
-        this.index++
-        if (this.index > this.textinfo.length) {
+        this.text.info = this.text.textinfo.substring(-1, this.text.index)
+        this.text.index++
+        if (this.text.index > this.text.textinfo.length) {
           clearInterval(time)
           this.xiaoshi()
         }
@@ -443,17 +446,17 @@ export default {
     },
     // 文字消失
     xiaoshi() {
-      let time
       setTimeout(() => {
+        let time
         time = setInterval(() => {
-          this.info = this.textinfo.substring(-1, this.index)
-          this.index--
-          if (this.index == 0) {
+          this.text.info = this.text.textinfo.substring(-1, this.text.index)
+          this.text.index--
+          if (this.text.index == -1) {
             clearInterval(time)
             this.suijiwenan()
           }
         }, 100)
-      }, 1000)
+      }, 2000)
     },
   },
   computed: {
@@ -466,6 +469,7 @@ export default {
     this.queryboard()
     logger.debug('查看没有登录有哪些参数', this.user)
     this.suijiwenan()
+    logger.debug(tools.md5('user-pwd'))
   },
 }
 </script>

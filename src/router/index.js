@@ -19,7 +19,7 @@ const routes = [
   {
     path: '/index',
     name: 'home',
-    component: () => import('../views/mainView.vue'),
+    component: () => import('../views/MainView.vue'),
   },
   {
     path: '/index/messagedata/:umid',
@@ -31,8 +31,12 @@ const routes = [
     name: 'user',
     component: () => import('../views/user/UserbodyView.vue'),
   },
+  {
+    path: '/index/message/settings',
+    name: 'settings',
+    component: () => import('../views/setup/SettingsView.vue'),
+  },
 ].concat(test)
-// .concat(message)
 
 const router = new VueRouter({
   mode: 'history',

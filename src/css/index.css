@@ -24,20 +24,14 @@ img {
 /* 文案 */
 .wenan {
   position: absolute;
-  top: 60px;
-  left: 0px;
-  bottom: 60px;
-  right: 0px;
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 2;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .wenan p {
   font-size: 2rem;
   text-indent: 2em;
-  width: 75vw;
+
   color: #fff;
   z-index: 2;
 }

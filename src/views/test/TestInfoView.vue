@@ -1,67 +1,48 @@
 <template>
-  <div>
-    <div>{{ info }}</div>
+  <div id="app">
+    <div>{{ message }}</div>
   </div>
 </template>
+
 <script>
-import logger from '@/js/logger'
-// import tools from "../../js/tools";
-let app
 export default {
-  name: 'TestAjaxView',
   data() {
     return {
-      title: '接口出错了，报错了',
-      info: '',
-      index: 1,
+      message: 10,
     }
   },
-  methods: {
-    thistest() {
-      logger.debug('查看是否可以进入methods')
-    },
-    suijiwenan() {
-      fetch('https://api.gmit.vip/Api/WaSentence')
-        .then((response) => response.json())
-        .then((res) => {
-          if (res.code == 200) {
-            this.title = ' '
-            this.title = res.data.text
-            logger.debug('调用')
-            this.chuxian()
-          }
-        })
-        .catch(console.error())
-    },
-    // 字体出现
-    chuxian() {
-      let time
-      time = setInterval(() => {
-        this.info = this.title.substring(0, this.index)
-        this.index++
-        if (this.index > this.title.length) {
-          clearInterval(time)
-          this.xiaoshi()
-        }
-      }, 200)
-    },
-    xiaoshi() {
-      let time
-      time = setInterval(() => {
-        this.info = this.title.substring(0, this.index)
-        this.index--
-        if (this.index == 0) {
-          clearInterval(time)
-          this.suijiwenan()
-        }
-      }, 200)
-    },
+  mounted: function () {
+    console.group('------mounted 挂载结束状态(父）------')
+    console.log('%c%s', 'color:red', 'el     : ' + this.$el)
+    console.log(this.$el)
+    console.log('%c%s', 'color:red', 'data   : ' + this.$data)
+    console.log('%c%s', 'color:red', 'message: ' + this.message)
+
+    this.message += 1
+    console.log('%c%s', 'color:red', 'message: ' + this.message)
   },
-  created() {
-    app = this
-    logger.debug(app)
-    this.suijiwenan()
+  beforeUpdate: function () {
+    console.group('beforeUpdate 更新前状态(父）===============》')
+    console.log('%c%s', 'color:red', 'el     : ' + this.$el)
+    console.log(this.$el)
+    console.log('%c%s', 'color:red', 'data   : ' + this.$data)
+    console.log('%c%s', 'color:red', 'message: ' + this.message)
+  },
+  updated: function () {
+    console.group('updated 更新完成状态(父）===============》')
+    console.log('%c%s', 'color:red', 'el     : ' + this.$el)
+    console.log(this.$el)
+    console.log('%c%s', 'color:red', 'data   : ' + this.$data)
+    console.log('%c%s', 'color:red', 'message: ' + this.message)
   },
 }
 </script>
-<style scoped></style>
+<style>
+.eac {
+  background: lightgreen;
+}
+li {
+  display: inline;
+  margin: 10px;
+}
+</style>

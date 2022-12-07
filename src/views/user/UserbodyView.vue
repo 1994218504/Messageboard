@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div v-loading="loading">
-      <el-page-header @back="jumpRouting()" content="用户"> </el-page-header>
+    <div v-loading="Visible.Allloading">
+      <el-page-header id="toStyle" @back="jumpRouting()" content="用户"> </el-page-header>
       <div class="conter">
         <!-- 背景图片 -->
         <div class="index_top">
@@ -153,102 +153,123 @@
       </div>
       <div class="user_body_main" v-else>
         <div class="user_body_main_left">
-          <el-tabs v-model="activeName">
+          <el-tabs v-model="activeName" @tab-click="ifTabs">
             <el-tab-pane label="动态" name="first">
-              <div v-for="d in messageList" :key="d.umid" class="forListMessageConern">
-                <div class="messageList" @click="queryMessage_date(d.umid)">
-                  <div>
+              <div v-if="messagePage.total != 0" v-loading="Visible.firstLoading">
+                <div v-for="d in messageList" :key="d.umid" class="forListMessageConern">
+                  <div class="messageList" @click="queryMessage_date(d.umid)">
                     <div>
-                      <img :src="d.userInfo.img" alt="" />
+                      <div>
+                        <img :src="d.userInfo.img" alt="" />
+                      </div>
+                      <div>
+                        <span>{{ d.user.nickname }}</span>
+                        <span>（{{ d.user.username }}）</span>
+                      </div>
                     </div>
+                    <div><i class="iconfont">&#xe634;</i>发布于：{{ d.lastupdate | formatDate }}</div>
+                    <div>{{ d.title }} </div>
                     <div>
-                      <span>{{ d.user.nickname }}</span>
-                      <span>（{{ d.user.username }}）</span>
+                      <span><i class="iconfont">&#xe604;</i> {{ d.hits }}</span>
+                      <span><i class="iconfont">&#xec7f;</i> {{ d.praiseCount }}</span>
                     </div>
+                    <div></div>
                   </div>
-                  <div><i class="iconfont">&#xe634;</i>发布于：{{ d.lastupdate | formatDate }}</div>
-                  <div>{{ d.title }} </div>
-                  <div>
-                    <span><i class="iconfont">&#xe604;</i> {{ d.hits }}</span>
-                    <span><i class="iconfont">&#xec7f;</i> {{ d.praiseCount }}</span>
-                  </div>
-                  <div></div>
+                </div>
+                <div class="pageStyle" v-if="messagePage.pageCount > 1">
+                  <page-comp :page.sync="messagePage" @change-page="queryMessageAjax()" layout=" total,prev,pager,next"></page-comp>
                 </div>
               </div>
-              <div class="pageStyle" v-if="messagePage.pageCount > 1">
-                <page-comp :page.sync="messagePage" @change-page="queryMessageAjax()" layout=" total,prev,pager,next"></page-comp>
+              <div v-else>
+                <el-empty description="还没有动态"></el-empty>
               </div>
             </el-tab-pane>
             <el-tab-pane label="评论" name="second">
-              <div v-for="d in replyByList" :key="d.umrid" class="forListMessageConern">
-                <div class="messageList" @click="queryMessage_date(d.umid)">
-                  <div>
+              <div v-if="replyPage.total != 0" v-loading="Visible.secondLoading">
+                <div v-for="d in replyByList" :key="d.umrid" class="forListMessageConern">
+                  <div class="messageList" @click="queryMessage_date(d.umid)">
                     <div>
-                      <img :src="d.userInfo.img" alt="" />
+                      <div>
+                        <img :src="d.userInfo.img" alt="" />
+                      </div>
+                      <div>
+                        <span>{{ d.user.nickname }}</span>
+                        <span>（{{ d.user.username }}）</span>
+                      </div>
                     </div>
-                    <div>
-                      <span>{{ d.user.nickname }}</span>
-                      <span>（{{ d.user.username }}）</span>
-                    </div>
+                    <div><i class="iconfont">&#xe634;</i>发布于：{{ d.lastupdate | formatDate }}</div>
+                    <div>{{ d.info }} </div>
+                    <div> </div>
                   </div>
-                  <div><i class="iconfont">&#xe634;</i>发布于：{{ d.lastupdate | formatDate }}</div>
-                  <div>{{ d.info }} </div>
-                  <div> </div>
+                </div>
+                <div class="pageStyle" v-if="replyPage.pageCount > 1">
+                  <page-comp :page.sync="replyPage" @change-page="queryReplyByAjax()" layout=" total,prev,pager,next"></page-comp>
                 </div>
               </div>
-              <div class="pageStyle" v-if="replyPage.pageCount > 1">
-                <page-comp :page.sync="replyPage" @change-page="queryReplyByAjax()" layout=" total,prev,pager,next"></page-comp>
+              <div v-else>
+                <el-empty description="还没有评论"></el-empty>
               </div>
             </el-tab-pane>
             <el-tab-pane label="关注" name="third">
-              <div v-for="d in concernList" :key="d.user.username" class="forListMessageConern">
-                <div class="conernStyle">
-                  <div>
+              <div v-if="concernPage.total != 0" v-loading="Visible.thirdLoading">
+                <div v-for="d in concernList" :key="d.user.username" class="forListMessageConern">
+                  <div class="conernStyle">
                     <div>
-                      <img :src="d.userInfo.img" alt="" />
+                      <div>
+                        <img :src="d.userInfo.img" alt="" />
+                      </div>
+                      <div>
+                        <span>{{ d.user.nickname }}</span>
+                        <span>（{{ d.user.username }}）</span>
+                      </div>
                     </div>
                     <div>
-                      <span>{{ d.user.nickname }}</span>
-                      <span>（{{ d.user.username }}）</span>
+                      <div v-if="isUser == true">
+                        <el-button @click="queryReturnAjax(d)" v-if="d.judgment == true">取消关注</el-button>
+                        <el-button @click="queryReturnAjax(d)" v-else type="primary">关注</el-button>
+                      </div>
                     </div>
-                  </div>
-                  <div>
-                    <div v-if="isUser == true">
-                      <el-button @click="queryReturnAjax(d)" v-if="d.judgment == true">取消关注</el-button>
-                      <el-button @click="queryReturnAjax(d)" v-else type="primary">关注</el-button>
-                    </div>
+                    <div class="conernStyleHr"></div>
                   </div>
                 </div>
-                <div class="conernStyleHr"></div>
-                <div class="pageStyle" v-if="messagePage.pageCount > 1">
+                <div class="pageStyle" v-if="concernPage.pageCount > 1">
                   <page-comp :page.sync="concernPage" @change-page="queryConcernAjax()" layout=" total,prev,pager,next"></page-comp>
                 </div>
               </div>
+              <div v-else>
+                <el-empty description="还没有关注的人"></el-empty>
+              </div>
             </el-tab-pane>
             <el-tab-pane label="粉丝" name="fourth">
-              <div v-for="d in followersList" :key="d.user.username" class="forListMessageConern">
-                <div class="conernStyle">
-                  <div>
+              <div v-if="followersPage.total != 0" v-loading="Visible.fourthLoading">
+                <div v-for="d in followersList" :key="d.user.username" class="forListMessageConern">
+                  <div class="conernStyle">
                     <div>
-                      <img :src="d.userInfo.img" alt="" />
+                      <div>
+                        <img :src="d.userInfo.img" alt="" />
+                      </div>
+                      <div>
+                        <span>{{ d.user.nickname }}</span>
+                        <span>（{{ d.user.username }}）</span>
+                      </div>
                     </div>
                     <div>
-                      <span>{{ d.user.nickname }}</span>
-                      <span>（{{ d.user.username }}）</span>
+                      <div v-if="isUser == true">
+                        <el-button @click="queryReturnAjax(d)" v-if="d.judgment == true">取消关注</el-button>
+                        <el-button @click="queryReturnAjax(d)" v-else type="primary">关注</el-button>
+                      </div>
                     </div>
                   </div>
-                  <div>
-                    <div v-if="isUser == true">
-                      <el-button @click="queryReturnAjax(d)" v-if="d.judgment == true">取消关注</el-button>
-                      <el-button @click="queryReturnAjax(d)" v-else type="primary">关注</el-button>
-                    </div>
-                  </div>
+                  <div class="conernStyleHr"></div>
                 </div>
-                <div class="conernStyleHr"></div>
-                <div class="pageStyle" v-if="messagePage.pageCount > 1">
-                  <page-comp :page.sync="concernPage" @change-page="queryConcernAjax()" layout=" total,prev,pager,next"></page-comp>
-                </div> </div
-            ></el-tab-pane>
+                <div class="pageStyle" v-if="followersPage.pageCount > 1">
+                  <page-comp :page.sync="followersPage" @change-page="queryConcernAjax()" layout=" total,prev,pager,next"></page-comp>
+                </div>
+              </div>
+              <div v-else>
+                <el-empty description="还没有小迷弟哦"></el-empty>
+              </div>
+            </el-tab-pane>
           </el-tabs>
         </div>
         <div class="user_body_main_right">
@@ -277,6 +298,7 @@
 import tools from '@/js/tools'
 import logger from '@/js/logger'
 import PageComp from '@/components/PageComp.vue'
+
 let app
 export default {
   components: { PageComp },
@@ -300,8 +322,12 @@ export default {
         ModifyVisible: false, //修改头像的visible
         nickname: true, //修改昵称时的visible
         ModifyInfoVisible: true,
+        Allloading: false,
+        firstLoading: true,
+        secondLoading: true,
+        thirdLoading: true,
+        fourthLoading: true,
       },
-      loading: false,
       updateModifyINfo: {
         img: '',
         info: '',
@@ -326,20 +352,16 @@ export default {
       // 关注列表和粉丝列表
       queryusername: {},
       concernList: [],
-      concernPage: {
-        pageSize: 5,
-      },
+      concernPage: { pageSize: 5 },
       followersList: [],
-      followersPage: {
-        pageSize: 5,
-      },
-      // 判断是不是本人且登录
+      followersPage: { pageSize: 5 },
+      // 判断动态、评论、关注、粉丝是否有值
     }
   },
 
   methods: {
     queryLocstionUser() {
-      this.loading = true
+      this.Visible.All = true
       this.queryString = decodeURIComponent(this.$route.params.username)
       this.queryUser()
     },
@@ -360,15 +382,13 @@ export default {
         //查看别人登录界面
         this.isUser = false
         this.Visible.Iusername = false
-        this.loading = true
         tools.ajax('/user/auth/getUserInfoByName', { username: this.queryString }, (data) => {
           this.users.tbUser = data.tbUser
           this.users.tbUserInfo = data.tbUserInfo
           this.users.userOtherInfo = data.userOtherInfo
-          this.loading = true
         })
       }
-      this.loading = false
+      this.Visible.All = false
     },
     // 退出
     jumpRouting() {
@@ -380,7 +400,7 @@ export default {
     },
     // 修改头像
     avatarModify() {
-      // this.loading = true
+      // this.Visible.All = true
       this.Visible.ModifyVisible = true
       this.file.files = ''
       tools.openFile((selfile) => {
@@ -401,7 +421,7 @@ export default {
       })
     },
     queryfile() {
-      this.loading = true
+      this.Visible.All = true
       tools.ajax(
         '/user/file/queryAll',
         {},
@@ -431,14 +451,13 @@ export default {
     },
     // 修改附加信息的ajax
     modifyAjax() {
-      this.loading = true
       tools.ajax('/user/auth/updateUserInfo', this.updateModifyINfo, (data) => {
         data.success ? this.$message({ type: 'success', message: data.message }) : this.$message.error(data.message)
         if (data.success == true) {
           this.$message({ type: 'success', message: data.message })
           this.$store
             .dispatch('updateUserInfo')
-            .then(app.showModinfyInfo, (app.loading = false))
+            .then(app.showModinfyInfo, (app.Visible.All = false))
             .catch()
         }
       })
@@ -466,16 +485,16 @@ export default {
     },
     // 个人动态
     queryMessageAjax() {
+      this.Visible.firstLoading = true
       if (this.queryString != this.user.tbUser.username) {
         this.queryMessage.info = this.queryString
       } else {
         this.queryMessage.info = this.user.tbUser.username
       }
-      this.loading = true
-      tools.ajax('/message/queryAll', tools.concatJson(this.queryMessage, this.page), (data) => {
+      tools.ajax('/message/queryAll', tools.concatJson(this.queryMessage, this.messagePage), (data) => {
         logger.debug('sadfiojlmgrnlkmhg;动态', this.queryusername.username)
         this.messageList = data.list
-        this.loading = false
+        this.Visible.firstLoading = false
         this.messagePage = data.page
       })
     },
@@ -492,11 +511,10 @@ export default {
       } else {
         this.queryMessage.username = this.user.tbUser.username
       }
-
-      this.loading = true
+      this.Visible.secondLoading = true
       tools.ajax('/message/queryReplyByUsername', tools.concatJson(this.queryMessage, this.replyPage), (data) => {
         logger.debug('sadfiojlmfjhhgrnlkm;评论', this.queryusername.username)
-        this.loading = false
+        this.Visible.secondLoading = false
         this.replyByList = data.list
         this.replyPage = data.page
       })
@@ -525,10 +543,10 @@ export default {
       } else {
         this.queryusername.username = this.user.tbUser.username
       }
-      this.loading = true
+      this.Visible.thirdLoading = true
       tools.ajax('/message/queryFollowUserList', tools.concatJson(this.queryusername, this.concernPage), (data) => {
         logger.debug('sadfiojlm,jhmgrnlkm;关注', this.queryusername.username)
-        this.loading = false
+        this.Visible.thirdLoading = false
         this.concernList = data.list
         for (let i = 0; i < this.concernList.length; i++) {
           this.concernList[i].judgment = true
@@ -543,7 +561,7 @@ export default {
       } else {
         this.queryusername.username = this.user.tbUser.username
       }
-      this.loading = true
+      this.Visible.fourthLoading = true
       tools.ajax('/message/queryFollowMeUserListByName', tools.concatJson(this.queryusername, this.followersPage), (data) => {
         logger.debug('sadfiojlmgrmdfxgnxnlkm;粉丝', this.queryusername.username)
         this.followersList = data.list
@@ -551,7 +569,34 @@ export default {
         for (let i = 0; i < this.followersList.length; i++) {
           this.followersList[i].judgment = true
         }
-        this.loading = false
+        this.Visible.fourthLoading = false
+      })
+    },
+
+    handleWatchEnter(e) {
+      var key = window.event ? e.keyCode : e.which
+      console.log('查看按键', key)
+      if (key === 13) {
+        // 这里执行相应的行为动作
+        console.log('++++---------')
+      }
+    },
+    ifTabs() {
+      if (this.activeName == 'first') {
+        this.queryMessageAjax()
+      }
+      if (this.activeName == 'second') {
+        this.queryReplyByAjax()
+      }
+      if (this.activeName == 'third') {
+        this.queryConcernAjax()
+      }
+      if (this.activeName == 'fourth') {
+        this.queryFollowersAjax()
+      }
+      window.scrollTo({
+        top: document.documentElement.scrollTop,
+        behavior: 'smooth',
       })
     },
   },
@@ -560,14 +605,24 @@ export default {
       return this.$store.state.loginUser
     },
   },
+  mounted() {
+    const that = this
+    document.addEventListener('keydown', that.handleWatchEnter)
+    logger.debug('-------------', document.documentElement.scrollTop)
+    if (document.documentElement.scrollTop == 50) {
+      logger.debug('---------------------------------')
+      // el-page-header
+      // document.getElementById('toStyle').style.backgroundColor = '#000'
+    }
+  },
   created() {
     app = this
     this.queryLocstionUser()
     this.queryMessageAjax()
-    this.queryMessageAjax()
-    this.queryReplyByAjax()
-    this.queryConcernAjax()
-    this.queryFollowersAjax()
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
     logger.debug('查看user参数', this.user)
   },
 }

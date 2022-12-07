@@ -63,7 +63,9 @@ export default new Vuex.Store({
             user.tbUser = data.tbUser
             user.tbUserInfo = data.tbUserInfo
             user.userOtherInfo = data.userOtherInfo
-
+            if (user.tbUserInfo.img == '') {
+              user.tbUserInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
+            }
             commit('serUserInfo', user)
             a()
           } else {

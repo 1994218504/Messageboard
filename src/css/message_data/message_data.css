@@ -4,6 +4,9 @@
 li {
   list-style: none;
 }
+ul {
+  list-style: none;
+}
 .el-page-header {
   line-height: 42px;
   cursor: pointer;
@@ -118,14 +121,13 @@ li {
 }
 /* 评论和关注的布局 */
 .comments_concern .el-tab-pane > div > div {
-  display: flex;
-  justify-content: space-between;
   padding: 15px 16px 0 16px;
 }
 /* 右边内容 */
 .commentslists {
   border-top: 1px solid #bdbdbd;
 }
+
 .commentslists > li:first-child > div:first-child,
 .commentslistconcern > li:first-child > div:first-child {
   margin-top: 10px;
@@ -142,7 +144,7 @@ li {
   position: relative;
   margin: 5px 0;
 }
-.commentslists > li:first-child > div:last-child > div:last-child,
+.commentslists > li:last-child > span:first-child > div,
 .commentslists > li:first-child > div:last-child > div:first-child,
 .commentslistconcern > li:first-child > div:last-child > div:first-child {
   color: #828488;
@@ -157,17 +159,21 @@ li {
 }
 /* 左边点击 */
 .commentslists > li:last-child {
+  margin-top: 32px;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-between;
 }
-.commentslists > li:last-child > div {
+.commentslists > li:last-child > span:last-child {
+  display: flex;
+  align-items: center;
+}
+.commentslists > li:last-child span:last-child > div {
   cursor: pointer;
   margin-left: 32px;
   display: flex;
-  align-items: self-end;
   padding-bottom: 16px;
 }
-.commentslists > li:last-child > div:hover {
+.commentslists > li:last-child span:last-child > div:hover {
   color: #409eff;
 }
 /* 分页 */
@@ -211,6 +217,8 @@ li {
   margin: 10px 0;
 }
 .commentslistconcern {
+  display: flex;
+  justify-content: space-between;
   align-items: center;
 }
 .comments_concern {

@@ -4,6 +4,8 @@ import router from './router'
 import store from './store'
 
 import ElementUI from 'element-ui'
+import { Loading } from 'element-ui'
+Vue.use(Loading.directive)
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 // 导入自定义插件

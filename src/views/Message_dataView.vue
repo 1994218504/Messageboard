@@ -33,9 +33,7 @@
         <!-- 帖子信息 -->
         <div class="userinfo">
           <div>标题：{{ messageinfo.title }}</div>
-          <div class="center_info" v-html="messageinfo.info" v-if="messageinfo">
-            {{ messageinfo.info }}
-          </div>
+          <div class="center_info" v-if="messageinfo" v-html="messageinfo.info"> </div>
           <div class="center_click">
             <div @click="praiseclick()" v-if="messageinfo.praise == false">
               <i class="el-input_icon iconfont">&#xec7f;</i>
@@ -53,7 +51,7 @@
         </div>
         <!-- 评论信息 -->
         <div class="comments_concern">
-          <el-tabs value="first" type="card">
+          <el-tabs v-model="activeName" type="card" @tab-click="ifTabs">
             <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
               <div class="hottestLatese">
                 <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
@@ -72,31 +70,35 @@
                 <div class="commentslists">
                   <li>
                     <div>
-                      <img @click="Message_data(d.user.nickname)" :src="d.userInfo.img" alt="" />
+                      <img @click="Message_data(d.user.username)" :src="d.userInfo.img" alt="" />
                     </div>
                     <div>
-                      <div @click="Message_data(d.user.nickname)">{{ d.user.nickname }}</div>
+                      <div @click="Message_data(d.user.username)">{{ d.user.nickname }}</div>
                       <p v-html="d.info"></p>
-                      <div>{{ d.lastupdate | formatDate }}</div>
                     </div>
                   </li>
                   <li>
-                    <div v-if="d.praise == false">
-                      <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
-                      <span @click="Commentsclick(d.umrid)">点赞{{ d.praiseCount }}</span>
-                    </div>
-                    <div class="praises" v-else>
-                      <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
-                      <span @click="Commentsclick(d.umrid)">已点赞{{ d.praiseCount }}</span>
-                    </div>
-                    <div v-if="d.mine">
-                      <i @click="DeleMessageList(d.umrid)" class="input_icon iconfont">&#xe68e;</i>
-                      <div @click="DeleMessageList(d.umrid)">删除</div>
-                    </div>
-                    <div>
-                      <i class="input_icon iconfont">&#xe66b;</i>
-                      <div>举报</div>
-                    </div>
+                    <span>
+                      <div>{{ d.lastupdate | formatDate }}</div>
+                    </span>
+                    <span>
+                      <div v-if="d.praise == false">
+                        <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
+                        <span @click="Commentsclick(d.umrid)">点赞{{ d.praiseCount }}</span>
+                      </div>
+                      <div class="praises" v-else>
+                        <i @click="Commentsclick(d.umrid)" class="input_icon iconfont">&#xec7f;</i>
+                        <span @click="Commentsclick(d.umrid)">已点赞{{ d.praiseCount }}</span>
+                      </div>
+                      <div v-if="d.mine">
+                        <i @click="DeleMessageList(d.umrid)" class="input_icon iconfont">&#xe68e;</i>
+                        <div @click="DeleMessageList(d.umrid)">删除</div>
+                      </div>
+                      <div>
+                        <i class="input_icon iconfont">&#xe66b;</i>
+                        <div>举报</div>
+                      </div>
+                    </span>
                   </li>
                 </div>
               </div>
@@ -109,10 +111,10 @@
               <div v-for="d in concernlist" :key="d.umrid">
                 <div class="commentslistconcern">
                   <li>
-                    <div style="margin-top: 20px">
+                    <div @click="Message_data(d.user.username)" style="margin-top: 20px">
                       <img :src="d.userInfo.img" alt="" />
                     </div>
-                    <div>
+                    <div @click="Message_data(d.user.username)">
                       <div style="color: #fff">liu</div>
                       <p>{{ d.user.nickname }}</p>
                       <div></div>
@@ -220,6 +222,8 @@ export default {
       loading: {
         postloading: false,
       },
+      // 标签
+      activeName: 'first',
     }
   },
   methods: {
@@ -248,7 +252,6 @@ export default {
         }
         this.messagepage = data.page
       })
-      this.queryconcern()
     },
     hottestLateseTabOne() {
       this.tab = 2
@@ -338,7 +341,7 @@ export default {
         this.concernlist = data.list
         for (let i = 0; i < this.concernlist.length; i++) {
           if (this.concernlist[i].userInfo.img == '') {
-            this.concernlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=529'
+            this.concernlist[i].userInfo.img = 'https://klcxy.top/oss-manage-service/ossinfo/queryOssUrl?tbOssInfo.oiid=544'
           }
         }
       })
@@ -376,6 +379,15 @@ export default {
     Message_data(nickname) {
       this.$router.push('/index/userbody/' + encodeURIComponent(nickname))
     },
+    ifTabs() {
+      if (this.activeName == 'second') {
+        this.queryconcern()
+      }
+      window.scrollTo({
+        top: document.documentElement.scrollTop,
+        behavior: 'smooth',
+      })
+    },
   },
   computed: {
     user() {
@@ -387,7 +399,10 @@ export default {
     this.umid = decodeURIComponent(this.$route.params.umid)
     this.messagequery.umid = this.umid
     app.querymessagedata()
-    logger.debug('查看是否有角色信息', this.user)
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth',
+    })
   },
 }
 </script>
