@@ -373,9 +373,23 @@ tools.upload = (url, param, file, callback) => {
     })
 }
 
+const FILE_DOWMNLOAL_URL = serverInfo.serverUrl + '/user/file/download?fid='
+
 // 获取文件下载地址
 tools.getDownloadUrl = (fid) => {
-  return serverInfo.serverUrl + '/user/file/download?fid=' + fid
+  return FILE_DOWMNLOAL_URL + fid
+}
+//判定是否是下载的url，如果是就返回fid不是就返回-1
+tools.isDowkiadUrl = (url) => {
+  if (!url) {
+    return -1
+  }
+  // 查找基本的下载url信息是否存在
+  let index = url.indexOf(FILE_DOWMNLOAL_URL)
+  if (index != 0) {
+    return -1
+  }
+  return url.substring(FILE_DOWMNLOAL_URL.length)
 }
 /*
 // websocket管理集合

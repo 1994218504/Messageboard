@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import test from './test'
+// import error from './error'
 // import message from './message'
 
 Vue.use(VueRouter)
@@ -37,6 +38,17 @@ const routes = [
     component: () => import('../views/setup/SettingsView.vue'),
   },
 ].concat(test)
+// .concat(error)
+// .concat([
+//   //通配符路由配置*表示任意路径
+//   // 所以本配置一定要在路由列表的最后
+//   {
+//     path: '*',
+//     name: 'all_toher',
+//     // redirect表示重定向到其它path
+//     redirect: '/error/404',
+//   },
+// ])
 
 const router = new VueRouter({
   mode: 'history',

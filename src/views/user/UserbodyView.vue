@@ -413,28 +413,14 @@ export default {
             if (data.success) {
               this.queryfile()
               this.Visible.ModifyVisible = false
+              this.updateModifyINfo.img = tools.getDownloadUrl(data.data.fid)
+              this.modifyAjax()
             } else {
               this.$message.error(data.message)
             }
           })
         }
       })
-    },
-    queryfile() {
-      this.Visible.All = true
-      tools.ajax(
-        '/user/file/queryAll',
-        {},
-        (data) => {
-          if (data.success) {
-            this.updateModifyINfo.img = tools.getDownloadUrl(data.list[0].fid)
-            this.modifyAjax()
-          } else {
-            this.$alert(data.message)
-          }
-        },
-        true
-      )
     },
     // 修改昵称
     showModifyNickname() {
@@ -572,15 +558,6 @@ export default {
         this.Visible.fourthLoading = false
       })
     },
-
-    handleWatchEnter(e) {
-      var key = window.event ? e.keyCode : e.which
-      console.log('查看按键', key)
-      if (key === 13) {
-        // 这里执行相应的行为动作
-        console.log('++++---------')
-      }
-    },
     ifTabs() {
       if (this.activeName == 'first') {
         this.queryMessageAjax()
@@ -599,6 +576,10 @@ export default {
         behavior: 'smooth',
       })
     },
+    handleWatchEnter(e) {
+      var key = window.event ? e.keyCode : e.which
+      console.log('查看按键', key)
+    },
   },
   computed: {
     user() {
@@ -607,7 +588,7 @@ export default {
   },
   mounted() {
     const that = this
-    document.addEventListener('keydown', that.handleWatchEnter)
+    window.addEventListener('keydown', that.handleWatchEnter)
     logger.debug('-------------', document.documentElement.scrollTop)
     if (document.documentElement.scrollTop == 50) {
       logger.debug('---------------------------------')
@@ -623,7 +604,9 @@ export default {
       top: 0,
       behavior: 'smooth',
     })
-    logger.debug('查看user参数', this.user)
+  },
+  destroyed() {
+    window.removeEventListener('keydown', this.handleWatchEnter) //  离开页面清除（移除）滚轮滚动事件
   },
 }
 </script>

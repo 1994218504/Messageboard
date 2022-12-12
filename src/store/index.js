@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import tools from '@/js/tools'
-import logger from '@/js/logger'
 
 Vue.use(Vuex)
 const LOCAL_USER_KEY = 'liuguanghui-liuyanban-message'
@@ -59,7 +58,6 @@ export default new Vuex.Store({
         tools.ajax('/user/auth/getUserInfo', {}, (data) => {
           let user = { isLogin: data.success }
           if (data.success) {
-            logger.debug('我已经进入vuex修改储存的用户信息')
             user.tbUser = data.tbUser
             user.tbUserInfo = data.tbUserInfo
             user.userOtherInfo = data.userOtherInfo

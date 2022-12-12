@@ -469,7 +469,8 @@ export default {
     this.queryboard()
     logger.debug('查看没有登录有哪些参数', this.user)
     this.suijiwenan()
-    logger.debug(tools.md5('user-pwd'))
+    // this.$store.commit('loadUser')
+    // logger.debug(tools.md5('user-pwd'))
   },
 }
 </script>

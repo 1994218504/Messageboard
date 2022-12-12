@@ -1,5 +1,6 @@
 <template>
   <div class="center">
+    <p style="position: fixed">{{ documentTop }}</p>
     <!-- {{ messageinfo }} -->
     <el-page-header @back="jumpRouting()" content="留言详细信息"> </el-page-header>
     <div>
@@ -8,7 +9,7 @@
         <div class="main_top">
           <div>
             <div class="main_top_left">
-              <div>
+              <div @click="Message_data(messageinfo.user.username)">
                 <img :src="messageinfo.userInfo.img" alt="" />
               </div>
               <div>
@@ -49,8 +50,7 @@
             </div>
           </div>
         </div>
-        <!-- 评论信息 -->
-        {{ messagepage.total }}
+        <!-- 评论和点赞信息 -->
         <div class="comments_concern">
           <el-tabs v-model="activeName" type="card" @tab-click="ifTabs">
             <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
@@ -194,6 +194,7 @@ export default {
   name: 'MessageDate',
   data() {
     return {
+      documentTop: 0,
       title: '具体评论界面',
       umid: '',
       tab: 2, //最新与最热的区别
@@ -315,6 +316,7 @@ export default {
         if (data.success) {
           this.$message({ type: 'success', message: data.message })
           this.querymessagedata()
+          this.queryconcern()
         } else {
           this.$message({ type: 'success', message: '网络不好，请检查网络' })
         }
@@ -355,7 +357,6 @@ export default {
       tools.ajax('/message/querySupportUserList', { umid: this.umid }, (data) => {
         this.concernlist = data.list
         this.messagepage = data.page
-        logger.debug('------------------------------------')
         this.Visible.secondLoading = false
         for (let i = 0; i < this.concernlist.length; i++) {
           if (this.concernlist[i].userInfo.img == '') {
@@ -413,12 +414,18 @@ export default {
         behavior: 'smooth',
       })
     },
+    // handleScroll() {
+    //   this.documentTop = document.documentElement.scrollTop
+    // },
   },
   computed: {
     user() {
       return this.$store.state.loginUser
     },
   },
+  // mounted() {
+  //   window.addEventListener('scroll', this.handleScroll)
+  // },
   created() {
     app = this
     this.umid = decodeURIComponent(this.$route.params.umid)
@@ -429,6 +436,9 @@ export default {
       behavior: 'smooth',
     })
   },
+  // destroyed() {
+  //   window.removeEventListener('scroll', this.handleScroll) //  离开页面清除（移除）滚轮滚动事件
+  // },
 }
 </script>
 <style scoped>
