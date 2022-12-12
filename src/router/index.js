@@ -20,7 +20,7 @@ const routes = [
   {
     path: '/index',
     name: 'home',
-    component: () => import('../views/MainView.vue'),
+    component: () => import('../views/MainMessageView.vue'),
   },
   {
     path: '/index/messagedata/:umid',
