@@ -400,7 +400,7 @@ export default {
     },
     // 修改头像
     avatarModify() {
-      // this.Visible.All = true
+      let fid = tools.isDowkiadUrl(this.user.tbUserInfo.img)
       this.Visible.ModifyVisible = true
       this.file.files = ''
       tools.openFile((selfile) => {
@@ -414,6 +414,9 @@ export default {
               this.queryfile()
               this.Visible.ModifyVisible = false
               this.updateModifyINfo.img = tools.getDownloadUrl(data.data.fid)
+              if (fid != -1) {
+                tools.ajax('/user/file/delete', { fid: fid }, () => {})
+              }
               this.modifyAjax()
             } else {
               this.$message.error(data.message)
