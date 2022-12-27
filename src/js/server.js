@@ -3,9 +3,9 @@ let serverInfo = {}
 // 本地存储token的key
 serverInfo.serverTokenKey = 'teach_project_service_token'
 // 后端服务基础地址
-serverInfo.serverUrl = 'https://huhuiyu.top/teach_project_service'
+serverInfo.serverUrl = 'https://service.huhuiyu.top/teach_project_service'
 // websocket服务基础地址
-serverInfo.websocketUrl = 'wss://huhuiyu.top/teach_project_service/ws/'
+serverInfo.websocketUrl = 'wss://service.huhuiyu.top/teach_project_service/ws/'
 // 本地token信息
 serverInfo.saveToken = (resp) => {
   if (resp.data && resp.data.token) {

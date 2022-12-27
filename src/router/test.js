@@ -10,6 +10,11 @@ let routers = [
     name: 'logo',
     component: () => import('../views/test/LogoView.vue'),
   },
+  {
+    path: '/testlogin',
+    name: 'logo',
+    component: () => import('../views/test/TestLoginView.vue'),
+  },
 ]
 
 export default routers
