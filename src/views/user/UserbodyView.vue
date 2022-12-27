@@ -317,6 +317,7 @@ export default {
         files: '',
         fileInfo: '修改用户头像',
       },
+      fileinfo: '',
       Visible: {
         Iusername: true, //是否为我的页面
         ModifyVisible: false, //修改头像的visible
@@ -405,24 +406,24 @@ export default {
       this.file.files = ''
       tools.openFile((selfile) => {
         // logger.debug('选择的文件', selfile)
-        this.file.files = selfile
-        if (!this.file.files) {
-          // logger.debug('没有选择图片')
-        } else {
-          tools.upload('/user/file/upload', { fileinfo: this.file.fileInfo }, this.file.files.file, (data) => {
-            if (data.success) {
-              this.queryfile()
-              this.Visible.ModifyVisible = false
-              this.updateModifyINfo.img = tools.getDownloadUrl(data.data.fid)
-              if (fid != -1) {
-                tools.ajax('/user/file/delete', { fid: fid }, () => {})
-              }
-              this.modifyAjax()
-            } else {
-              this.$message.error(data.message)
+        this.fileinfo = selfile
+        // if (!this.file.files) {
+        // logger.debug('没有选择图片')
+        // } else {
+        tools.upload('/user/file/upload', { fileinfo: this.file.fileInfo }, this.fileinfo.file, (data) => {
+          if (data.success) {
+            this.Visible.ModifyVisible = false
+            this.updateModifyINfo.img = tools.getDownloadUrl(data.data.fid)
+            this.modifyAjax()
+
+            if (fid != -1) {
+              tools.ajax('/user/file/delete', { fid: fid }, () => {})
             }
-          })
-        }
+          } else {
+            this.$message.error(data.message)
+          }
+        })
+        // }
       })
     },
     // 修改昵称
@@ -442,6 +443,7 @@ export default {
     modifyAjax() {
       tools.ajax('/user/auth/updateUserInfo', this.updateModifyINfo, (data) => {
         data.success ? this.$message({ type: 'success', message: data.message }) : this.$message.error(data.message)
+
         if (data.success == true) {
           this.$message({ type: 'success', message: data.message })
           this.$store
@@ -481,7 +483,6 @@ export default {
         this.queryMessage.info = this.user.tbUser.username
       }
       tools.ajax('/message/queryAll', tools.concatJson(this.queryMessage, this.messagePage), (data) => {
-        logger.debug('sadfiojlmgrnlkmhg;动态', this.queryusername.username)
         this.messageList = data.list
         this.Visible.firstLoading = false
         this.messagePage = data.page
@@ -502,7 +503,6 @@ export default {
       }
       this.Visible.secondLoading = true
       tools.ajax('/message/queryReplyByUsername', tools.concatJson(this.queryMessage, this.replyPage), (data) => {
-        logger.debug('sadfiojlmfjhhgrnlkm;评论', this.queryusername.username)
         this.Visible.secondLoading = false
         this.replyByList = data.list
         this.replyPage = data.page
@@ -534,7 +534,6 @@ export default {
       }
       this.Visible.thirdLoading = true
       tools.ajax('/message/queryFollowUserList', tools.concatJson(this.queryusername, this.concernPage), (data) => {
-        logger.debug('sadfiojlm,jhmgrnlkm;关注', this.queryusername.username)
         this.Visible.thirdLoading = false
         this.concernList = data.list
         for (let i = 0; i < this.concernList.length; i++) {
@@ -552,7 +551,6 @@ export default {
       }
       this.Visible.fourthLoading = true
       tools.ajax('/message/queryFollowMeUserListByName', tools.concatJson(this.queryusername, this.followersPage), (data) => {
-        logger.debug('sadfiojlmgrmdfxgnxnlkm;粉丝', this.queryusername.username)
         this.followersList = data.list
         this.followersPage = data.page
         for (let i = 0; i < this.followersList.length; i++) {
