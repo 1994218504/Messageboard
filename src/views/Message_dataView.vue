@@ -1,6 +1,6 @@
 <template>
   <div class="center">
-    <p style="position: fixed">{{ documentTop }}</p>
+    <!-- <p style="position: fixed">{{ documentTop }}</p> -->
     <!-- {{ messageinfo }} -->
     <el-page-header @back="jumpRouting()" content="留言详细信息"> </el-page-header>
     <div>
@@ -54,20 +54,20 @@
         <div class="comments_concern">
           <el-tabs v-model="activeName" type="card" @tab-click="ifTabs">
             <el-tab-pane label="评论" name="first" v-loading="loading.postloading">
+              <div class="message_list_plun">
+                <div>
+                  <textarea v-model="addreplay.info" placeholder="发条友善的评论吧"></textarea>
+                </div>
+                <div style="padding-top: 8px">
+                  <el-button @click="AddReplayclick()">发送</el-button>
+                </div>
+              </div>
+              <div class="hottestLatese">
+                <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
+                <span>|</span>
+                <span @click="hottestLateseTabTwo()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
+              </div>
               <div v-loading="Visible.firstLoading" v-if="messagepage.total != 0">
-                <div class="hottestLatese">
-                  <span @click="hottestLateseTabOne()" :class="{ fontcolor: tab == 1 }">最新<i class="iconfont">&#xe603;</i></span>
-                  <span>|</span>
-                  <span @click="hottestLateseTabTwo()" :class="{ fontcolor: tab == 2 }">最热<i class="iconfont">&#xe603;</i></span>
-                </div>
-                <div class="message_list_plun">
-                  <div>
-                    <textarea v-model="addreplay.info" placeholder="发条友善的评论吧"></textarea>
-                  </div>
-                  <div style="padding-top: 8px">
-                    <el-button @click="AddReplayclick()">发送</el-button>
-                  </div>
-                </div>
                 <div v-for="d in messagelist" :key="d.umrid">
                   <div class="commentslists">
                     <li>
