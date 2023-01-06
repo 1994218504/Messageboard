@@ -478,10 +478,11 @@ export default {
     queryMessageAjax() {
       this.Visible.firstLoading = true
       if (this.queryString != this.user.tbUser.username) {
-        this.queryMessage.info = this.queryString
+        this.queryMessage.username = this.queryString
       } else {
-        this.queryMessage.info = this.user.tbUser.username
+        this.queryMessage.username = this.user.tbUser.username
       }
+      logger.debug('==============>', tools.concatJson(this.queryMessage, this.messagePage))
       tools.ajax('/message/queryAll', tools.concatJson(this.queryMessage, this.messagePage), (data) => {
         this.messageList = data.list
         this.Visible.firstLoading = false
