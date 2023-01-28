@@ -28,6 +28,7 @@ export default {
       fileinfo: null,
     }
   },
+  // 测试ssh公钥
   methods: {
     //修改用户图片
     // 用户附加信息副本
