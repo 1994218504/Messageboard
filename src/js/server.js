@@ -3,7 +3,8 @@ let serverInfo = {}
 // 本地存储token的key
 serverInfo.serverTokenKey = 'teach_project_service_token'
 // 后端服务基础地址
-serverInfo.serverUrl = 'https://service.huhuiyu.top/teach_project_service'
+// serverInfo.serverUrl = 'https://service.huhuiyu.top/teach_project_service'
+serverInfo.serverUrl = 'https://service.huhuiyu.top/'
 // websocket服务基础地址
 serverInfo.websocketUrl = 'wss://service.huhuiyu.top/teach_project_service/ws/'
 // 本地token信息
